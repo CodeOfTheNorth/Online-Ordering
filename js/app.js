@@ -228,7 +228,11 @@
         // set config for require
         require.config(app.config);
 
+        // start spinner
+        var spinner = app.initSpinner(app.addSpinner, app.getFontSize);
+
         require(['cssua', 'functions', 'generator', 'errors', 'errors_view', 'myorder', 'settings', 'timetable', 'log', 'tax', 'main_router', 'locale'], function() {
+
             var win = Backbone.$(window);
 
             App.Data.devMode && traceDeferredObjects();
@@ -269,8 +273,9 @@
             app.beforeInit();
 
             App.Data.spinnerStartEvents = [];
-            // init spinner
-            var spinner = app.initSpinner(app.addSpinner, app.getFontSize);
+
+            // init spinner plugin
+            createSpinnerPlugin();
 
             App.Data.spinnerEvents = [];
             win.on('hideSpinner', function(event, data) {
@@ -463,6 +468,10 @@
             $(".ui-spinner").addClass("stanford");
         }
 
+        return loader;
+    }
+
+    function createSpinnerPlugin() {
         // jquery `spinner` plugin
         $.fn.spinner = function(options) {
             var self = this;
@@ -480,8 +489,6 @@
                 })
             }
         };
-
-        return loader;
     }
 
     /**
