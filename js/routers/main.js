@@ -25,8 +25,7 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
     // flag for maintenance mode
     var isMaintenance;
 
-    App.Routers.MainRouter = Backbone.Router.extend({
-        LOC_DINING_OPTION_NAME: '',
+    App.Routers.RootRouter = Backbone.Router.extend({
         initialize: function() {
             var self = this;
 
@@ -35,7 +34,6 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
                 this.lockedRoutes = [];
             }
 
-            this.initLocDiningOptionName();
             this.setTabTitle();
 
             // extend Backbone.history.loadUrl method to add validation of route handler availability
@@ -109,35 +107,18 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
                     settings.load_google_captcha();
 
                 // update session history state-object
-                this.updateState(true);
+                this.updateState && this.updateState(true);
             });
 
             this.once('started', function() {
                 self.started = true;
             });
 
-            // start listen to state changes
-            this.once('initialized', this.runStateTracking.bind(this));
-
-            // remember state of application data (begin)
-            App.Data.stateAppData = {};
-            for (var i in App.Data) {
-                App.Data.stateAppData[i] = true;
-            }
-            // remember state of application data (end)
-
-            this.listenTo(App.Data.myorder, 'paymentResponse paymentFailed', function() {
-                App.Data.establishments && App.Data.establishments.removeSavedEstablishment();
-            }, this);
-
-            this.listenTo(App.Data.myorder, 'checkout_reorder_completed', function() {
-                if (App.Data.myorder.checkout.get('dining_option') == 'DINING_OPTION_SHIPPING') {
-                    App.Data.myorder.update_cart_totals({update_shipping_options: true});
-                }
-            }, this);
-
             // set handler for window.unload event
             window.onunload = this.beforeUnloadApp.bind(this);
+        },
+        onInitialized: function() {
+            this.afterInitialized();
         },
         isBlocked: function() {
             var fragment = null;
@@ -177,28 +158,6 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
                 return;
             } else {
                 isMaintenance = true;
-            }
-        },
-        initLocDiningOptionName: function() {
-            this.LOC_DINING_OPTION_NAME = _.clone(_loc.DINING_OPTION_NAME);
-
-            // remove Delivery option if it is necessary
-            if (!App.Data.myorder.total.get('delivery').get('enable'))
-                delete this.LOC_DINING_OPTION_NAME.DINING_OPTION_DELIVERY;
-
-            if(App.Settings.editable_dining_options && App.Settings.editable_dining_options[0]) {
-                if (this.LOC_DINING_OPTION_NAME['DINING_OPTION_DRIVETHROUGH']) {
-                    this.LOC_DINING_OPTION_NAME.DINING_OPTION_DRIVETHROUGH = _.escape(App.Settings.editable_dining_options[1]);
-                }
-                if (this.LOC_DINING_OPTION_NAME['DINING_OPTION_OTHER']) {
-                    this.LOC_DINING_OPTION_NAME.DINING_OPTION_OTHER = _.escape(App.Settings.editable_dining_options[2]);
-                }
-            }
-
-            for (var dining_option in DINING_OPTION) {
-                if (!App.Settings.dining_options || App.Settings.dining_options.indexOf(DINING_OPTION[dining_option]) == -1) {
-                    delete this.LOC_DINING_OPTION_NAME[dining_option];
-                }
             }
         },
         prepare: function(page, callback, dependencies) {
@@ -330,6 +289,105 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
                     externCss.push(settings.get('host') + '/weborders/css/' + encodeURIComponent(system_settings.color_scheme) + '/' + server_color_schemes[ App.skin ] );
                 }
                 this.prepare.initialized = true;
+            }
+        },
+        /**
+         * User notification.
+         */
+        alertMessage: function() {
+            var errors = App.Data.errors;
+            App.Routers.MainRouter.prototype.prepare('errors', function() {
+                var view = App.Views.GeneratorView.create('CoreErrors', {
+                    mod: 'Main',
+                    model: errors
+                }, 'ContentErrorsCore'); // generation of view
+                Backbone.$('body').append(view.el);
+                errors.trigger('showAlertMessage'); // user notification
+            });
+        },
+        /**
+         * This method is invoked before app close
+         */
+        beforeUnloadApp: function() {
+            // any code may be written here
+        },
+        /**
+         * Navigates to previous page or #index in case when current page is start page.
+         */
+        goToBack: function() {
+            this.initialized ? window.history.back() : this.navigate('index', true);
+        },
+        afterInitialized: function() {
+            if( App.Data.devMode ) {
+                var customer = new App.Models.Customer();
+                customer.loadCustomer();
+                if (customer.get('email')) {
+                    App.Data.customer.set('email', customer.get('email'));
+                }
+
+                //set debug aliases
+                dbgSetAliases();
+            }
+
+            if (App.Data.reportBugNumber) {
+                $("<div id=report_bug_info class=''>REPORT</div>").appendTo("body");
+                $("#report_bug_info").on('click', function() {
+                    raven_send_report("Report_bug_" + App.Data.reportBugNumber, {}, function(event_id) {
+                        App.Data.errors.alert("An issue #" + App.Data.reportBugNumber + " report was send successfully, id = " + event_id);
+                        $("#report_bug_info").addClass('disabled');
+                    });
+                });
+            }
+        }
+    });
+
+    App.Routers.MainRouter = App.Routers.RootRouter.extend({
+        LOC_DINING_OPTION_NAME: '',
+        initialize: function() {
+            App.Routers.RootRouter.prototype.initialize.apply(this, arguments);
+
+            this.initLocDiningOptionName();
+
+             // remember state of application data (begin)
+            App.Data.stateAppData = {};
+            for (var i in App.Data) {
+                App.Data.stateAppData[i] = true;
+            }
+            // remember state of application data (end)
+
+            // start listen to state changes
+            this.once('initialized', this.runStateTracking.bind(this));
+
+            this.listenTo(App.Data.myorder, 'paymentResponse paymentFailed', function() {
+                App.Data.establishments && App.Data.establishments.removeSavedEstablishment();
+            }, this);
+
+            this.listenTo(App.Data.myorder, 'checkout_reorder_completed', function() {
+                if (App.Data.myorder.checkout.get('dining_option') == 'DINING_OPTION_SHIPPING') {
+                    App.Data.myorder.update_cart_totals({update_shipping_options: true});
+                }
+            }, this);
+        },
+        initLocDiningOptionName: function() {
+            this.LOC_DINING_OPTION_NAME = _.clone(_loc.DINING_OPTION_NAME);
+
+            // remove Delivery option if it is necessary
+            if (!App.Data.myorder.total.get('delivery').get('enable'))
+                delete this.LOC_DINING_OPTION_NAME.DINING_OPTION_DELIVERY;
+
+            if(App.Settings.editable_dining_options && App.Settings.editable_dining_options[0]) {
+                if (this.LOC_DINING_OPTION_NAME['DINING_OPTION_DRIVETHROUGH']) {
+                    this.LOC_DINING_OPTION_NAME.DINING_OPTION_DRIVETHROUGH = _.escape(App.Settings.editable_dining_options[1]);
+                }
+                if (this.LOC_DINING_OPTION_NAME['DINING_OPTION_OTHER']) {
+                    this.LOC_DINING_OPTION_NAME.DINING_OPTION_OTHER = _.escape(App.Settings.editable_dining_options[2]);
+                }
+            }
+
+            for (var dining_option in DINING_OPTION) {
+                if (!App.Settings.dining_options || App.Settings.dining_options.indexOf(DINING_OPTION[dining_option]) == -1) {
+                    delete this.LOC_DINING_OPTION_NAME[dining_option];
+                }
             }
         },
         pay: function() {
@@ -922,26 +980,6 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
             }
         },
         /**
-         * User notification.
-         */
-        alertMessage: function() {
-            var errors = App.Data.errors;
-            App.Routers.MainRouter.prototype.prepare('errors', function() {
-                var view = App.Views.GeneratorView.create('CoreErrors', {
-                    mod: 'Main',
-                    model: errors
-                }, 'ContentErrorsCore'); // generation of view
-                Backbone.$('body').append(view.el);
-                errors.trigger('showAlertMessage'); // user notification
-            });
-        },
-        /**
-         * This method is invoked before app close
-         */
-        beforeUnloadApp: function() {
-            // any code may be written here
-        },
-        /**
          * Returns unique id of app defined as '<hostname>.<skin>.<establishment>'
          */
         getUID: function() {
@@ -1050,34 +1088,6 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
                 });
                 stores.reset(_stores);
                 stores.request.resolve();
-            }
-        },
-        /**
-         * Navigates to previous page or #index in case when current page is start page.
-         */
-        goToBack: function() {
-            this.initialized ? window.history.back() : this.navigate('index', true);
-        },
-        afterInitialized: function() {
-            if( App.Data.devMode ) {
-                var customer = new App.Models.Customer();
-                customer.loadCustomer();
-                if (customer.get('email')) {
-                    App.Data.customer.set('email', customer.get('email'));
-                }
-
-                //set debug aliases
-                dbgSetAliases();
-            }
-
-            if (App.Data.reportBugNumber) {
-                $("<div id=report_bug_info class=''>REPORT</div>").appendTo("body");
-                $("#report_bug_info").on('click', function() {
-                    raven_send_report("Report_bug_" + App.Data.reportBugNumber, {}, function(event_id) {
-                        App.Data.errors.alert("An issue #" + App.Data.reportBugNumber + " report was send successfully, id = " + event_id);
-                        $("#report_bug_info").addClass('disabled');
-                    });
-                });
             }
         }
     });

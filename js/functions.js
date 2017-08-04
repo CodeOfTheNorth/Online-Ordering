@@ -191,7 +191,7 @@ function parse_get_params() {
         var get_var = __GET[i].split("=");
         $_GET[get_var[0]] = typeof(get_var[1]) == "undefined" ? "" : get_var[1];
     }
-    if (_.isObject(instance_params)) {
+    if (typeof instance_params == 'object') {
         $_GET = _.extend({}, instance_params, $_GET);
     }
     return $_GET;

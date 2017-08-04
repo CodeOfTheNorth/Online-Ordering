@@ -351,6 +351,7 @@
             });
 
             settings.on('change:skin', function() {
+                trace({for: 'start'}, 'app:init() change:skin ==>');
                 locale.dfd_load = locale.loadLanguagePack(); // load a language pack from backend
                 locale.dfd_load.done(function() {
                     _loc = locale.toJSON();
@@ -366,6 +367,7 @@
             });
 
             settings.on('changeSettingsSkin', function() {
+                trace({for: 'start'}, 'app:init() change:changeSettingsSkin ==>');
                 load_styles_and_scripts(); // load styles and scripts
                 var myorder = App.Data.myorder = new App.Collections.Myorders;
                 require([settings.get('skin') + '/router'], function(module) {
@@ -435,6 +437,7 @@
      */
     function loadApp() {
         require(['establishments', 'establishments_view'], function() {
+            trace({for: 'start'}, 'loadApp() establishments ==>');
             /**
              * App reported about error.
              */
@@ -452,6 +455,7 @@
             ests.on('loadStoresList', App.Routers.MainRouter.prototype.loadViewEstablishments.bind(window)); // status code = 1 (app should load view with stores list)
             ests.on('showError', showError); // status code = 2 (app reported about error)
             ests.on('changeEstablishment', function(estID) {
+                trace({for: 'start'}, 'loadApp() changeEstablishment ==>');
                 // Need stop execution if establishment id is same.
                 // It's important for restoring from session history.
                 if(settings.get('establishment') == estID) {
