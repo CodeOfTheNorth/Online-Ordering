@@ -116,6 +116,22 @@ define(["tips_view"], function(tips_view) {
                         });
                     }
 
+<<<<<<< HEAD
+=======
+                    //keep focus on value 'Other' if percent value is not selected
+                    var tipOptions = this.$('.percents')[0].children;
+                    var tipOptionOther = _.filter(tipOptions, function(option) {
+                        return option.label === _loc.TIPS_OTHER;
+                    });
+
+                    if (this.model.get('amount')) {
+                        //bug - if other option value matches percent value, other option becomes unavailable to be chosen
+                        this.model.set('sum', 0);
+                    } else {
+                        tipOptionOther[0].setAttribute('selected', true);
+                    }
+
+>>>>>>> 0c2fbef... WOMA-485 Tip type disappear once clicking on other areas of screen
                     this.model.trigger('change');
 
                     return value
