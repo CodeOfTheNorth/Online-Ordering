@@ -104,12 +104,6 @@ define(["tips_view"], function(tips_view) {
                     return total ? (sum / total * 100) : 0;
                 },
                 set: function(value) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> 528f13b... WOMA-485 Tip type disappear once clicking on other areas of screen
-=======
                     //keep focus on value 'Other' if percent value is not selected
                     var tipOption = this.$('.percents')[0].children;
 
@@ -120,8 +114,6 @@ define(["tips_view"], function(tips_view) {
                     if(this.model.get('amount')) {
                         this.model.set('sum', 0)
                     }
-
->>>>>>> 147c1a2... WOMA-485 Tip type disappear once clicking on other areas of screen
                     value = Number(value);
 
                     if (!value) {
@@ -134,33 +126,6 @@ define(["tips_view"], function(tips_view) {
                             percent: value
                         });
                     }
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 528f13b... WOMA-485 Tip type disappear once clicking on other areas of screen
-                    //keep focus on value 'Other' if percent value is not selected
-                    var tipOptions = this.$('.percents')[0].children;
-                    var tipOptionOther = _.filter(tipOptions, function(option) {
-                        return option.label === _loc.TIPS_OTHER;
-                    });
-
-<<<<<<< HEAD
-                    if (this.model.get('amount')) {
-=======
-                    if(this.model.get('amount')) {
->>>>>>> 528f13b... WOMA-485 Tip type disappear once clicking on other areas of screen
-                        //bug - if other option value matches percent value, other option becomes unavailable to be chosen
-                        this.model.set('sum', 0);
-                    } else {
-                        tipOptionOther[0].setAttribute('selected', true);
-                    }
-
-<<<<<<< HEAD
->>>>>>> 0c2fbef... WOMA-485 Tip type disappear once clicking on other areas of screen
-=======
->>>>>>> 528f13b... WOMA-485 Tip type disappear once clicking on other areas of screen
                     this.model.trigger('change');
 
                     return value
