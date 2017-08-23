@@ -121,13 +121,7 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
             this.afterInitialized();
         },
         isBlocked: function() {
-            var fragment = null;
-
-            if (App.Data.customer.isLocked()) {
-                fragment = 'profile_edit';
-            }
-
-            return fragment;
+            return null;
         },
         setTabTitle: function() {
             var title = _loc.TAB_TITLE_ONLINE_ORDERING;
@@ -318,11 +312,13 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
             this.initialized ? window.history.back() : this.navigate('index', true);
         },
         afterInitialized: function() {
-            if( App.Data.devMode ) {
-                var customer = new App.Models.Customer();
-                customer.loadCustomer();
-                if (customer.get('email')) {
-                    App.Data.customer.set('email', customer.get('email'));
+            if ( App.Data.devMode ) {
+                if (App.Models.Customer) {
+                    var customer = new App.Models.Customer();
+                    customer.loadCustomer();
+                    if (customer.get('email')) {
+                        App.Data.customer.set('email', customer.get('email'));
+                    }
                 }
 
                 //set debug aliases
@@ -367,6 +363,15 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
                     App.Data.myorder.update_cart_totals({update_shipping_options: true});
                 }
             }, this);
+        },
+        isBlocked: function() {
+            var fragment = null;
+
+            if (App.Data.customer.isLocked()) {
+                fragment = 'profile_edit';
+            }
+
+            return fragment;
         },
         initLocDiningOptionName: function() {
             this.LOC_DINING_OPTION_NAME = _.clone(_loc.DINING_OPTION_NAME);
