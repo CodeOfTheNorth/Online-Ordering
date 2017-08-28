@@ -33,7 +33,7 @@ define(["products_view"], function(products_view) {
             '.currency': 'text: _system_settings_currency_symbol, toggle: not(any(uom, hide_price))',
             '.uom': 'text: uom, toggle: uom',
             '.title': 'text: _product_name',
-            '.desc': 'text: _product_description, toggle: _product_description',
+            '.desc': 'html: _product_description, toggle: _product_description',
             '.timetable': 'toggle: _product_timetables',
             '.timetable span': 'text: _product_timetables',
             '.gift-card': 'classes: {hidden: not(all(_product_is_gift, _system_settings_online_orders))}',
