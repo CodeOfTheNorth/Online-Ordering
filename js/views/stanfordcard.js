@@ -109,7 +109,7 @@ define(["factory", "giftcard_view"], function(factory) {
             App.Views.FactoryView.prototype.initialize.apply(this, arguments);
         },
         bindings: {
-            ':el': 'toggle: all(plansLength, validated)',
+            ':el': 'toggle: all(plansLength)',
             '.list': 'collection: $collection'
         },
         computeds: {
@@ -118,9 +118,6 @@ define(["factory", "giftcard_view"], function(factory) {
                 get: function(plans) {
                     return plans.length;
                 }
-            },
-            validated : function() {
-                App.Data.stanfordCard.get('validated');
             }
         },
         itemView: App.Views.CoreStanfordCardView.CoreStanfordCardPlanView
