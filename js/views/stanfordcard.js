@@ -106,7 +106,7 @@ define(["factory", "giftcard_view"], function(factory) {
         name: 'stanfordcard',
         mod: 'plans',
         bindings: {
-            ':el': 'toggle: all(plansLength, validated)',
+            ':el': 'toggle: all(plansLength)',
             '.list': 'collection: $collection'
         },
         computeds: {
