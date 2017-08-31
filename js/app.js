@@ -370,6 +370,7 @@
                 trace({for: 'start'}, 'app:init() change:changeSettingsSkin ==>');
                 load_styles_and_scripts(); // load styles and scripts
                 var myorder = App.Data.myorder = new App.Collections.Myorders;
+
                 require([settings.get('skin') + '/router'], function(module) {
                     Backbone.$.when(locale.dfd_load, settings.loadCustomerSettings).then(function() {
                         App.Data.timetables = new App.Models.Timetable;
