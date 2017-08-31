@@ -271,3 +271,30 @@
         border: none;
     }
 }
+
+ul.products li.product {
+    position: relative;
+}
+
+.product_sold_out {
+    width: 120px;
+    height: 50px;
+    background-color: rgba(0,0,0,.8);
+    position: absolute;
+    left: 50%;
+    top: 40px;
+    transform: translate(-50%,-50%);
+    text-align: center;
+}
+
+.product_sold_out > span {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 100%;
+    color: white;
+    font-family: Times New Roman;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 1.2em;
+}

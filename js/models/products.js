@@ -327,7 +327,6 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
                 this.set('child_products', children.addJSON(children_json));
             }
 
-            this.checkStockAmount();
             return this;
         },
         /**
@@ -526,10 +525,6 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
             children.forEach(function(item) {
                 var image = true;
 
-                if (!inventory && item.product) {
-                    item.product.stock_amount = 999;
-                }
-
                 // copy image url from parent if it is not present for child product
                 if (item.product && !item.product.image) {
                     item.product.image = self.get('image');
@@ -670,14 +665,6 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
          */
         isParent: function() {
             return this.get('attribute_type') === 1;
-        },
-        /**
-         * Changes a `stock_amount` value on `999` if 'cannot_order_with_empty_inventory' is turned off in backend.
-         */
-        checkStockAmount: function() {
-            var inventory = App.Data.settings.get("settings_system").cannot_order_with_empty_inventory;
-            if (!inventory)
-                this.set('stock_amount', 999);
         },
         /**
          * Converts array with timetables to string. Originally server returns timetables as array of custom menus assigned to.
