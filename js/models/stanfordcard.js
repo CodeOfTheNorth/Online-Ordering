@@ -73,9 +73,20 @@ define(["backbone", "captcha"], function(Backbone) {
             is_enough_funds: false
         },
         initialize: function() {
-            this.listenTo(this, "change:balance", this.check_funds, this);
+            //check if stanford card used for payment of for it's reload
+            this.check_if_stanford_payment() ? this.init_balance_listening() : this.init_reload_mode();
+        },
+        check_if_stanford_payment: function() {
+            return App.Data.paymentMethods.get('selected') === 'stanford';
+        },
+        init_balance_listening: function() {
+            this.listenTo(this.model, "change:balance", this.check_funds, this);
             this.listenTo(App.Data.myorder.total, "change:grandTotal", this.check_funds, this);
             this.check_funds();
+        },
+        init_reload_mode: function () {
+            this.set({"is_enough_funds": true});
+            App.Data.stanfordCard.get('plans').trigger("change:selected");
         },
         check_funds: function() {
             this.set({"is_enough_funds": this.is_enough_funds()});
@@ -87,7 +98,7 @@ define(["backbone", "captcha"], function(Backbone) {
                 this.set('selected', false);
             }
             return is_enough;
-        },
+        }
     });
 
     /**
