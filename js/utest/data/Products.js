@@ -67,6 +67,7 @@ define([], function() {
             "gift_card_number": null,
             "checked_gift_cards": {},
             "stock_amount": 999,
+            "max_stock_amount": 999,
             "active": true,
             "created_date": 0,
             "timetables": null,

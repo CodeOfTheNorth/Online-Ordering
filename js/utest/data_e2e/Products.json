@@ -24,6 +24,7 @@
         "attribute_1_enable": true,
         "attribute_2_enable": true,
         "stock_amount": 10,
+        "max_stock_amount": 10,
         "max_price": null,
         "is_gift": false
     },

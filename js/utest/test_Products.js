@@ -110,9 +110,14 @@ define(['products', 'js/utest/data/Products', 'js/utest/data/Timetable', 'catego
         describe('addJSON(data)', function() {
             var model, host;
 
+            function generalBehavior() {
+                expect(model.checkStockAmount).toHaveBeenCalled();
+            }
+
             beforeEach(function() {
                 model = new App.Models.Product();
                 host = App.Data.settings.get('host');
+                spyOn(model, 'checkStockAmount');
                 spyOn(model, 'set').and.callFake(function() {
                     return App.Models.Product.prototype.set.apply(model, arguments);
                 });
@@ -122,42 +127,49 @@ define(['products', 'js/utest/data/Products', 'js/utest/data/Timetable', 'catego
                 var modelData = _.clone(data.addJSON_without_image);
                 model.addJSON(_.clone(modelData));
                 expect(model.set).toHaveBeenCalledWith(_.extend({}, modelData, {image: defInitialized.image}));
+                generalBehavior();
             });
 
             it('data.image exists', function() {
                 var modelData = _.clone(data.addJSON_with_image);
                 model.addJSON(_.clone(modelData));
                 expect(model.set).toHaveBeenCalledWith(modelData);
+                generalBehavior();
             });
 
             it('data.is_gift is false', function() {
                 var modelData = _.clone(data.addJSON_is_gift_false);
                 model.addJSON(_.clone(modelData));
                 expect(model.set).toHaveBeenCalledWith(modelData);
+                generalBehavior();
             });
 
             it('data.is_gift is true', function() {
                 var modelData = _.clone(data.addJSON_is_gift_true);
                 model.addJSON(_.clone(modelData));
                 expect(model.set).toHaveBeenCalledWith(_.extend({}, modelData, {sold_by_weight: defInitialized.sold_by_weight}));
+                generalBehavior();
             });
 
             it('data.created_date exists', function() {
                 var modelData = _.clone(data.addJSON_with_created_date);
                 model.addJSON(_.clone(modelData));
                 expect(model.set).toHaveBeenCalledWith(modelData);
+                generalBehavior();
             });
 
             it('data.created_date doesn\'t exist', function() {
                 var modelData = _.clone(data.addJSON_without_created_date);
                 model.addJSON(_.clone(modelData));
                 expect(model.set).toHaveBeenCalledWith(_.extend({}, modelData, {created_date: defInitialized.created_date}));
+                generalBehavior();
             });
 
             it('data.attribute_type isn\'t 1 (parent product), data.child_products doesn\'t exist', function() {
                 var modelData = _.clone(data.addJSON_without_created_date);
                 model.addJSON(_.clone(modelData));
                 expect(model.get('child_products')).toBe(model.defaults.child_products);
+                generalBehavior();
             });
 
             it('data.attribute_type is 1 (parent product), data.child_products is array', function() {
@@ -175,6 +187,7 @@ define(['products', 'js/utest/data/Products', 'js/utest/data/Timetable', 'catego
                 modelData.child_products[1].product.image = addHost(modelData.child_products[1].product.image);
                 expect(child1).toEqual(_.extend({}, defInitialized, modelData.child_products[0].product));
                 expect(child2).toEqual(_.extend({}, defInitialized, modelData.child_products[1].product));
+                generalBehavior();
             });
 
             it('data.attribute_type is 1 (parent product), data.child_products is an instance of App.Collections.ChildProducts', function() {
@@ -192,6 +205,7 @@ define(['products', 'js/utest/data/Products', 'js/utest/data/Timetable', 'catego
                 expect(child_products instanceof App.Collections.ChildProducts).toBe(true);
                 expect(child1).toEqual(_.extend({}, defInitialized, modelData.child_products[0].product));
                 expect(child2).toEqual(_.extend({}, defInitialized, modelData.child_products[1].product));
+                generalBehavior();
             });
 
             it('data.is_combo is true, data.product_sets is array', function() {
@@ -1123,6 +1137,35 @@ define(['products', 'js/utest/data/Products', 'js/utest/data/Timetable', 'catego
             it('`attribute_type` is 2 (child product)', function() {
                 model.set('attribute_type', 2);
                 expect(model.isParent()).toBe(false);
+            });
+        });
+
+        describe('checkStockAmount()', function() {
+            var model, inventory;
+
+            beforeEach(function() {
+                model = new App.Models.Product();
+                inventory = App.Data.settings.get("settings_system").cannot_order_with_empty_inventory;
+            });
+
+            afterEach(function() {
+                App.Data.settings.get("settings_system").cannot_order_with_empty_inventory = inventory;
+            });
+
+            it('system_settings.cannot_order_with_empty_inventory is false', function() {
+                App.Data.settings.get("settings_system").cannot_order_with_empty_inventory = false;
+                model.checkStockAmount();
+
+                expect(model.get('stock_amount')).toBe(999);
+            });
+
+            it('system_settings.cannot_order_with_empty_inventory is true', function() {
+                var stockAmount = 5;
+                App.Data.settings.get("settings_system").cannot_order_with_empty_inventory = true;
+                model.set('stock_amount', stockAmount);
+                model.checkStockAmount();
+
+                expect(model.get('stock_amount')).toBe(stockAmount);
             });
         });
 
