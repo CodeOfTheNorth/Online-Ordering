@@ -59,6 +59,7 @@ define(["backbone", "factory"], function(Backbone) {
             var product = this.model.get_product(),
                 quantity = this.model.get('quantity'),
                 stock_amount = product.get('stock_amount'),
+                max_stock_amount = product.get('max_stock_amount'),
                 is_gift = product.get('is_gift'),
                 disallowEmptyInventory = App.Data.settings.get('settings_system').cannot_order_with_empty_inventory;
 
@@ -85,7 +86,7 @@ define(["backbone", "factory"], function(Backbone) {
                 if (this.model.get('quantity') > 1) {
                     this.$('.decrease').removeClass('disabled');
                 }
-                if (this.model.get('quantity') < stock_amount) {
+                if (this.model.get('quantity') < max_stock_amount) {
                     this.$('.increase').removeClass('disabled');
                 }
             }
@@ -94,8 +95,8 @@ define(["backbone", "factory"], function(Backbone) {
             if($(event.target).hasClass('disabled'))
                 return;
             var q = this.model.get('quantity'),
-                stock_amount = this.model.get_product().get('stock_amount');
-            this.model.set('quantity', ++q <= stock_amount ? q : stock_amount);
+                max_stock_amount = this.model.get_product().get('max_stock_amount');
+            this.model.set('quantity', ++q <= max_stock_amount ? q : max_stock_amount);
         },
         decrease: function(event) {
             if($(event.target).hasClass('disabled'))

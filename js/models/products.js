@@ -193,6 +193,12 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
              * @type {number}
              */
             stock_amount: 999,
+            /*
+             * Max product amount, equal to stock_amount or 999,
+             * depending on flag cannot_order_with_empty_inventory
+             * @type {number}
+             */
+            max_stock_amount: 999,
             /**
              * Product is active or not.
              * @type {boolean}
@@ -527,7 +533,7 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
                 var image = true;
 
                 if (!inventory && item.product) {
-                    item.product.stock_amount = 999;
+                    item.product.max_stock_amount = 999;
                 }
 
                 // copy image url from parent if it is not present for child product
@@ -672,12 +678,12 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
             return this.get('attribute_type') === 1;
         },
         /**
-         * Changes a `stock_amount` value on `999` if 'cannot_order_with_empty_inventory' is turned off in backend.
+         * Set a `max_stock_amount` value on `999` if 'cannot_order_with_empty_inventory' is turned off in backend.
          */
         checkStockAmount: function() {
             var inventory = App.Data.settings.get("settings_system").cannot_order_with_empty_inventory;
-            if (!inventory)
-                this.set('stock_amount', 999);
+            var stock_amount = this.get('stock_amount');
+            this.set('max_stock_amount', (!inventory && stock_amount > 0) ? stock_amount : 999 );
         },
         /**
          * Converts array with timetables to string. Originally server returns timetables as array of custom menus assigned to.

@@ -256,6 +256,7 @@
         'VIEW_PAST_ORDERS': 'View Past Orders',
         'PAST_ORDER': 'Past Order',
         'PROFILE_LOYALTY_NUMBER': 'Loyalty Number',
-        'PROFILE_ADDRESS_LINE1': 'Address'
+        'PROFILE_ADDRESS_LINE1': 'Address',
+        'PRODUCT_SOLD_OUT': 'Sold out'
     } // end of locale
 }); // end of module

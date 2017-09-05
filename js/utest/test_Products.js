@@ -749,10 +749,11 @@ define(['products', 'js/utest/data/Products', 'js/utest/data/Timetable', 'catego
             });
 
             it('`children` is array, `system_settings.cannot_order_with_empty_inventory` is false', function() {
+                var stockAmount = childrenArray[0].product.stock_amount;
                 App.Settings.cannot_order_with_empty_inventory = false;
                 model.set_child_products(childrenArray);
                 successfulExpect();
-                expect(childrenArray[0].product.stock_amount).toBe(999);
+                expect(childrenArray[0].product.stock_amount).toBe(stockAmount);
             });
 
             it('`children` is array, `system_settings.cannot_order_with_empty_inventory` is true', function() {

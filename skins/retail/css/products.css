@@ -37,6 +37,7 @@
     margin: 0 22px 37px;
     vertical-align: top;
     cursor: pointer;
+    position: relative;
 }
 
 .products-view .product.list-none {
@@ -185,4 +186,31 @@
     .product_info .images {
         height: 380px;
     }
+}
+
+.products-view .products ul li{
+    position: relative;
+}
+
+.product_sold_out {
+    width: 120px;
+    height: 50px;
+    background-color: rgba(0,0,0,.5);
+    position: absolute;
+    left: 50%;
+    top: 100px;
+    transform: translate(-50%,-50%);
+    text-align: center;
+}
+
+.product_sold_out > span {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 100%;
+    color: white;
+    font-family: Times New Roman;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 1.2em;
 }

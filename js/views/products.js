@@ -35,8 +35,17 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
         },
         bindings: {
             ':el': 'classes: {hide: not(active)}',
-            '.product_list_item': "attr:{'data-id':compositeId}"
+            '.product_list_item': "attr:{'data-id':compositeId}",
+            '.product_sold_out': "classes: {hide: non_empty_amount}"
         },
+        computeds: {
+            non_empty_amount: {
+                deps: ['stock_amount'],
+                get: function(stock_amount) {
+                    return stock_amount > 0;
+                }
+            }
+         },
         render: function() {
             var model = this.model.toJSON();
             model.hide_images = App.Data.settings.get('settings_system').hide_images;

@@ -257,6 +257,7 @@
             'Items'
         ],
         'PREVIOUS_ORDER': 'Previous Order',
-        'PROFILE_LOYALTY_PROGRAM_INFO': 'Add your Loyalty Number here to redeem points on purchases and view your Loyalty Points status!'
+        'PROFILE_LOYALTY_PROGRAM_INFO': 'Add your Loyalty Number here to redeem points on purchases and view your Loyalty Points status!',
+        'PRODUCT_SOLD_OUT': 'Sold out'
     } // end of locale
 }); // end of module

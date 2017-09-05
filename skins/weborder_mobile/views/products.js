@@ -138,7 +138,16 @@ define(["products_view"], function(products_view) {
             ':el': 'toggle: active',
             '.title': 'text: name', //'text: format("$1 sort $2", name, sort)',
             '.desc': 'html: description, toggle: not(_system_settings_hide_products_description)',
-            '.price': 'text: select(sold_by_weight, weightFormat(price), currencyFormat(price))'
+            '.price': 'text: select(sold_by_weight, weightFormat(price), currencyFormat(price))',
+            '.product_sold_out': "classes: {hide: non_empty_amount}"
+        },
+        computeds: {
+            non_empty_amount: {
+                deps: ['stock_amount'],
+                get: function(stock_amount) {
+                    return stock_amount > 0;
+                }
+            }
         },
         events: {
             "click": "showModifiers"
