@@ -340,6 +340,7 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
     App.Routers.MainRouter = App.Routers.RootRouter.extend({
         LOC_DINING_OPTION_NAME: '',
         initialize: function() {
+            var self = this;
             App.Routers.RootRouter.prototype.initialize.apply(this, arguments);
 
             this.initLocDiningOptionName();
@@ -352,7 +353,14 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
             // remember state of application data (end)
 
             // start listen to state changes
-            this.once('initialized', this.runStateTracking.bind(this));
+            this.once('initialized', function() {
+                self.runStateTracking.bind(this);
+                // notify parent window if it exists
+                var parent = window.opener || (window.parent != window ? window.parent : false);
+                if (parent) {
+                    parent.postMessage('{"isDirectoryInitialized": true}', '*');
+                }
+            });
 
             this.listenTo(App.Data.myorder, 'paymentResponse paymentFailed', function() {
                 App.Data.establishments && App.Data.establishments.removeSavedEstablishment();
