@@ -2146,6 +2146,9 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                             myorder.update_cart_totals();//get discounts & totals w/o discount_code
                             break;
                         case 'INCORRECT_PRODUCT_PRICE':
+                            if (checkout.discount_code && is_apply_discount) {
+                                myorder.checkout.set('last_discount_code', checkout.discount_code);
+                            }
                             var response = data.responseJSON;
                             reportErrorFrm(MSG.ERROR_PRICE_CHANGED.replace('%product', response.name).replace('%price', response.price));
                             myorder.price_changed(response);
