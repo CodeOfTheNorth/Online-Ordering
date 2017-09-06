@@ -1,13 +1,19 @@
 <script type="text/template" id="stanfordcard_main-template">
     <ul class="stanfordcard card font-size2 <% if(isFirefox) { %>firefox<% } %>">
         <li class="required input-control">
-            <input type="text" placeholder="<%= _lp.GIFTCARD_NUMBER %>" class="number number-input ios-safari-caret input-colors" value="<%= cardNumber %>" min="0">
+            <input type="text" placeholder="<%= _lp.GIFTCARD_NUMBER %>"
+                   class="number number-input ios-safari-caret input-colors"
+                   value="<%= cardNumber %>"
+                   min="0">
             <label class="ctrl-wrapper cancel-input"><input type="button" class="ctrl"></label>
         </li>
     </ul>
     <ul class="stanfordcard card font-size2 <% if(isFirefox) { %>firefox<% } %>">
         <li class="input-control">
-            <input type="text" placeholder="<%= _lp.STANFORD_ACCOUNT_CODE %>" class="number account_code_input ios-safari-caret input-colors" min="0">
+            <input type="text"
+                   placeholder="<%= _lp.STANFORD_ACCOUNT_CODE %>"
+                   class="number account_code_input ios-safari-caret input-colors"
+                   min="0">
         </li>
     </ul>
     <div class="account_code_info font-size2">
@@ -45,9 +51,30 @@
 <script type="text/template" id="stanfordcard_reload-template">
     <ul class="stanfordcard card font-size2 <% if(isFirefox) { %>firefox<% } %>">
         <li class="required input-control">
-            <input type="text" placeholder="<%= _lp.STANFORD_CARD_NUMBER %>" class="number number-input ios-safari-caret input-colors" value="<%= cardNumber %>" min="0">
+            <input type="text" placeholder="<%= _lp.STANFORD_CARD_NUMBER %>"
+                   class="number number-input ios-safari-caret input-colors"
+                   value="<%= cardNumber %>"
+                   min="0">
+            <label class="ctrl-wrapper cancel-input"><input type="button" class="ctrl"></label>
+        </li>
+        <li class="input-control">
+            <input type="text"
+                   placeholder="<%= _lp.STANFORD_ACCOUNT_CODE %>"
+                   class="number-input account_code_input ios-safari-caret input-colors"
+                   min="0">
             <label class="ctrl-wrapper cancel-input"><input type="button" class="ctrl"></label>
         </li>
     </ul>
     <div class="recaptcha_view"></div>
+</script>
+
+<script type="text/template" id="account_code_info-template">
+    <div class="account_code_info font-size2">
+        <div><%= _lp.STANFORD_ACCOUNT_CODE_INFO %></div>
+        <div>
+           <a href="<%= MSG.STANFORD_ACCOUNT_CODE_LINK %>" class="primary-text link" target="_blank">
+               <%= MSG.STANFORD_ACCOUNT_CODE_LINK %>
+           </a>
+        </div>
+    </div>
 </script>
