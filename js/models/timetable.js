@@ -524,16 +524,16 @@ define(["backbone"], function(Backbone) {
          *     ...
          * }
          * ```
-         * - {} or [] - always open;
+         * - {};
          * - FALSE - always closed;
-         * - NULL - timetables is empty.
+         * - TRUE - timetables is empty. - always open
          */
         _get_timetable: function(current_date) {
             var table = this.get('timetables'),
                 parse, from_date, to_date, cur_date;
 
             if ((Array.isArray(table) && table.length == 0) || empty_object(table)) { // check object (empty or not empty)
-                return null;
+                return true;
             }
 
             for (var i = 0, j = table.length; i < j; i++) {
@@ -598,16 +598,12 @@ define(["backbone"], function(Backbone) {
             format_output = format_output === 1 ? 1 : 0;
             var timetable = this._get_timetable(new Date(current_date.getFullYear(), current_date.getMonth(), current_date.getDate())); // get timetable on a particular day
 
-            if (this.isHoliday(current_date)) {
-                return false;
+            if (timetable === true) {
+                return true; //always open
             }
 
-            if (timetable === false || timetable === null) {
-                return timetable;
-            }
-
-            if (empty_object(timetable)) { // check object (empty or not empty)
-                return true;
+            if (this.isHoliday(current_date) || timetable === false || empty_object(timetable)) {
+                return false; //always closed
             }
 
             var current_day_timetable = timetable[weekDays[current_date.getDay()]],
@@ -818,8 +814,10 @@ define(["backbone"], function(Backbone) {
             var hours = this.get_working_hours(day),
                 result = false;
 
-            if (!(hours instanceof Array) || !hours.length) {
-                return result;
+            if (hours === true) {
+                return true; //all the day case
+            } else if (!(hours instanceof Array) || !hours.length) {
+                return result; //closed
             }
 
             var now = this.base().getTime(),
