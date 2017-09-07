@@ -515,7 +515,13 @@ define(['js/utest/data/Timetable', 'timetable'], function(timetables) {
                 timetables: [],
                 server_time: 0,
                 holidays: [],
-                hours: null,
+                hours: [{"weekDay":"wednesday","hours":true},
+                        {"weekDay":"thursday","hours":true},
+                        {"weekDay":"friday","hours":true},
+                        {"weekDay":"saturday","hours":true},
+                        {"weekDay":"sunday","hours":true},
+                        {"weekDay":"monday","hours":true},
+                        {"weekDay":"tuesday","hours":true}],
                 time_format: App.Settings.time_format
             };
         });
@@ -578,7 +584,7 @@ define(['js/utest/data/Timetable', 'timetable'], function(timetables) {
                 date5 = new Date(2014, 3, 6); // April 6 sunday
 
             it('empty timetables', function() {
-                expect(model._get_timetable(date)).toBeNull();
+                expect(model._get_timetable(date)).toBe(true);
             });
 
             it('closed', function() {
@@ -614,7 +620,7 @@ define(['js/utest/data/Timetable', 'timetable'], function(timetables) {
                 var timetable6 = deepClone(timetables.timetable6);
 
             it('empty timetables', function() {
-                expect(model._get_timetable(date)).toBeNull();
+                expect(model._get_timetable(date)).toBe(true);
             });
 
             it('closed', function() {
@@ -710,19 +716,14 @@ define(['js/utest/data/Timetable', 'timetable'], function(timetables) {
                 date7 = new Date(2014, 3, 9); // April 9 wednesday
 
             it('empty timetables', function() {
-                expect(model.get_working_hours(date)).toBeNull();
+                expect(model.get_working_hours(date)).toBe(true);
             });
 
             it('closed', function() {
                 model.set('timetables', timetable);
                 expect(model.get_working_hours(date)).toBe(false);
-            });
-
-            it('always open', function() {
-                model.set('timetables', timetable);
-                expect(model.get_working_hours(date2)).toBe(true);
-
-                expect(model.get_working_hours(date3)).toBe(true);
+                expect(model.get_working_hours(date2)).toBe(false);
+                expect(model.get_working_hours(date3)).toBe(false);
             });
 
             it('timetable is defined but day undefined', function() {
@@ -759,11 +760,10 @@ define(['js/utest/data/Timetable', 'timetable'], function(timetables) {
                 expect(model.get_working_hours(date7, 1)).toEqual(timetable[2].timetable_data.wednesday);
             });
 
-            it('always open, but the Holiday in that day', function() {
+            it('open, but the Holiday in that day', function() {
                 model.set('timetables', timetable);
-                model.set('holidays', [{date:"Mar, 17", name:"H1"}, {date:"Feb, 29", name:"H2"}, {date:"Jan, 1", name:""}]);
-                expect(model.get_working_hours(date2)).toBe(false);
-                expect(model.get_working_hours(date3)).toBe(true);
+                model.set('holidays', [{date:"Apr, 8", name:"H1"}, {date:"Feb, 29", name:"H2"}, {date:"Jan, 1", name:""}]);
+                expect(model.get_working_hours(date6)).toBe(false);
             });
 
             it('closed and no Holiday in that day', function() {
@@ -885,7 +885,7 @@ define(['js/utest/data/Timetable', 'timetable'], function(timetables) {
         describe('getCurDayHours()', function() {
             it('`hours` is set', function() {
                 model.set('timetables', timetable);
-                expect(model.getCurDayHours()).toEqual(model.get('hours'));
+                expect(model.getCurDayHours()).toEqual(model.get('hours')[0]);
             });
 
             it('`hours` is not array or empty array', function() {
