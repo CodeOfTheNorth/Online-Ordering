@@ -55,7 +55,7 @@ define(["backbone", "captcha"], function(Backbone) {
          * @prop {string} defaults.name - the plan name.
          * @default ''.
          *
-         * @prop {string} defaults.type - the palan type (may be Dollars or Meals).
+         * @prop {string} defaults.type - the plan type (may be Dollars or Meals).
          * @default 'D'.
          *
          * @prop {number} defaults.balance - the plan balance.
@@ -73,22 +73,29 @@ define(["backbone", "captcha"], function(Backbone) {
             is_enough_funds: false
         },
         initialize: function() {
-            this.listenTo(this, "change:balance", this.check_funds, this);
+            this.listenTo(this.model, "change:balance", this.check_funds, this);
             this.listenTo(App.Data.myorder.total, "change:grandTotal", this.check_funds, this);
             this.check_funds();
         },
+        check_if_stanford_payment: function() {
+            return App.Data.paymentMethods && App.Data.paymentMethods.get('selected') === 'stanford';
+        },
         check_funds: function() {
             this.set({"is_enough_funds": this.is_enough_funds()});
-            App.Data.stanfordCard.get('plans').trigger("change:selected");
+            App.Data.stanfordCard && App.Data.stanfordCard.get('plans').trigger("change:selected");
         },
         is_enough_funds: function() {
-            var is_enough = parseFloat(round_money(this.get("balance"))) >= parseFloat(App.Data.myorder.total.get_grand());
+            var is_enough;
+            is_enough = this.check_if_stanford_payment() ?
+               parseFloat(round_money(this.get("balance"))) >= parseFloat(App.Data.myorder.total.get_grand()) : true;
+
             if (!is_enough) {
                 this.set('selected', false);
             }
             return is_enough;
-        },
+        }
     });
+
 
     /**
      * @class
