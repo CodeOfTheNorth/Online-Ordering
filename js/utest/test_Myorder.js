@@ -2270,7 +2270,8 @@ define(['js/utest/data/Myorder', 'js/utest/data/Products', 'myorder', 'products'
                 var ini_length = model.length;
                 model.price_changed({
                     name: 'Pizza',
-                    price: 10
+                    price: 10,
+                    product_id: 5
                 });
                 expect(product.get('price')).toBe(10);
                 expect(model.length).toBe(ini_length - 1);
