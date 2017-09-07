@@ -10,6 +10,7 @@ define(['stanfordcard', 'js/utest/data/StanfordCard'], function(stanfordcard, da
                     return data.TOTAL_AMOUNT;
                 }
             };
+            App.Data.paymentMethods = new Backbone.Model({selected: 'stanford'});
             App.Data.stanfordCard = new Backbone.Model({plans: new Backbone.Collection()});
             plan = new App.Models.StanfordCardPlan();
         });
@@ -18,9 +19,9 @@ define(['stanfordcard', 'js/utest/data/StanfordCard'], function(stanfordcard, da
             expect(App.Models.StanfordCardPlan).toBeDefined();
         });
 
-        // it('Create model', function() {
-        //     expect(plan.toJSON()).toEqual(data.PLAN_DEFAULT);
-        // });
+        it('Create model', function() {
+            expect(plan.toJSON()).toEqual(data.PLAN_DEFAULT);
+        });
     });
 
     describe("App.Collections.StanfordCardPlans", function() {
@@ -88,13 +89,13 @@ define(['stanfordcard', 'js/utest/data/StanfordCard'], function(stanfordcard, da
 
         describe('initialize()', function() {
             beforeEach(function() {
-                //spyOn(card, 'get').and.callFake(function() {
-                //    return Backbone.Model.prototype.get.apply(card, arguments);
-                //});
+                spyOn(card, 'get').and.callFake(function() {
+                   return Backbone.Model.prototype.get.apply(card, arguments);
+                });
 
-                //spyOn(card, 'set').and.callFake(function() {
-                //    return Backbone.Model.prototype.set.apply(card, arguments);
-                //});
+                spyOn(card, 'set').and.callFake(function() {
+                   return Backbone.Model.prototype.set.apply(card, arguments);
+                });
                 spyOn(card, 'listenTo');
             });
 
@@ -132,7 +133,7 @@ define(['stanfordcard', 'js/utest/data/StanfordCard'], function(stanfordcard, da
                 //commonExpectations(plans);
                 expect(plans instanceof App.Collections.StanfordCardPlans).toBe(true);
                 expect(plans.at(0).toJSON()).toEqual(plansData[0]);
-                // expect(plans.at(1).toJSON()).toEqual(plansData[1]);
+                expect(plans.at(1).toJSON()).toEqual(plansData[1]);
             });
 
             it('setting `suppress_student_identifier_popup` is true', function() {
@@ -232,6 +233,7 @@ define(['stanfordcard', 'js/utest/data/StanfordCard'], function(stanfordcard, da
             var ajax, ajaxData, ajaxOpts, result;
 
             beforeEach(function() {
+                App.Data.paymentMethods = new Backbone.Model({selected: 'stanford'});
                 card = new App.Models.StanfordCard(data.CARD_1);
                 ajax = Backbone.$.Deferred();
                 result = Backbone.$.Deferred();
@@ -430,11 +432,11 @@ define(['stanfordcard', 'js/utest/data/StanfordCard'], function(stanfordcard, da
                 expect(plans.set).not.toHaveBeenCalled();
             });
 
-            // it('data is an array', function() {
-            //     card.updatePlans([data.PLAN_1, data.PLAN_2]);
-            //     expect(card.get('plans').at(0).toJSON()).toEqual(data.PLAN_1);
-            //     expect(card.get('plans').at(1).toJSON()).toEqual(data.PLAN_2);
-            // });
+            it('data is an array', function() {
+                card.updatePlans([data.PLAN_1, data.PLAN_2]);
+                expect(card.get('plans').at(0).toJSON()).toEqual(data.PLAN_1);
+                expect(card.get('plans').at(1).toJSON()).toEqual(data.PLAN_2);
+            });
         });
 
         describe('doNotAskStudentStatus(model, value)', function() {
@@ -506,7 +508,7 @@ define(['stanfordcard', 'js/utest/data/StanfordCard'], function(stanfordcard, da
                     planId: null,
                     validated: true,
                     needToAskStudentStatus: false
-                }
+                };
                 card.restoreCard();
 
                 expect(window.getData).toHaveBeenCalledWith('stanfordcard');
@@ -523,7 +525,7 @@ define(['stanfordcard', 'js/utest/data/StanfordCard'], function(stanfordcard, da
                     planId: null,
                     validated: true,
                     needToAskStudentStatus: false
-                }
+                };
                 card.restoreCard();
 
                 expect(window.getData).toHaveBeenCalledWith('stanfordcard');

@@ -42,7 +42,7 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
             non_empty_amount: {
                 deps: ['stock_amount'],
                 get: function(stock_amount) {
-                    return stock_amount > 0;
+                    return true; // stock_amount > 0; temporary solution
                 }
             }
          },
