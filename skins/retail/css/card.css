@@ -16,23 +16,33 @@
 
 .gift-card-reload .card-box {
     width: 300px;
-    height: 160px;
+    min-height: 160px;
     margin-top: 20px;
     border-width: 1px;
     border-style: solid;
     border-radius: 6px;
     position: relative;
+    padding-bottom: 15px;
 }
 
 .gift-card-reload .card-number-box {
-    padding-left: 11px;
-    position: absolute;
+    padding: 11px 75px 0px 11px;
     bottom: 17px;
+}
+
+.gift-card-reload .ctrl-box {
+    padding-left: 4px;
+}
+
+.gift-card-reload .ctrl-box .ctrl-input {
+    box-sizing: border-box;
+    margin: 0;
 }
 
 .gift-card-reload .card-label {
     padding-left: 20px;
     font-size: 10px;
+    margin-bottom: 4px;
 }
 
 .gift-card-reload .card-number {
