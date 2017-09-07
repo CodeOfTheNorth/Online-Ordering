@@ -2213,7 +2213,8 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
         price_changed: function(data) {
             // clear item(s) inside order
             var products = App.Data.myorder.filter( function(el) {
-                return (el.get_product().get('name') == data.name) ? el : null;
+                var product = el.get_product();
+                return (product.get('name') == data.name && product.get('id') == data.product_id) ? el : null;
             }).map( function(item_found) {
                 App.Data.myorder.remove(item_found);
                 var product = item_found.get_product();
