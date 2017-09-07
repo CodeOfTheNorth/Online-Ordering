@@ -563,7 +563,8 @@ function loadCSS(name, loadModelCSS) {
         App.Data.errors.alert(errorMsg, true, true); // user notification
     };
     var cache = false,
-        version = is_minimized_version ? '?ver=' + autoVersion : '';
+        version = is_minimized_version ? '?ver=' + autoVersion : '',
+        path_name = name + (loadModelCSS.hasExtention ? '' : '.css') + version;
 
     if(loadCSS.cache[id] instanceof $) {
         //trace("name =", name, "was cached");
@@ -571,7 +572,7 @@ function loadCSS(name, loadModelCSS) {
         elem = loadCSS.cache[id];
     } else {
         //trace("name =", name, "starting load...");
-        elem = loadCSS.cache[id] = $('<link rel="stylesheet" href="' + name + (loadModelCSS.hasExtention ? '' : '.css') + version + '" type="text/css" />');
+        elem = loadCSS.cache[id] = $('<link rel="stylesheet" href="' + path_name + '" type="text/css" />');
         // bug #18285 - no timeout for app assets
         var timer = window.setTimeout(error, App.Data.settings.get('timeout'));
 
@@ -585,7 +586,7 @@ function loadCSS(name, loadModelCSS) {
         });
     }
 
-    if($('link[href="' + name + '.css"]').length === 0) {
+    if($('link[href="' + path_name + '"]').length === 0) {
         $('head').append(elem);
         if (cache) {
             //trace(name, "got from cache, detecting... ");
