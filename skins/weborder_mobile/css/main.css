@@ -520,9 +520,7 @@ select::-ms-expand { /*Removes default IE style*/
     content: '\f05a';
     font-family: "FontAwesome";
     font-size: 3em;
-    position: absolute;
-    left: 0.3em;
-    top: 0.2em;
+    color: rgb(155, 157, 159);
 }
 
 #popup_content[id].warning::before {
@@ -530,7 +528,7 @@ select::-ms-expand { /*Removes default IE style*/
 }
 
 .info #popup_message[id], .warning #popup_message[id] {
-    padding-left: 4em;
+    color: rgb(95,98,102);
 }
 
 #popup_message[id] {
@@ -547,6 +545,13 @@ select::-ms-expand { /*Removes default IE style*/
 }
 
 #popup_panel[id] > input[type='button'] {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgb(129,129,129)), color-stop(1, rgb(95,98,102)));
+    background: -o-linear-gradient(bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
+    background: -moz-linear-gradient(bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
+    background: -webkit-linear-gradient(bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
+    background: -ms-linear-gradient(bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
+    background: linear-gradient(to bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
+    color: rgb(255,255,255);
     min-width: 6em;
     border-width: 1px;
     border-style: solid;
