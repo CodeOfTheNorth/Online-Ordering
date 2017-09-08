@@ -145,7 +145,7 @@ define(["products_view"], function(products_view) {
             non_empty_amount: {
                 deps: ['stock_amount'],
                 get: function(stock_amount) {
-                    return stock_amount > 0;
+                    return true; // stock_amount > 0; temporary solution
                 }
             }
         },
