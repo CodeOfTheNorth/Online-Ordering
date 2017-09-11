@@ -42,7 +42,7 @@ require(['app', 'js/utest/data/Settings'], function(app, settings_data) {
     App.unitTest = true;
     App.dbgStackTrace = [];
 
-    require(['cssua', 'deep_diff', 'functions', 'errors', 'backbone_epoxy', 'tests_list', 'e2e_list', 'settings', 'tax', 'locale', 'about'], function() { //, 'e2e_list', 'settings', 'tax', 'main_router', 'locale'
+    require(['cssua', 'deep_diff', 'init', 'functions', 'errors', 'backbone_epoxy', 'tests_list', 'e2e_list', 'settings', 'tax', 'locale', 'about'], function() { //, 'e2e_list', 'settings', 'tax', 'main_router', 'locale'
 
         console.log("mainAutoTest: step #2 ==>");
         trace_init(true);

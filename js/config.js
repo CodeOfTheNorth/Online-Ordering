@@ -109,6 +109,11 @@ define({
         underscore: "js/libs/underscore",
         /**
          * @type {string}
+         * @description The actual path of [functions]{@link module:init} module.
+         */
+        init : "js/init",
+        /**
+         * @type {string}
          * @description The actual path of [functions]{@link module:functions} module.
          */
         functions : "js/functions",
