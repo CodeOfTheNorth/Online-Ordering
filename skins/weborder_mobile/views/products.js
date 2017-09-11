@@ -145,7 +145,7 @@ define(["products_view"], function(products_view) {
             non_empty_amount: {
                 deps: ['stock_amount'],
                 get: function(stock_amount) {
-                    return true; // stock_amount > 0; temporary solution
+                    return App.Settings.cannot_order_with_empty_inventory ? stock_amount > 0 : true;
                 }
             }
         },
@@ -153,6 +153,9 @@ define(["products_view"], function(products_view) {
             "click": "showModifiers"
         },
         showModifiers: function(e) {
+            if (App.Settings.cannot_order_with_empty_inventory && this.model.get('stock_amount') < 0 ) {
+                return;
+            }
             e.preventDefault();
             var id_category = this.model.get('id_category'),
                 id = this.model.get('id');

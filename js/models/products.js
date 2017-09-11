@@ -820,6 +820,13 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
          * @params {Object} attrs - Object literal containing {@link App.Models.Product} attributes.
          * @returns {string} Unique id of model.
          */
+        comparator: function(product) {
+            var sort = product.get('sort');
+            if (!App.Settings.cannot_order_with_empty_inventory) {
+                return sort;
+            }
+            return product.get('stock_amount') > 0 ? sort - 10000000 : sort;
+        },
         modelId: function(attrs) {
             return attrs['compositeId'] || App.Collections.CollectionSort.prototype.modelId.apply(this, arguments);
         },

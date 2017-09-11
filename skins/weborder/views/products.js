@@ -25,6 +25,9 @@ define(['products_view'], function(products_view) {
 
     var ProductListItemView = App.Views.CoreProductView.CoreProductListItemView.extend({
         showModifiers: function(event, options) {
+            if (App.Settings.cannot_order_with_empty_inventory && this.model.get('stock_amount') < 0 ) {
+                return;
+            }
             var self = this,
                 isStanfordItem = App.Data.is_stanford_mode && this.model.get('is_gift'),
                 is_combo = this.model.isComboProduct(),
