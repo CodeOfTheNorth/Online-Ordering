@@ -86,28 +86,9 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
         render: function() {
             var self = this;
             App.Views.ListView.prototype.render.apply(this, arguments);
-            this.collection.comparator = 'sort';
-            var sorted = this.collection.sort();
-
-            if (!App.Settings.cannot_order_with_empty_inventory) {
-                sorted.each( function(item) {
-                    self.addItem(item);
-                });
-            } else {
-                var positive = sorted.filter(function(el) {
-                    return (el.get('stock_amount') > 0) ? el : null;
-                });
-                var non_positive = sorted.filter(function(el) {
-                    return (el.get('stock_amount') <= 0) ? el : null;
-                });
-
-                _.each(positive, function(el) {
-                    self.addItem(el);
-                });
-                _.each(non_positive, function(el) {
-                    self.addItem(el);
-                });
-            }
+            this.collection.each( function(item) {
+                self.addItem(item);
+            });
             if (!this.collection.length) {
                 var view = self.createView('Product', {
                     el: $('<li class="product list-none"></li>'),
@@ -134,7 +115,10 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
             }, 'product_' + root_cache_id + "_" + model.get("compositeId"));
             noDesc && view.$el.addClass('short');
             noImg && view.$el.addClass('no-image');
-            App.Views.ListView.prototype.addItem.call(this, view, this.$('.products'));
+            var sort = model.get('sort');
+            sort = (App.Settings.cannot_order_with_empty_inventory && model.get('stock_amount') > 0) ?
+                    sort - 1000000 : sort;
+            App.Views.ListView.prototype.addItem.call(this, view, this.$('.products'), sort);
 
             this.subViews.push(view);
             $(window).resize();
