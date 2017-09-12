@@ -153,7 +153,7 @@ define(["products_view"], function(products_view) {
             "click": "showModifiers"
         },
         showModifiers: function(e) {
-            if (App.Settings.cannot_order_with_empty_inventory && this.model.get('stock_amount') < 0 ) {
+            if (App.Settings.cannot_order_with_empty_inventory && this.model.get('stock_amount') <= 0 ) {
                 return;
             }
             e.preventDefault();

@@ -277,13 +277,12 @@ ul.products li.product {
 }
 
 .product_sold_out {
-    width: 120px;
-    height: 50px;
+    width: 98%;
+    height: 98%;
     background-color: rgba(0,0,0,.5);
     position: absolute;
-    left: 50%;
-    top: 52px;
-    transform: translate(-50%,-50%);
+    left: 1%;
+    top: 1%;
     text-align: center;
 }
 
