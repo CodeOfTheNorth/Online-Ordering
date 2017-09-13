@@ -33,7 +33,7 @@ define(["products_view"], function(products_view) {
             '.currency': 'text: _system_settings_currency_symbol, toggle: not(any(uom, hide_price))',
             '.uom': 'text: uom, toggle: uom',
             '.title': 'text: _product_name',
-            '.desc': 'text: _product_description, toggle: _product_description',
+            '.desc': 'html: _product_description, toggle: _product_description',
             '.timetable': 'toggle: _product_timetables',
             '.timetable span': 'text: _product_timetables',
             '.gift-card': 'classes: {hidden: not(all(_product_is_gift, _system_settings_online_orders))}',
@@ -138,12 +138,24 @@ define(["products_view"], function(products_view) {
             ':el': 'toggle: active',
             '.title': 'text: name', //'text: format("$1 sort $2", name, sort)',
             '.desc': 'html: description, toggle: not(_system_settings_hide_products_description)',
-            '.price': 'text: select(sold_by_weight, weightFormat(price), currencyFormat(price))'
+            '.price': 'text: select(sold_by_weight, weightFormat(price), currencyFormat(price))',
+            '.product_sold_out': "classes: {hide: non_empty_amount}"
+        },
+        computeds: {
+            non_empty_amount: {
+                deps: ['stock_amount'],
+                get: function(stock_amount) {
+                    return App.Settings.cannot_order_with_empty_inventory ? stock_amount > 0 : true;
+                }
+            }
         },
         events: {
             "click": "showModifiers"
         },
         showModifiers: function(e) {
+            if (App.Settings.cannot_order_with_empty_inventory && this.model.get('stock_amount') <= 0 ) {
+                return;
+            }
             e.preventDefault();
             var id_category = this.model.get('id_category'),
                 id = this.model.get('id');

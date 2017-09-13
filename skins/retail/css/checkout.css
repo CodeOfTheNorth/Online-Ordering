@@ -287,3 +287,9 @@
         right: 300px !important;
     }
 }
+
+.step-1.to-step-1,
+.step-2.to-step-2,
+.step-3.to-step-3 {
+    cursor: pointer;
+}

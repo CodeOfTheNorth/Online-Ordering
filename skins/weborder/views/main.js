@@ -1,4 +1,4 @@
-﻿/*
+﻿﻿/*
  * Revel Systems Online Ordering Application
  *
  *  Copyright (C) 2014 by Revel Systems
@@ -205,7 +205,7 @@ define(["done_view", "generator"], function(done_view) {
             if (removeClass)
                 delete data.className;
 
-            var subView = App.Views.GeneratorView.create(data.modelName, data, id);
+            var subView = this.createView(data.modelName, data, id);
             this.subViews.push(subView); // subViews length always > 4
 
             return subView.el;
@@ -271,7 +271,7 @@ define(["done_view", "generator"], function(done_view) {
             '.submitted': 'html: insertPlaceholder(_lp_DONE_ORDER_SUBMITTED, format(boldTmp, _system_settings_business_name))',
             '.pickup-time': 'classes: {hide: inList(checkout_dining_option, "DINING_OPTION_ONLINE", "DINING_OPTION_SHIPPING")}, html: insertPlaceholder(select(isDelivery, _lp_DONE_ARRIVE_TIME, _lp_DONE_PICKUP_TIME), format(boldTmp, checkout_pickupTime))',
             '.email-sent-to': 'text: customer_email',
-            '.other-options-line': 'classes: {hide: not(equal(checkout_dining_option, "DINING_OPTION_OTHER"))}',
+            '.other-options-line': 'classes: {hide: any(not(equal(checkout_dining_option, "DINING_OPTION_OTHER")), equal(joinOtherDiningOptions($other_options), ""))}',
             '.other-options': 'text: joinOtherDiningOptions($other_options)',
             '.address-box': 'classes: {hide: equal(checkout_dining_option, "DINING_OPTION_OTHER")}',
             '.address-label': 'text: addressLabel(checkout_dining_option)',

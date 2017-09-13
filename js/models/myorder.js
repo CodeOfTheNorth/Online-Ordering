@@ -1378,6 +1378,12 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
          * @default null
          */
         paymentResponse: null,
+        /*
+         * indicates if the price of any product was changed during the session
+         * @type {boolean}
+         * @default false
+         */
+        priceChanged: false,
         /**
          * Initializes the collection.
          */
@@ -2146,6 +2152,9 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                             myorder.update_cart_totals();//get discounts & totals w/o discount_code
                             break;
                         case 'INCORRECT_PRODUCT_PRICE':
+                            if (checkout.discount_code && is_apply_discount) {
+                                myorder.checkout.set('last_discount_code', checkout.discount_code);
+                            }
                             var response = data.responseJSON;
                             reportErrorFrm(MSG.ERROR_PRICE_CHANGED.replace('%product', response.name).replace('%price', response.price));
                             myorder.price_changed(response);
@@ -2204,17 +2213,25 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
         price_changed: function(data) {
             // clear item(s) inside order
             var products = App.Data.myorder.filter( function(el) {
-                return (el.get_product().get('name') == data.name) ? el : null;
+                return (el.get_product().get('id') == data.product_id) ? el : null;
             }).map( function(item_found) {
                 App.Data.myorder.remove(item_found);
                 var product = item_found.get_product();
                 return {id: product.get('id'), category: product.get('id_category')};
             });
+            this.priceChanged = true;
 
             // set new price(s) for product(s) in products and in search
             _.each(products, function(product) {
                 App.Data.products[product.category] &&
                 App.Data.products[product.category].findWhere({id: product.id}).set('price', data.price);
+
+                if (product.category == 0) {
+                    for (var cat in App.Data.products) {
+                        var el = App.Data.products[cat].findWhere({id: product.id});
+                        el && el.set('price', data.price);
+                    }
+                }
 
                 App.Data.search &&
                 App.Data.search.each( function(el) {
@@ -2471,7 +2488,10 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
             order_info.notes = checkout.notes;
             if (checkout.dining_option == "DINING_OPTION_OTHER")  {
                 order_info.notes.length && (order_info.notes += "\n");
-                order_info.notes += _loc.DELIVERY_INFO + ": " + this.getOtherDiningOptionCallName();
+                var otherDiningOption = this.getOtherDiningOptionCallName();
+                if (otherDiningOption != '') {
+                    order_info.notes += _loc.DELIVERY_INFO + ": " + otherDiningOption;
+                }
             }
             order_info.asap = checkout.isPickupASAP;
             order_info.discount = this.discount.get("id") ? this.discount.toJSON() : undefined;
@@ -2575,6 +2595,7 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                         url: App.Data.settings.get("host") + "/weborders/" + req_action,
                         data: myorder_json,
                         dataType: "json",
+                        headers: App.Data.customer.getAuthorizationHeader(),
                         xhrFields: { withCredentials: true },//to send cookie (containing session_id) for CORS requests
                         success: new Function(), // to override global ajax success handler
                         error: new Function()    // to override global ajax error handler

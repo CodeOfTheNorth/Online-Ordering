@@ -40,13 +40,13 @@ define(["quantity_view"], function(quantity_view) {
                 quantity = this.model.get('quantity'),
                 stock_amount = product.get('stock_amount'),
                 selectWrapper = this.$('.combobox-wrapper'),
-                max_amount = Math.min(stock_amount, product.defaults.stock_amount);
+                max_amount = product.get('max_stock_amount');
 
             // need hide quantity widget if parent product is selected
             if(product.isParent())
                 return this.$el.hide();
 
-            stock_amount > 0 && select.empty();
+            max_amount > 0 && select.empty();
             var options = [];
             for (var i = 1; i <= max_amount; i++) {
                 if (i === quantity) {

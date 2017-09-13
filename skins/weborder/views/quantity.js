@@ -39,7 +39,7 @@ define(["quantity_view"], function(quantity_view) {
                 quantity = this.model.get('quantity'),
                 stock_amount = product.get('stock_amount'),
                 selectWrapper = this.$('.combobox-wrapper'),
-                max_amount = Math.min(stock_amount, product.defaults.stock_amount);
+                max_amount = product.get('max_stock_amount');
 
             select.empty();
             var options = [];

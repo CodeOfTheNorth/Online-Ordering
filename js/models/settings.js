@@ -757,7 +757,7 @@ define(["backbone", "async"], function(Backbone) {
                                  set_sys.address.postal_code + ", " +
                                  set_sys.address.country + ", " +
                                  set_sys.address.line_1,
-                GoogleMapsAPIURL = "https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true";
+                GoogleMapsAPIURL = "https://maps.googleapis.com/maps/api/js?v=3.exp";
 
                 if (set_sys.google_maps_api_key) {
                     GoogleMapsAPIURL += '&key=' + set_sys.google_maps_api_key;

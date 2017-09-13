@@ -107,7 +107,7 @@ define(["backbone", "factory", "generator"], function(Backbone) {
         map: function(zoomControl, panControl, mapTypeControl) {
             var settings = App.Settings,
                 self = this,
-                GoogleMapsAPIURL = "https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true",
+                GoogleMapsAPIURL = "https://maps.googleapis.com/maps/api/js?v=3.exp",
                 GoogleMapsAPIKey = App.Settings.google_maps_api_key;
 
             if (GoogleMapsAPIKey) {

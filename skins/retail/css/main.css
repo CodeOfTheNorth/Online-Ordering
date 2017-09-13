@@ -669,6 +669,7 @@ input[type="radio"]:checked + .radio::before,
 #popup_message[id] {
     margin: 35px 20px 50px;
     min-height: 100px;
+    color: rgb(95,98,102);
 }
 
 #popup_content.info[class] {
@@ -681,6 +682,7 @@ input[type="radio"]:checked + .radio::before,
     padding: 30px 0 10px;
     font-family: 'FontAwesome';
     font-size: 25px;
+    color: rgb(155, 157, 159);
 }
 
 #popup_panel[id] {
@@ -695,6 +697,13 @@ input[type="radio"]:checked + .radio::before,
     width: 50%;
     border: none;
     border-radius: 0;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgb(129,129,129)), color-stop(1, rgb(95,98,102)));
+    background: -o-linear-gradient(bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
+    background: -moz-linear-gradient(bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
+    background: -webkit-linear-gradient(bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
+    background: -ms-linear-gradient(bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
+    background: linear-gradient(to bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
+    color: rgb(255,255,255);
 }
 
 #popup_overlay[id] {
@@ -758,4 +767,34 @@ input[type="radio"]:checked + .radio::before,
         background-repeat: no-repeat;
         background-position: 50%
     }
+}
+
+.left-sidebar-title {
+    width: 189px;
+    height: 40px;
+}
+
+.left-sidebar-content {
+    position: absolute;
+    left: 0;
+    top: 40px;
+    bottom: 0;
+    right: 0px;        
+    overflow: auto;
+}
+
+.subtree-icon::before {
+    content: '\f078';
+    font-family: 'FontAwesome';
+    font-size: 8px;
+    display: block;
+    width: 8px;
+    margin-top: 4px;
+}
+
+.categories-tree .collapsed > .subtree-icon::before,
+.left-sidebar-title.collapsed .subtree-icon::before,
+.filters-title.collapsed .subtree-icon::before
+{
+    content: '\f054';
 }

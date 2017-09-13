@@ -35,8 +35,17 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
         },
         bindings: {
             ':el': 'classes: {hide: not(active)}',
-            '.product_list_item': "attr:{'data-id':compositeId}"
+            '.product_list_item': "attr:{'data-id':compositeId}",
+            '.product_sold_out': "classes: {hide: non_empty_amount}"
         },
+        computeds: {
+            non_empty_amount: {
+                deps: ['stock_amount'],
+                get: function(stock_amount) {
+                    return App.Settings.cannot_order_with_empty_inventory ? stock_amount > 0 : true;
+                }
+            }
+         },
         render: function() {
             var model = this.model.toJSON();
             model.hide_images = App.Data.settings.get('settings_system').hide_images;
@@ -47,6 +56,7 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
             model.uom = App.Data.settings.get("settings_system").scales.default_weighing_unit;
             model.isDefaultImage = model.image == App.Data.settings.get_img_default();
             this.$el.html(this.template(model));
+            this.applyBindings();
             this.afterRender.call(this, model.sort);
             return this;
         },
@@ -57,6 +67,9 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
             ':el': 'showModifiers'
         },
         showModifiers: function(e) {
+            if (App.Settings.cannot_order_with_empty_inventory && this.model.get('stock_amount') <= 0 ) {
+                return;
+            }
             e.preventDefault();
             var id_category = this.model.get('id_category'),
                 id = this.model.get('id');
@@ -78,7 +91,7 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
                 self.addItem(item);
             });
             if (!this.collection.length) {
-                var view = App.Views.GeneratorView.create('Product', {
+                var view = self.createView('Product', {
                     el: $('<li class="product list-none"></li>'),
                     mod: 'ListNone'
                 });
@@ -96,14 +109,18 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
                 noDesc = settings.hide_products_description,
                 view,
                 root_cache_id = this.options.root_cache_id ? this.options.root_cache_id : "";
-            view = App.Views.GeneratorView.create('Product', {
+            view = this.createView('Product', {
                 el: $('<li class="product"></li>'),
                 mod: 'ListItem',
                 model: model
             }, 'product_' + root_cache_id + "_" + model.get("compositeId"));
             noDesc && view.$el.addClass('short');
             noImg && view.$el.addClass('no-image');
-            App.Views.ListView.prototype.addItem.call(this, view, this.$('.products'), model.escape('sort'));
+            var sort = model.get('sort');
+            sort = (App.Settings.cannot_order_with_empty_inventory && model.get('stock_amount') > 0) ?
+                    sort - 1000000 : sort;
+            App.Views.ListView.prototype.addItem.call(this, view, this.$('.products'), sort);
+
             this.subViews.push(view);
             $(window).resize();
         }

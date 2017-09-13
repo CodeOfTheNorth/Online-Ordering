@@ -44,17 +44,25 @@ var MAINTENANCE = {
 var RESOURCES = {
     CSS: 'RESOURCES_CSS',
     TEMPLATES: 'RESOURCES_TEMPLATES'
-}
+};
 
 var ERROR = {},
     MSG = {},
-    _loc; ; //locale strings
+    _loc; //locale strings
 
 // Should be set before language pack loading
 ERROR.WEBSTORAGES_ARE_DISABLED = 'Web storages are disabled or not supported in your browser';
 ERROR.LOAD_LANGUAGE_PACK = 'Unable to load a language pack. Now the page is reloaded.';
 ERROR.CANT_GET_WEBORDER_SETTINGS = 'Can\'t load weborder settings from a backend server';
+ERROR.SERVER_MAINTENANCE_ERROR = 'The Server is not available at this time because of maintenance work. <br> ' +
+    'We apologise for the inconvenience that this causes to you! <br> Please try again later.';
 MSG.ESTABLISHMENTS_ERROR_NOSTORE = 'No store is available for the specified brand';
+ERROR.CANT_GET_PAGE = 'Page doesn\'t exist or some error occured. <br>' +
+    'Go back to previous page.';
+ERROR.INTERNAL_SERVER_ERROR = '500 Internal Server Error';
+ERROR.BAD_GATEWAY_ERROR = 'The server is currently unreachable. <br>' +
+    'The server may be down, or there may be a network problem. <br>' +
+    'Try again later.';
 
 var PAYMENT_TYPE = {
     PAYPAL_MOBILE: 1,
@@ -560,7 +568,9 @@ function loadCSS(name, loadModelCSS) {
         // Bug 25585.
         // If network connection has been lost in capture phase, user will get the corresponding notification with reload button.
         var errorMsg = App.Data.myorder.disconnected ? App.Data.myorder.paymentResponse.errorMsg : ERROR[RESOURCES.CSS];
-        App.Data.errors.alert(errorMsg, true, true); // user notification
+        !App.Data.settings.get('isMaintenance') ?
+            App.Data.errors.alert(errorMsg, true, true) :
+            App.Data.errors.alert(ERROR.SERVER_MAINTENANCE_ERROR, true); // user notification
     };
     var cache = false,
         version = is_minimized_version ? '?ver=' + autoVersion : '',
@@ -2046,6 +2056,7 @@ var MonerisPaymentProcessor = {
                 if (!payment_info.errorMsg) {
                     payment_info.errorMsg = MONERIS_RETURN_MESSAGE_DEFAULT;
                 }
+                PaymentProcessor.removePaymentData();
             }
         }
         function wrong_config() {
