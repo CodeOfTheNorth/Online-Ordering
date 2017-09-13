@@ -56,6 +56,7 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
             model.uom = App.Data.settings.get("settings_system").scales.default_weighing_unit;
             model.isDefaultImage = model.image == App.Data.settings.get_img_default();
             this.$el.html(this.template(model));
+            this.applyBindings();
             this.afterRender.call(this, model.sort);
             return this;
         },
