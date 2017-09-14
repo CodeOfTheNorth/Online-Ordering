@@ -57,7 +57,7 @@ require(['app', 'js/utest/data/Settings'], function(app, settings_data) {
         var errors = App.Data.errors = new App.Models.Errors();
 
         // init settings object
-        App.Models.Settings.prototype.get_settings_system = function() {
+        App.Models.Settings.prototype.get_system_settings = function() {
             return $.Deferred().resolve();
         }
         App.Models.Settings.prototype.get_customer_settings = function() {
