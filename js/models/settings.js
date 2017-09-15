@@ -446,11 +446,10 @@ define(["backbone", "async"], function(Backbone) {
                         self.set("settings_system", {color_scheme: self.set_default_settings().color_scheme});
                     }
                 },
-                error: self.get_first_available_est,
-                complete: function () {
-                    return $.Deferred().resolve();
-                }
+                error: self.get_first_available_est
             });
+
+            return $.Deferred().resolve();
         },
 
         process_settings_request: function(response) {
@@ -623,7 +622,6 @@ define(["backbone", "async"], function(Backbone) {
                         });
                     }
                 }
-
             },
 
         get_first_available_est: function () {
@@ -647,11 +645,9 @@ define(["backbone", "async"], function(Backbone) {
                 },
                 error: function() {
                    App.Data.settings.set(defaults);
-                },
-                complete: function () {
-                    return $.Deferred().resolve();
                 }
             });
+            return $.Deferred().resolve();
          },
 
         set_default_settings: function() {
