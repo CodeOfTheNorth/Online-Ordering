@@ -408,53 +408,50 @@ define(["backbone", "async"], function(Backbone) {
         get_system_settings: function() {
             var self = this;
             var settings_system = App.Data.settings.set_default_settings().settings_system;
-            var load = $.Deferred();
 
             if (App.Data.selectEstablishmentMode) {
                 self.set({
                     settings_system: settings_system // default settings
-                    });
-                return load.resolve();
+                });
+                return $.Deferred().resolve();
             }
 
-            this.get_settings.call(this);
-
-            return load;
+            return this.get_settings();
         },
 
         get_settings: function() {
-            var load = $.Deferred();
             var self = this;
 
-                $.ajax({
-                    url: self.get("host") + "/weborders/system_settings/",
-                    data: {
-                        establishment: self.get("establishment")
-                    },
-                    dataType: "json",
-                    success: function (response) {
-                        switch (response.status) {
-                            case "OK":
-                                self.process_settings_request(response);
-                                break;
+            $.ajax({
+                url: self.get("host") + "/weborders/system_settings/",
+                data: {
+                    establishment: self.get("establishment")
+                },
+                dataType: "json",
+                success: function (response) {
+                    switch (response.status) {
+                        case "OK":
+                            self.process_settings_request(response);
+                            break;
 
-                            default:
-                                App.Data.errors.alert(response.errorMsg, true, false, {
-                                    errorServer: true,
-                                    typeIcon: 'warning'
-                                }); // user notification
-                                recoverColorScheme();
-                        }
+                        default:
+                            App.Data.errors.alert(response.errorMsg, true, false, {
+                                errorServer: true,
+                                typeIcon: 'warning'
+                            }); // user notification
+                            recoverColorScheme();
+                    }
 
-                        function recoverColorScheme() {
-                            self.set("settings_system", {color_scheme: self.set_default_settings().color_scheme});
-                        }
-
-                        load.resolve();
-                    },
-                    error: self.get_first_available_est
-                });
-            },
+                    function recoverColorScheme() {
+                        self.set("settings_system", {color_scheme: self.set_default_settings().color_scheme});
+                    }
+                },
+                error: self.get_first_available_est,
+                complete: function () {
+                    return $.Deferred().resolve();
+                }
+            });
+        },
 
         process_settings_request: function(response) {
 
@@ -630,7 +627,12 @@ define(["backbone", "async"], function(Backbone) {
             },
 
         get_first_available_est: function () {
-            var load = $.Deferred();
+
+            var defaults = {
+                settings_system: App.Data.settings.set_default_settings().settings_system, // default settings
+                isMaintenance: true,
+                maintenanceMessage: MAINTENANCE.BACKEND_CONFIGURATION
+            };
             
             $.ajax({
                 url: '/weborders/locations/',
@@ -640,15 +642,14 @@ define(["backbone", "async"], function(Backbone) {
                         App.Data.settings.set("establishment", data[0].estabs[0].id, {silent: true});
                         App.Data.settings.get_settings();
                     } else {
-                        App.Data.settings.set({
-                            settings_system: App.Data.settings.set_default_settings().settings_system, // default settings
-                            isMaintenance: true,
-                            maintenanceMessage: MAINTENANCE.BACKEND_CONFIGURATION
-                        });
+                        App.Data.settings.set(defaults);
                     }
                 },
-                complete: function() {
-                    load.resolve();
+                error: function() {
+                   App.Data.settings.set(defaults);
+                },
+                complete: function () {
+                    return $.Deferred().resolve();
                 }
             });
          },
