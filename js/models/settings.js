@@ -421,6 +421,7 @@ define(["backbone", "async"], function(Backbone) {
 
         get_settings: function() {
             var self = this;
+            var dfd = Backbone.$.Deferred();
 
             $.ajax({
                 url: self.get("host") + "/weborders/system_settings/",
@@ -445,11 +446,15 @@ define(["backbone", "async"], function(Backbone) {
                     function recoverColorScheme() {
                         self.set("settings_system", {color_scheme: self.set_default_settings().color_scheme});
                     }
+                     dfd.resolve();
                 },
-                error: self.get_first_available_est
-            });
+                error: function() {
+                    self.get_first_available_est();
+                    dfd.resolve();
+                }
 
-            return $.Deferred().resolve();
+            });
+            return dfd;
         },
 
         process_settings_request: function(response) {
@@ -626,12 +631,13 @@ define(["backbone", "async"], function(Backbone) {
 
         get_first_available_est: function () {
 
+            var dfd = Backbone.$.Deferred();
             var defaults = {
                 settings_system: App.Data.settings.set_default_settings().settings_system, // default settings
                 isMaintenance: true,
                 maintenanceMessage: MAINTENANCE.BACKEND_CONFIGURATION
             };
-            
+
             $.ajax({
                 url: '/weborders/locations/',
                 dataType: 'json',
@@ -642,12 +648,14 @@ define(["backbone", "async"], function(Backbone) {
                     } else {
                         App.Data.settings.set(defaults);
                     }
+                    dfd.resolve();
                 },
                 error: function() {
                    App.Data.settings.set(defaults);
+                   dfd.resolve();
                 }
             });
-            return $.Deferred().resolve();
+            return dfd;
          },
 
         set_default_settings: function() {
