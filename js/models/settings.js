@@ -421,9 +421,10 @@ define(["backbone", "async"], function(Backbone) {
 
         get_settings: function() {
             var self = this;
-            var dfd = Backbone.$.Deferred();
+            var req;
+            var promise = Backbone.$.Deferred();
 
-            $.ajax({
+            req = $.ajax({
                 url: self.get("host") + "/weborders/system_settings/",
                 data: {
                     establishment: self.get("establishment")
@@ -446,15 +447,14 @@ define(["backbone", "async"], function(Backbone) {
                     function recoverColorScheme() {
                         self.set("settings_system", {color_scheme: self.set_default_settings().color_scheme});
                     }
-                     dfd.resolve();
                 },
                 error: function() {
                     self.get_first_available_est();
-                    dfd.resolve();
                 }
-
             });
-            return dfd;
+            req.then(promise.resolve());
+
+            return promise;
         },
 
         process_settings_request: function(response) {
@@ -631,14 +631,15 @@ define(["backbone", "async"], function(Backbone) {
 
         get_first_available_est: function () {
 
-            var dfd = Backbone.$.Deferred();
+            var promise = Backbone.$.Deferred();
+            var req;
             var defaults = {
                 settings_system: App.Data.settings.set_default_settings().settings_system, // default settings
                 isMaintenance: true,
                 maintenanceMessage: MAINTENANCE.BACKEND_CONFIGURATION
             };
 
-            $.ajax({
+            req = $.ajax({
                 url: '/weborders/locations/',
                 dataType: 'json',
                 success: function(data) {
@@ -648,14 +649,14 @@ define(["backbone", "async"], function(Backbone) {
                     } else {
                         App.Data.settings.set(defaults);
                     }
-                    dfd.resolve();
                 },
                 error: function() {
                    App.Data.settings.set(defaults);
-                   dfd.resolve();
                 }
             });
-            return dfd;
+            req.then(promise.resolve());
+
+            return promise;
          },
 
         set_default_settings: function() {
