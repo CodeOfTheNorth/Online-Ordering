@@ -32,6 +32,8 @@ define(['js/utest/data/ProductSets', 'product_sets'], function(data) {
                 if (window._phantom) {
                     p1.image = decodeURIComponent(p1.image);
                 }
+                console.log("Unstable test addJSON():");
+                logdiff(p1, product1);
                 expect(p1).toEqual(product1);
                 var p2 = modelJson.order_products.models[1].get('product').toJSON()
                 if (window._phantom) {
