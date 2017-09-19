@@ -421,10 +421,9 @@ define(["backbone", "async"], function(Backbone) {
 
         get_settings: function() {
             var self = this;
-            var req;
-            var promise = Backbone.$.Deferred();
+            var dfd = Backbone.$.Deferred();
 
-            req = $.ajax({
+            $.ajax({
                 url: self.get("host") + "/weborders/system_settings/",
                 data: {
                     establishment: self.get("establishment")
@@ -447,14 +446,15 @@ define(["backbone", "async"], function(Backbone) {
                     function recoverColorScheme() {
                         self.set("settings_system", {color_scheme: self.set_default_settings().color_scheme});
                     }
+                    dfd.resolve();
                 },
                 error: function() {
-                    self.get_first_available_est();
+                    var req;
+                    req = self.get_first_available_est();
+                    req.then(dfd.resolve.bind(dfd));
                 }
             });
-            req.then(promise.resolve());
-
-            return promise;
+            return dfd;
         },
 
         process_settings_request: function(response) {
@@ -631,32 +631,37 @@ define(["backbone", "async"], function(Backbone) {
 
         get_first_available_est: function () {
 
-            var promise = Backbone.$.Deferred();
-            var req;
+            var dfd = Backbone.$.Deferred();
             var defaults = {
                 settings_system: App.Data.settings.set_default_settings().settings_system, // default settings
                 isMaintenance: true,
                 maintenanceMessage: MAINTENANCE.BACKEND_CONFIGURATION
             };
 
-            req = $.ajax({
+            $.ajax({
                 url: '/weborders/locations/',
                 dataType: 'json',
                 success: function(data) {
-                    if (data[0].estabs.length) {
-                        App.Data.settings.set("establishment", data[0].estabs[0].id, {silent: true});
-                        App.Data.settings.get_settings();
+                    var establishment = _.find(data[0].estabs, check_online_ordering_up);
+                    function check_online_ordering_up(est) {
+                        return est.system_settings.online_and_app_orders === true;
+                    }
+                    if (data[0].estabs.length && establishment) {
+                        var req;
+                        App.Data.settings.set("establishment", establishment.id, {silent: true});
+                        req = App.Data.settings.get_settings();
+                        req.then(dfd.resolve.bind(dfd))
                     } else {
                         App.Data.settings.set(defaults);
+                        dfd.resolve();
                     }
                 },
                 error: function() {
                    App.Data.settings.set(defaults);
+                   dfd.resolve();
                 }
             });
-            req.then(promise.resolve());
-
-            return promise;
+            return dfd;
          },
 
         set_default_settings: function() {
