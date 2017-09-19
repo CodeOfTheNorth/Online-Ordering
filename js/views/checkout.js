@@ -321,7 +321,7 @@ define(["delivery_addresses", "generator"], function(delivery_addresses) {
                 field: field[0],
                 minDate: this.pickupTime[0].date,
                 maxDate: this.pickupTime[this.pickupTime.length - 1].date,
-                position: 'bottom hcenter',
+                position: 'bottom left',
                 firstDay : _loc['PIKADAY']['FIRST_DAY'],
                 i18n: _loc['PIKADAY']['i18n'],
                 onSelect: selectDate
