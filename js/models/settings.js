@@ -407,7 +407,7 @@ define(["backbone", "async"], function(Backbone) {
 
         get_system_settings: function() {
             var self = this;
-            var settings_system = App.Data.settings.set_default_settings().settings_system;
+            var settings_system = this.get_default_settings().settings_system;
 
             if (App.Data.selectEstablishmentMode) {
                 self.set({
@@ -444,7 +444,7 @@ define(["backbone", "async"], function(Backbone) {
                     }
 
                     function recoverColorScheme() {
-                        self.set("settings_system", {color_scheme: self.set_default_settings().color_scheme});
+                        self.set("settings_system", {color_scheme: self.get_default_settings().color_scheme});
                     }
                     dfd.resolve();
                 },
@@ -459,8 +459,8 @@ define(["backbone", "async"], function(Backbone) {
 
         process_settings_request: function(response) {
 
-            var settings_system = App.Data.settings.set_default_settings().settings_system;
-            var color_scheme_key = App.Data.settings.set_default_settings().color_scheme_key;
+            var settings_system = this.get_default_settings().settings_system;
+            var color_scheme_key = this.get_default_settings().color_scheme_key;
 
             var data = response.data;
             var self = this;
@@ -633,7 +633,7 @@ define(["backbone", "async"], function(Backbone) {
 
             var dfd = Backbone.$.Deferred();
             var defaults = {
-                settings_system: App.Data.settings.set_default_settings().settings_system, // default settings
+                settings_system: this.get_default_settings().settings_system, // default settings
                 isMaintenance: true,
                 maintenanceMessage: MAINTENANCE.BACKEND_CONFIGURATION
             };
@@ -664,7 +664,7 @@ define(["backbone", "async"], function(Backbone) {
             return dfd;
          },
 
-        set_default_settings: function() {
+        get_default_settings: function() {
               var color_scheme_key = 'color_scheme' + this.get('establishment');
               var saved_color_scheme = getData(color_scheme_key, true);
               var settings_system = {
