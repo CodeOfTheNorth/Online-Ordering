@@ -600,13 +600,6 @@ input[type="radio"]:checked + .radio::before,
     z-index: 10001;
 }
 
-#alert .alert_align {
-    display: inline-block;
-    height: 100%;
-    width: 0;
-    vertical-align: middle;
-}
-
 #alert .alert_wrapper {
     display: inline-block;
     min-width: 400px;
@@ -635,11 +628,7 @@ input[type="radio"]:checked + .radio::before,
 
 #alert .icon.info::before {
     content: '\f05A';
-}
-
-#alert .message {
-    margin: 35px 20px 75px;
-    font-size: 16px;
+    color: rgb(155, 157, 159);
 }
 
 #alert .btn_wrapper {
@@ -668,7 +657,8 @@ input[type="radio"]:checked + .radio::before,
 
 #popup_message[id] {
     margin: 35px 20px 50px;
-    min-height: 100px;
+    min-height: 50px;
+    color: rgb(95,98,102);
 }
 
 #popup_content.info[class] {
@@ -681,6 +671,7 @@ input[type="radio"]:checked + .radio::before,
     padding: 30px 0 10px;
     font-family: 'FontAwesome';
     font-size: 25px;
+    color: rgb(155, 157, 159);
 }
 
 #popup_panel[id] {

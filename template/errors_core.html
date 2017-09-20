@@ -26,10 +26,10 @@
     </div>
     <style type="text/css">
         #popup_overlay {
-            background: #fff;
+            background: rgb(170, 170, 170);
             height: 100%;
             left: 0;
-            opacity: .01;
+            opacity: 1;
             position: fixed;
             top: 0;
             width: 100%;
@@ -94,30 +94,92 @@
         }
     </style>
 </script>
+
 <script type="text/template" id="alert-template">
-    <div class="alert_align"> </div>
-    <div class="alert_wrapper">
-        <div class="alert_block">
-            <div class="no-cancel"> </div>
-            <div class="icon <%= typeIcon %>"> </div>
-            <div class="message">
-                <% if (errorServer) { %> <span style="color: red; font-weight: bold;"> <% } %>
-                    <%= message %>
-                <% if (errorServer) { %> </span> <% } %>
-            </div>
-            <div class="btn_wrapper border-box" data-btns="<% print(isConfirm + !cancelHide) %>">
-                <% if (!btnsSwap) { %>
-                    <div class="btn btnOk" tabindex="0"> <span class="clip"> <%= btnText1 %> </span> </div>
-                    <% if (isConfirm && !cancelHide) { %>
-                       <div class="btn btn-secondary btnCancel" tabindex="0"> <span class="clip"> <%= btnText2 %> </span> </div>
+    <div class="alert_overlay"> </div>
+    <div id="popup_alert">
+        <div id="alert_wrapper">
+            <div id="alert_content alert_block" class="icon <%= typeIcon %>">
+                <div class="message">
+                    <% if (errorServer) { %> <span style="color: red; font-weight: bold;"> <% } %>
+                        <%= message %>
+                    <% if (errorServer) { %> </span> <% } %>
+                </div>
+                <div class="btn_wrapper border-box" data-btns="<% print(isConfirm + !cancelHide) %>">
+                    <% if (!btnsSwap) { %>
+                        <div class="btn btnOk" tabindex="0"> <span class="clip"> <%= btnText1 %> </span> </div>
+                        <% if (isConfirm && !cancelHide) { %>
+                           <div class="btn btn-secondary btnCancel" tabindex="0"> <span class="clip"> <%= btnText2 %> </span> </div>
+                        <% } %>
+                    <% } else { %>
+                        <% if (isConfirm && !cancelHide) { %>
+                           <div class="btn btn-secondary btnCancel" tabindex="0"> <span class="clip"> <%= btnText2 %> </span> </div>
+                        <% } %>
+                        <div class="btn btnOk" tabindex="0"> <span class="clip"> <%= btnText1 %> </span> </div>
                     <% } %>
-                <% } else { %>
-                    <% if (isConfirm && !cancelHide) { %>
-                       <div class="btn btn-secondary btnCancel" tabindex="0"> <span class="clip"> <%= btnText2 %> </span> </div>
-                    <% } %>
-                    <div class="btn btnOk" tabindex="0"> <span class="clip"> <%= btnText1 %> </span> </div>
-                <% } %>
+                </div>
             </div>
         </div>
     </div>
+    <style type="text/css">
+        .alert_overlay {
+            background: rgb(170, 170, 170);
+            height: 100%;
+            left: 0;
+            opacity: 1;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 99998;
+        }
+        #popup_alert {
+            height: 100%;
+            position: fixed;
+            text-align: center;
+            width: 100%;
+            z-index: 99999;
+            top: 0;
+        }
+        #popup_alert:before {
+            content: '';
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+        }
+        #alert_wrapper {
+            display: inline-block;
+            min-width: 400px;
+            max-width: 600px;
+            background: #fff;
+            border: none;
+            border-radius: 0;
+            font-family: inherit;
+            font-size: inherit;
+            color: inherit;
+            padding: 0;
+            position: relative;
+            vertical-align: middle;
+        }
+        .message {
+            padding: 0;
+            margin: 35px 20px 45px;
+            color: rgb(95,98,102);
+            font-size: 14px;
+        }
+        .btn_wrapper .btn {
+            cursor: pointer;
+            padding: 16px 10px;
+            background: linear-gradient(to bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
+            color: rgb(255,255,255);
+            display: inline-block;
+            width: 50%;
+            border: none;
+            border-radius: 0;
+        }
+        @media screen and (max-width: 600px) {
+            #alert_wrapper {
+                max-width: 90% !important;
+            }
+        }
+    </style>
 </script>
