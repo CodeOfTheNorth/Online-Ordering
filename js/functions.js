@@ -630,6 +630,7 @@ function loadCSS(name, loadModelCSS) {
         });
         elem.on('error', function(event) {
             console.error("Can't load: ", event.target.href);
+            Backbone.$(window).trigger('hideSpinner');
             onCSSLoaded(true, error);
         });
     }

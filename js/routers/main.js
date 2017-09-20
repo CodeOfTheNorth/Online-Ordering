@@ -1671,7 +1671,7 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
         },
         signupContent: function() {
             var events = 'change:first_name change:last_name change:email change:phone change:password change:confirm_password change:terms_accepted',
-                customer = App.Data.customer
+                customer = App.Data.customer,
                 self = this;
 
             // listen to any App.Data.customer change
