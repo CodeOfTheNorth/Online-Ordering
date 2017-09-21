@@ -128,16 +128,16 @@ define([], function() {
                     "province": "",
                     "city": "San Francisco",
                     "state": "CA",
-                    "postal_code": "93144",
-                    "line_1": "170 Columbus Ave",
+                    "postal_code": "94107",
+                    "line_1": "303 Second street",
                     "country": "US",
-                    "line_2": "",
+                    "line_2": "North Tower, Suite 550",
                     "coordinates": {
                         "lat": 56.317333,
                         "lng": 44.060451
                     },
                     "state_province": "CA",
-                    "full_address": "170 Columbus Ave, San Francisco, CA 93144"
+                    "full_address": "303 Second street North Tower, Suite 550 San Francisco, CA 94107 United States"
                 },
                 "business_name": "Kinematics",
                 "email": "apakhunov@revelsystems.com",
