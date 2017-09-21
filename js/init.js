@@ -11,7 +11,7 @@
             nodes[i].style.margin = '0';
         }
 
-        document.querySelector('body').innerHTML = '<div class="ui-loader-default" style="width: 100%; height: 100%; font-size:' + MainSpinner.getFontSize() + 'px !important" id="loader"></div>';
+        document.querySelector('body').innerHTML += '<div class="ui-loader-default" style="width: 100%; height: 100%; font-size:' + MainSpinner.getFontSize() + 'px !important" id="loader"></div>';
         var loader = document.querySelector('#loader');
         MainSpinner.addSpinner.call(loader);
         loader.style.cssText += "background-color: rgba(170, 170, 170, .8); position: absolute;";
