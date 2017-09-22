@@ -25,11 +25,6 @@ define(["checkout_view"], function(Backbone) {
 
     App.Views.CoreUpfrontView = {};
 
-    App.Views.CoreUpfrontView.CoreUpfrontMainView = App.Views.FactoryView.extend({
-        name: 'upfront',
-        mod: 'main'
-    });
-
     App.Views.CoreUpfrontView.CoreUpfrontPageView = App.Views.FactoryView.extend({
         name: 'upfront',
         mod: 'page'
@@ -64,7 +59,6 @@ define(["checkout_view"], function(Backbone) {
 
     return new (require('factory'))(function() {
         App.Views.UpfrontView = {};
-        App.Views.UpfrontView.UpfrontMainView = App.Views.CoreUpfrontView.CoreUpfrontMainView;
         App.Views.UpfrontView.UpfrontPageView = App.Views.CoreUpfrontView.CoreUpfrontPageView;
         App.Views.UpfrontView.UpfrontOrderTypeView = App.Views.CoreUpfrontView.CoreUpfrontOrderTypeView;
         App.Views.UpfrontView.UpfrontPickupView = App.Views.CoreUpfrontView.CoreUpfrontPickupView;

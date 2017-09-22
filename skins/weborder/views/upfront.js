@@ -40,13 +40,13 @@ define(["upfront_view"], function(upfront_view) {
 
             order_type = App.Views.GeneratorView.create('Upfront', {
                 mod: 'OrderType',
-                model: this.options.model.checkout,
+                model: this.options.checkout,
                 DINING_OPTION_NAME: this.options.DINING_OPTION_NAME,
                 className: 'fl-left'
             });
 
             pickup = App.Views.GeneratorView.create('Upfront', {
-                model: this.options.model.checkout,
+                model: this.options.checkout,
                 timetable: this.options.timetable,
                 mod: 'Pickup',
                 className: 'fl-left'
@@ -54,7 +54,7 @@ define(["upfront_view"], function(upfront_view) {
 
             actions = App.Views.GeneratorView.create('Upfront', {
                 mod: 'Actions',
-                model: this.options.model.checkout,
+                model: this.options.checkout,
                 className: 'clear button-block'
             });
 

@@ -170,8 +170,6 @@ define(["done_view", "generator"], function(done_view) {
                     el: el,
                     collection: App.Data.myorder,
                     mod: 'Page',
-                    model: App.Data.myorder,
-                    DINING_OPTION_NAME: this.LOC_DINING_OPTION_NAME,
                     timetable: App.Data.timetables,
                     customer: App.Data.customer,
                     DINING_OPTION_NAME: _.clone(_loc.DINING_OPTION_NAME),
