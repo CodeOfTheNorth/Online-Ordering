@@ -259,6 +259,11 @@ define({
         checkout_view: "js/views/checkout",
         /**
          * @type {string}
+         * @description The actual path of [upfront_view]{@link module:upfront_view} module.
+         */
+        upfront_view: "js/views/upfront",
+        /**
+         * @type {string}
          * @description The actual path of [categories_view]{@link module:categories_view} module.
          */
         categories_view: "js/views/categories",

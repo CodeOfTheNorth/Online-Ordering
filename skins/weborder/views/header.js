@@ -32,14 +32,19 @@ define(["backbone", "factory"], function() {
     var HeaderMainView = App.Views.FactoryView.extend({
         name: 'header',
         mod: 'main',
+        initialize: function() {
+            App.Views.FactoryView.prototype.initialize.apply(this, arguments);
+            this.listenTo(App.Data.myorder.checkout, 'change', this.applyBindings);
+        },
         bindings: {
             '.menu': 'classes: {active: strictEqual(tab_index, 0)}',
             '.about': 'classes: {active: strictEqual(tab_index, 1)}',
             '.map': 'classes: {active: strictEqual(tab_index, 2)}',
             '.title': 'text: business_name',
+            '.order-type-name': 'text: orderType',
+            '.pickup-label': 'text: pickupLabel',
+            '.delivery-time': 'text: deliveryTime',
             '.promotions-link': 'toggle: promotions_available',
-            '.address-line1': 'text: line1',
-            '.address-line2': 'text: line2',
             '.open-now': 'text: select(openNow, _lp_STORE_INFO_OPEN_NOW, _lp_STORE_INFO_CLOSED_NOW)'
         },
         render: function() {
@@ -50,30 +55,36 @@ define(["backbone", "factory"], function() {
             'click .menu': onClick('onMenu'),
             'click .about': onClick('onAbout'),
             'click .map': onClick('onMap'),
-            'click .promotions-link': onClick('onPromotions')
+            'click .promotions-link': onClick('onPromotions'),
+            'click .order-type-name': 'setOrder'
         },
         computeds: {
             openNow: function() {
                 return App.Data.timetables.openNow();
             },
-            line1: {
-                deps: ['_system_settings_address'],
-                get: function(address) {
-                    var line1 = address.line_1,
-                        line2 = address.line_2;
-                    return line2 ? line1 + ', ' + line2 : line1;
+            orderType: function() {
+                var order_type = App.Data.myorder.checkout.get('dining_option');
+                if (order_type === '') {
+                    return '';
                 }
+                var _lp = this.getBinding('$_lp').toJSON();
+                return _lp.DINING_OPTION_NAME[order_type];
             },
-            line2: {
-                deps: ['_system_settings_address'],
-                get: function(address) {
-                    var address_line = address.city + ', ';
-                        address_line += address.getRegion() ? address.getRegion() + ' ' : '';
-                        address_line += address.postal_code;
-
-                    return address_line;
-                }
+            pickupLabel: function() {
+                var option = App.Data.myorder.checkout.get('dining_option');
+                    if (option === 'DINING_OPTION_DELIVERY' || option === 'DINING_OPTION_OTHER') {
+                        return _loc.CONFIRM_DELIVERY_TIME;
+                    }
+                    return _loc.CONFIRM_ARRIVAL_TIME;
+            },
+            deliveryTime: function() {
+                return '';
             }
+
+        },
+        setOrder: function(e) {
+            e.preventDefault();
+            App.Data.mainModel.set('upfront_active', true);
         }
     });
 

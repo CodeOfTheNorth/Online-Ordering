@@ -58,6 +58,7 @@ define(["done_view", "generator"], function(done_view) {
             this.listenTo(this.model, 'change:cart', this.cart_change, this);
             this.listenTo(this.model, 'change:popup', this.popup_change, this);
             this.listenTo(this.model, 'change:profile_panel', this.profile_change, this);
+            this.listenTo(this.model, 'change:upfront_active', this.upfront_change, this);
 
             this.iOSFeatures();
 
@@ -159,6 +160,23 @@ define(["done_view", "generator"], function(done_view) {
             // It can be used in MainProfile with specific el.
             this.subViews[3] && this.subViews[3].remove();
             this.subViews[3] = App.Views.GeneratorView.create(data.modelName, data);
+        },
+        upfront_change: function() {
+            var active = this.model.get('upfront_active');
+            var el = $('.upfront-panel');
+            var bd = $('.upfront-backdrop');
+            if (active) {
+                var data = _.extend( {
+                    el: el,
+                    mod: 'Page',
+                    model: App.Data.myorder,
+                },
+                this.model.get('content'));
+
+                var view = App.Views.GeneratorView.create('Upfront', data);
+            }
+            el[active ? 'show' : 'hide']();
+            bd[active ? 'show' : 'hide']();
         },
         hide_popup: function(event, status) {
             var callback = _.isObject( this.subViews[2]) ? this.subViews[2].options.action_callback : null;

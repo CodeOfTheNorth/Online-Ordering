@@ -33,7 +33,8 @@ define(["backbone"], function(Backbone) {
             isShowPromoMessage: false,
             needShowStoreChoice: false,
             isBlurContent: false,
-            backAction: window.history.back.bind(window.history)
+            backAction: window.history.back.bind(window.history),
+            upfront_active: false
         }
     });
 });
