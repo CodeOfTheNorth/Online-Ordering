@@ -899,6 +899,7 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
                     category: id_category,
                     establishment: settings.get("establishment"),
                     search: search,
+                    cmenu: App.Data.custom_menus.get_menus_for_time(App.Data.timetables.base()),
                     page: page,
                     limit: App.SettingsDirectory.json_page_limit
                 },
