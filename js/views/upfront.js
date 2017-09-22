@@ -33,16 +33,8 @@ define(["backbone"], function(Backbone) {
     App.Views.CoreUpfrontView.CoreUpfrontPageView = App.Views.FactoryView.extend({
         name: 'upfront',
         mod: 'page',
-//        bindings: {
-//            show_page: {
-//                get: function() {
-//                    return App.Data.myorder.get('is_upfront_active');
-//                }
-//            }
-//        },
         initialize: function() {
             App.Views.Factory.prototype.initialize.apply(this, arguments);
-            console.log('initializing Upfront page view!!!');
             this.listenTo(App.Data.myorder.get('is_upfront_active'), this.showUpfront, this);
         },
         showUpfront: function() {
@@ -112,7 +104,8 @@ define(["backbone"], function(Backbone) {
 
             this.isDelivery = this.model.get('dining_option') === 'DINING_OPTION_DELIVERY';
             this.pickupTimeIndexByDelta = {};
-            this.pickupTime = this.options.timetable.getPickupList(this.isDelivery, this.pickupTimeIndexByDelta);
+            this.pickupTime = this.options.timetable ?
+                    this.options.timetable.getPickupList(this.isDelivery, this.pickupTimeIndexByDelta) : [];
             App.Views.FactoryView.prototype.initialize.apply(this, arguments);
             this.listenOrderType(null, this.model.get('dining_option'));
         },
@@ -250,7 +243,8 @@ define(["backbone"], function(Backbone) {
         listenOrderType: function(model, value) {
             this.isDelivery = this.model.get('dining_option') === 'DINING_OPTION_DELIVERY';
             this.pickupTimeIndexByDelta = {};
-            this.pickupTime = this.options.timetable.getPickupList(this.isDelivery, this.pickupTimeIndexByDelta);
+            this.pickupTime = this.options.timetable ?
+                this.options.timetable.getPickupList(this.isDelivery, this.pickupTimeIndexByDelta) : [];
             if (value === 'DINING_OPTION_DELIVERY' || value === 'DINING_OPTION_OTHER') {
                 this.$('.pickup').text(_loc.CONFIRM_DELIVERY_TIME);
             } else {
@@ -279,44 +273,6 @@ define(["backbone"], function(Backbone) {
         just_browsing: function() {
             App.Data.mainModel.set('upfront_active', false);
         }
-//        bindings: {
-//            ':el': 'toggle: not(equal(dining_option, "DINING_OPTION_ONLINE"))',
-//            '.select-wrapper': 'classes: { "no-arrows": hide_arrows }',
-//            '.order-type-select': 'value: diningOption, options: dining_options'
-//        },
-//        computeds: {
-//            hide_arrows: function() {
-//                var opts = this.getBinding('dining_options');
-//                return opts.length <= 1;
-//            },
-//            dining_options: function() {
-//                var opts = [];
-//                if (_.isObject(this.options.DINING_OPTION_NAME)) {
-//                    opts = _.map(this.options.DINING_OPTION_NAME, function(value, key) {
-//                        return {label: value, value: key};
-//                    });
-//                }
-//                return opts;
-//            },
-//            /**
-//             * Need to use the computed value because 'DINING_OPTION_ONLINE' is not presented in 'dining_options' computed array. Bug #44273
-//             */
-//            diningOption: {
-//                deps: ['dining_option', 'selected_dining_option'],
-//                get: function(dining_option, selected_dining_option) {
-//                    return dining_option == 'DINING_OPTION_ONLINE' ? selected_dining_option : dining_option;
-//                },
-//                set: function(value) {
-//                    var dining_options = this.getBinding('dining_options');
-//
-//                    if (!value && dining_options.length) {
-//                        value = dining_options[0].value;
-//                    }
-//
-//                    this.model.set('dining_option', value);
-//                }
-//            }
-//        }
     });
 
     return new (require('factory'))(function() {
