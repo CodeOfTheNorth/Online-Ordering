@@ -44,99 +44,6 @@
     </div>
 </script>
 
-<script type="text/template" id="upfront_address-template">
-    <div class="address-selection item"></div>
-
-    <div class="address-edit">
-        <div class="item">
-            <div class="label required optional-text"><%= _lp.CHECKOUT_ADDRESS %></div>
-            <input type="text" name="street_1" class="input ios-safari-caret size3">
-        </div>
-        <div class="item">
-            <div class="label optional-text"><%= _lp.CHECKOUT_APT %></div>
-            <input type="text" name="street_2" class="input ios-safari-caret size1">
-        </div>
-    </div>
-
-    <div class="address-edit">
-        <div class="item">
-            <div class="label required optional-text"><%= _lp.PROFILE_CITY %></div>
-            <input type="text" name="city" class="input ios-safari-caret size1">
-        </div>
-        <% if(country == 'US' && state && states instanceof Object && Object.keys(states).length > 0) { %>
-        <div class="states-box item">
-            <div class="label required optional-text"><%= _lp.PROFILE_STATE %></div>
-            <div class="select-wrapper">
-                <select class="states" id="states">
-                <% for(var i in states) { %>
-                    <option value="<%= i %>" <% if(i.toLowerCase() == state.toLowerCase()) { %>selected="selected"<% } %>><%= states[i] %></option>
-                <% } %>
-                </select>
-            </div>
-        </div>
-        <% } %>
-        <% if(typeof province == 'string') { %>
-        <div class="province-box item">
-            <div class="label required optional-text"><%= _lp.PROFILE_PROVINCE %></div>
-            <input type="text" name="province" class="input ios-safari-caret size1">
-        </div>
-        <% } %>
-        <div class="item">
-            <div class="label required optional-text"><% if(country == 'US') {print(_lp.PROFILE_ZIP_CODE);} else {print(_lp.PROFILE_POSTAL_CODE);} %></div>
-            <input type="text" name="zipcode" class="input ios-safari-caret size4">
-        </div>
-    </div>
-
-    <% if(isShippingServices) { %>
-    <div class="address-edit">
-        <div class="item">
-            <div class="label required optional-text"><%= _lp.PROFILE_COUNTRY %>:</div>
-            <div class="select-wrapper">
-                <select class="country size2">
-                <% for (var i in countries) { %>
-                    <option value="<%= i %>" <% if(i.toLowerCase() == country.toLowerCase()) { %>selected="selected"<% } %>><%= countries[i] %></option>
-                <% } %>
-                </select>
-            </div>
-        </div>
-    </div>
-
-    <div class="item">
-        <div class="label required optional-text"><%= _lp.CHECKOUT_SHIPPING_HANDLING %></div>
-        <div class="inline-block">
-            <div class="select-wrapper">
-                <select class="shipping-select select"></select>
-            </div>
-            <div class="shipping-status fl-right"></div>
-        </div>
-    </div>
-    <% } %>
-</script>
-
-<script type="text/template" id="upfront_address_selection-template">
-    <div class="label required optional-text"><%= _lp.CHECKOUT_CHOOSE_ADDRESS %></div>
-    <div class="select-wrapper">
-        <select id="addresses"></select>
-    </div>
-</script>
-
-<script type="text/template" id="upfront_other-template">
-    <div class="list"></div>
-</script>
-
-<script type="text/template" id="upfront_other_item-template">
-    <div class="item fl-left">
-        <div class="label optional-text" data-isrequired><%= name %></div>
-        <% if (Array.isArray(choices) && choices.length) { %>
-            <div class="select-wrapper">
-                <select class="section-select" name="<%= name %>"></select>
-            </div>
-        <% } else { %>
-            <input type="text" name="<%= name %>" class="input ios-safari-caret size1">
-        <% } %>
-    </div>
-</script>
-
 <script type="text/template" id="upfront_page-template">
 <!--   <h2 class="category-title primary-border category-bg order-details-title"><%= 'Your food is a couple of clicks away.' %></h2> -->
     <div class="upfront-content">
@@ -148,29 +55,6 @@
         </div>-->
     </div>
     <div>
-</script>
-
-<script type="text/template" id="upfront_discount_code-template">
-    <div class="label optional-text"><%= _lp.CHECKOUT_DISCOUNT_CODE %></div>
-    <div class="ctrl-box item size1">
-        <input type="text" name="discount_code" class="input ctrl-input ios-safari-caret">
-        <label class="ctrl-wrapper cancel">
-            <input type="button" class="ctrl cancel-input">
-        </label>
-    </div>
-    <span class="btnApply"><%= _lp.CHECKOUT_DISC_CODE_APPLY %></span>
-</script>
-
-<script type="text/template" id="upfront_rewards_card-template">
-    <div class="label optional-text"><%= _lp.CHECKOUT_REWARD_CARD %></div>
-    <div class="ctrl-box item size1">
-        <input type="text" class="rewardCard input ctrl-input ios-safari-caret">
-        <label class="ctrl-wrapper cancel">
-            <input type="button" class="ctrl cancel-input">
-        </label>
-    </div>
-    <span class="rewards-card-apply link primary-text"><%= _lp.CHECKOUT_DISC_CODE_APPLY %></span>
-    <span class="see-rewards link primary-text"><%= _lp.CHECKOUT_SEE_REWARDS %></span>
 </script>
 
 <script type="text/template" id="upfront_actions-template">

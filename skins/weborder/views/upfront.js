@@ -28,12 +28,6 @@ define(["upfront_view"], function(upfront_view) {
  * to be used for another algorithm (sequence of actions)
  */
 
-    var UpfrontMainView = App.Views.UpfrontView.UpfrontMainView.extend({
-        initialize: function() {
-            App.Views.UpfrontView.UpfrontMainView.prototype.initialize.apply(this, arguments);
-        }
-    });
-
     var UpfrontPageView = App.Views.FactoryView.extend({
         name: 'upfront',
         mod: 'page',
@@ -75,7 +69,6 @@ define(["upfront_view"], function(upfront_view) {
     });
 
     return new (require('factory'))(upfront_view.initViews.bind(upfront_view), function() {
-        App.Views.UpfrontView.UpfrontMainView = UpfrontMainView;
         App.Views.UpfrontView.UpfrontPageView = UpfrontPageView;
     });
 });
