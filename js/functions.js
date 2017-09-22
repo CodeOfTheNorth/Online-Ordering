@@ -1419,7 +1419,11 @@ var PaymentProcessor = {
     handleRedirect: function(payment_type, myorder, data) {
         var processor = this.getPaymentProcessor(payment_type);
         if (processor.handleRedirect) {
-            processor.handleRedirect(myorder, data);
+            var status = processor.handleRedirect(myorder, data);
+            if (status == "Exit") {
+                // used for iframe method like triPOS
+                return;
+            }
         }
 
         myorder.checkout.set('payment_type', payment_type);
@@ -1558,6 +1562,8 @@ var PaymentProcessor = {
             payment_processor = GlobalCollectPaymentProcessor;
         } else if (payment.adyen && (window.location.hostname == "bellpepper.revelup.com" || window.location.hostname == "bellpepper-dev.revelup.com")) {//#55981
             payment_processor = AdyenPaymentProcessor;
+        } else if (payment.tripos) {
+            payment_processor = triPOSPaymentProcessor;
         }
         return payment_processor;
     },
@@ -2432,6 +2438,91 @@ var CRESecurePaymentProcessor = {
         return payment_info;
     }
 };
+
+/*
+* global events with data
+*/
+function triggerEvent(name, data) {
+   window.dispatchEvent(new CustomEvent(name, {detail: data}));
+}
+function listenEvent(name, callback) {
+    window.addEventListener(name, function(e){
+        callback && callback(e, e.detail);
+    });
+}
+
+var PaymentIframe = new CPaymentIframe;
+function CPaymentIframe() {
+    if (CPaymentIframe.instance instanceof CPaymentIframe) {
+        return CPaymentIframe.instance; //to be singletone
+    } else {
+        CPaymentIframe.instance = this;
+    }
+    this.iframe = $("#payment_ifrm");
+    var self = this;
+    window.addEventListener('message', function(event) {
+        try {
+            var data = JSON.parse(event.data);
+            if (data.action == "CompletePayment") {
+                triggerEvent("IframePaymentComplete", data.data);
+                self.hide();
+            }
+        } catch(error) {}
+    });
+}
+CPaymentIframe.prototype.redirect = function(data) {
+    var src;
+    if (data.url) {
+        src = data.url;
+    } else if (data.action && data.query) {
+        src = data.action + (App.skin == App.Skins.WEBORDER_MOBILE ? "mobile?" : "?");
+        for (var key in data.query) {
+            src += decodeURIComponent(key) + "=" + decodeURIComponent(data.query[key]) + "&";
+        }
+    } else {
+        console.error("redirect: unxpected data:", data);
+        return;
+    }
+
+    this.iframe[0].src = src;
+    this.iframe.show();
+}
+CPaymentIframe.prototype.hide = function() {
+    this.iframe.hide();
+}
+
+var triPOSPaymentProcessor = {
+    name: 'triPOSPaymentProcessor',
+    clearQueryString: function(queryString) {
+        return queryString;
+    },
+    showCreditCardDialog: function() {
+        return false;
+    },
+    handleRedirect: function(myorder, data) {
+        PaymentIframe.redirect(data.data);
+        setTimeout(function() {
+            App.Data.mainModel.trigger('loadCompleted')
+        }, 1000);
+
+        if (!this.iframePaymentCompleteEvent) {
+            listenEvent('IframePaymentComplete', function (event, data) {
+                PaymentIframe.hide();
+                if (data.status == "OK")
+                    myorder.paymentResponse = data;
+                else
+                    myorder.paymentResponse = {status: 'error', errorMsg: data.errorMsg};
+
+                myorder.trigger('paymentResponse');
+            });
+            this.iframePaymentCompleteEvent = true;
+        }
+        return "Exit";
+    },
+    processPayment: function(myorder, payment_info, pay_get_parameter) {
+        return payment_info;
+    }
+}
 
 /**
  * Removes all classes by regular expression.

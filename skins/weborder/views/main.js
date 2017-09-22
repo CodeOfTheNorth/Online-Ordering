@@ -39,6 +39,7 @@ define(["done_view", "generator"], function(done_view) {
             this.hideSpinner();
         },
         loadStarted: function() {
+            trace({for: 'spinner'}, "#main-spinner show");
             this.spinner = setTimeout(this.showSpinner.bind(this), 50);
         },
         showSpinner: function() {
