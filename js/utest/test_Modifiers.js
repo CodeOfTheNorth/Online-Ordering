@@ -1231,6 +1231,8 @@ define(['modifiers', 'js/utest/data/Modifiers'], function(modifiers, data) {
                     return ajaxStub;
                 };
 
+            App.Data.products = new Backbone.Model();
+
             spyOn($,'ajax').and.callFake(ajaxStub);
             spyOn(model, 'create_quick_modifiers_section').and.callThrough();
             spyOn(App.Data.errors, 'alert');
