@@ -582,12 +582,16 @@ function loadCSS(name, loadModelCSS) {
         elem = loadCSS.cache[id];
     } else {
         //trace("name =", name, "starting load...");
-        elem = loadCSS.cache[id] = $('<link rel="stylesheet" href="' + path_name + '" type="text/css" />');
+        if (/\.less$/.test(path_name)) {
+            var isLess = true;
+        }
+        elem = loadCSS.cache[id] = $('<link rel="stylesheet" href="' + path_name + '" type="text/' + (isLess ? 'less"/>' : 'css"/>'));
         // bug #18285 - no timeout for app assets
         var timer = window.setTimeout(error, App.Data.settings.get('timeout'));
 
         elem.on('load', function(event) {
             //trace("name =", name, " loaded successfully");
+            //note: this event is not working e.g. for .less files for Firefox
             onCSSLoaded(true, resolve);
         });
         elem.on('error', function(event) {
