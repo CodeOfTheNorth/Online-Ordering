@@ -1048,6 +1048,14 @@ define(["backbone"], function(Backbone) {
             var self = this,
                 fetching = new $.Deferred(); // Pointer that all data loaded
 
+            //prevent sending request for modifiers if current product is a child of matrix inventory product
+            var arr = _.map(App.Data.products, function(item){ return item });
+            var product = _.find(arr[0].models, function(product){ return product.attributes.id === id_product });
+
+            if (product && product.attributes.attribute_type === 2) {
+                return fetching.resolve();
+            }
+
             $.ajax({
                 url: App.Data.settings.get("host") + "/weborders/modifiers/",
                 data: {
