@@ -582,20 +582,17 @@ function loadCSS(name, loadModelCSS) {
         elem = loadCSS.cache[id];
     } else {
         //trace("name =", name, "starting load...");
-        if (/\.less$/.test(path_name)) {
-            var isLess = true;
-        }
-        elem = loadCSS.cache[id] = $('<link rel="stylesheet" href="' + path_name + '" type="text/' + (isLess ? 'less"/>' : 'css"/>'));
+        var elemStr = '<link rel="stylesheet" href="' + path_name + '" type="text/css"/>';
+        elem = loadCSS.cache[id] = $(elemStr);
         // bug #18285 - no timeout for app assets
         var timer = window.setTimeout(error, App.Data.settings.get('timeout'));
-
         elem.on('load', function(event) {
             //trace("name =", name, " loaded successfully");
-            //note: this event is not working e.g. for .less files for Firefox
+            //note: this event is not working right e.g. for .less files (for all browsers)
             onCSSLoaded(true, resolve);
         });
         elem.on('error', function(event) {
-            console.error("Can't load: ", event.target.href);
+            console.error("Can't load: ", event.target);
             Backbone.$(window).trigger('hideSpinner');
             onCSSLoaded(true, error);
         });
