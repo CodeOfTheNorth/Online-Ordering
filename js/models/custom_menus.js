@@ -22,51 +22,51 @@
  define(["backbone"], function(Backbone) {
     'use strict';
 
-	App.Models.CustomMenu = Backbone.Model.extend({
-		defaults: {
-			name: '',
-			id: null,
-			timetable: null
-		},
-		addJSON: function(data) {
-			var timetable = new App.Models.Timetable({
+    App.Models.CustomMenu = Backbone.Model.extend({
+        defaults: {
+            name: '',
+            id: null,
+            timetable: null
+        },
+        addJSON: function(data) {
+            var timetable = new App.Models.Timetable({
                                 timetables: [data.timetable],
                                 holidays: []
                             });
-			timetable.workingDay.update({
-				start_time: 0,
+            timetable.workingDay.update({
+                start_time: 0,
                 end_time: 0,
                 delivery_time: 0,
                 preparation_time: 0,
                 pickup_time_interval: 15, //it does not play the role for checking_work_shop(), but it set just to exclude possible errors
-				enable_asap: false, //the same
-			});
+                enable_asap: false, //the same
+            });
 
-			this.set({
-				name: data.name,
-				id: data.id,
-				timetable: timetable
-			});
-		},
+            this.set({
+                name: data.name,
+                id: data.id,
+                timetable: timetable
+            });
+        },
         is_available_for_time: function(pickup_time) {
-        	//pickup_time is a server time
-        	return this.get("timetable").checking_work_shop(pickup_time);
+            //pickup_time is a server time
+            return this.get("timetable").checking_work_shop(pickup_time);
         }
-	});
+    });
 
-	App.Collections.CustomMenus = Backbone.Collection.extend({
-	    model: App.Models.CustomMenu,
-	    //Usage is:
+    App.Collections.CustomMenus = Backbone.Collection.extend({
+        model: App.Models.CustomMenu,
+        //Usage is:
         //var pickup = App.Data.myorder.checkout.get("pickupTS");
         //var ids = get_menus_for_time(pickup)
         get_menus_for_time: function(time) {
-        	var result = [];
-        	this.each(function(model) {
-        		if (model.is_available_for_time(time)) {
+            var result = [];
+            this.each(function(model) {
+                if (model.is_available_for_time(time)) {
                     result.push(model.id);
                 }
-        	});
-        	return result;
-		}
-	});
+            });
+            return result;
+        }
+    });
 })

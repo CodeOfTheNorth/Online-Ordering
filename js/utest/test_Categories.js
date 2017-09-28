@@ -48,7 +48,8 @@ define(['js/utest/data/Categories', 'categories'], function(categories) {
                 error = arguments[0].error;
                 arg = arguments;
             },
-            settings = App.Data.settings;
+            settings = App.Data.settings,
+            curCustomMenus;
 
         beforeEach(function() {
             model = new App.Collections.Categories();
@@ -66,6 +67,17 @@ define(['js/utest/data/Categories', 'categories'], function(categories) {
                 active: true,
                 timetables: null
             };
+            curCustomMenus = [11, 22];
+            App.Data.custom_menus = {
+                get_menus_for_time: function() {
+                    return curCustomMenus;
+                }
+            }
+            App.Data.timetables = {
+                base: function() {
+                    return new Date();
+                }
+            }
         });
 
         it('Environment', function() {
@@ -84,6 +96,12 @@ define(['js/utest/data/Categories', 'categories'], function(categories) {
             expect(model.get(50).toJSON()).toEqual(id);
             expect(model.selected).toBe(0);
             expect(model.parent_selected).toBe(0);
+        });
+
+        it("get_categories(), no custom menus found", function() {
+            curCustomMenus = [];
+            var dfd = model.get_categories();
+            expect(dfd.state()).toBe('resolved');
         });
 
         it("set_inactive()", function() {
