@@ -2159,6 +2159,9 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                             reportErrorFrm(MSG.ERROR_PRICE_CHANGED.replace('%product', response.name).replace('%price', response.price));
                             myorder.price_changed(response);
                             break;
+                        case 'INCORRECT_MODIFIER_QTY':
+                            reportErrorFrm(MSG.INCORRECT_MODIFIER_QTY);
+                            break;
                         default:
                             if (!data.errorMsg) data.errorMsg = MSG.ERROR_NO_MSG_FROM_SERVER;
                             data.errorMsg = MSG.ERROR_OCCURRED + ' ' + data.errorMsg;
@@ -2166,12 +2169,12 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                     }//end of switch
                 },
                 error: function(xhr) {
-                    if (xhr.statusText != "abort") {
+                    if (xhr.statusText !== "abort") {
                         reportErrorFrm(MSG.ERROR_GET_CART_TOTALS);
                     }
                 },
                 complete: function(xhr) {
-                    if (xhr.statusText != "abort") {
+                    if (xhr.statusText !== "abort") {
                         myorder.trigger("DiscountsComplete");
                     }
                 }

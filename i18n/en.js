@@ -448,6 +448,7 @@
             'FREE_MODIFIERS_PRICE': 'Modifiers for up to %s will be free',
             'FREE_MODIFIERS_QUANTITY': 'First %s modifiers selected will be free',
             'FREE_MODIFIERS_QUANTITY1': 'First modifier selected will be free',
+            'INCORRECT_MODIFIER_QTY': 'Minimum modifier\'s quantity for one or more items from the order has been changed. Please reoder from the menu.',
             'PRODUCTS_VALID_TIME': 'Available: ',
             'ERROR_REVEL_EMPTY_NEW_PASSWORD': 'Please enter new password.',
             'ERROR_REVEL_EMPTY_OLD_PASSWORD': 'Please enter old password.',
