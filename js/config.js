@@ -485,7 +485,12 @@ define({
          * @type {string}
          * @description The actual path to [raven]{@link module:raven} module. Used for logging
          */
-        raven: 'js/libs/raven.min' //#WOMA-491, version 3.12.1 url: https://cdn.ravenjs.com/3.12.1/raven.min.js
+        raven: 'js/libs/raven.min', //#WOMA-491, version 3.12.1 url: https://cdn.ravenjs.com/3.12.1/raven.min.js
+        /**
+         * @type {string}
+         * @description The actual path to [raven]{@link module:custom_menus} module.
+         */
+        custom_menus: 'js/models/custom_menus'
     },
     /**
      * A waiting time of a module loading.
@@ -561,6 +566,9 @@ define({
         },
         "timetable": {
             deps: ["settings"]
+        },
+        "custom_menus": {
+            deps: ["timetable"]
         },
         "factory": {
             deps: ["backbone", "backbone_epoxy_handlers", "backbone_epoxy_filters"]

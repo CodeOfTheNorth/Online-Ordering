@@ -188,11 +188,21 @@ define(["backbone", "collection_sort"], function(Backbone) {
         get_categories: function() {
             var self = this;
             var dfd = $.Deferred();
+
+            var custom_menus = App.Data.custom_menus.get_menus_for_time(App.Data.timetables.base());
+            if (custom_menus.length == 0) {
+                //no custom menus are found
+                return dfd.resolve();
+            }
+
             $.ajax({
+                type: "GET",
                 url: App.Data.settings.get("host") + "/weborders/product_categories/",
                 data: {
-                    establishment: App.Data.settings.get("establishment")
+                    establishment: App.Data.settings.get("establishment"),
+                    cmenu: custom_menus
                 },
+                traditional: true, // it removes "[]" from "category" get parameter name
                 dataType: "json",
                 successResp: function(data) {
                     if (data.length) {
