@@ -101,9 +101,6 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
             return this;
         },
         addItem: function(model) {
-            if (model.get("attribute_type") == 2) { // to hide child products
-                return;
-            }
             var settings = App.Data.settings.get('settings_system'),
                 noImg = settings.hide_images,
                 noDesc = settings.hide_products_description,
