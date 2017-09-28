@@ -858,6 +858,12 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
             });
             return res;
         },
+        /*
+        *  Reset paging info about the product collection
+        */
+        reset_meta_info: function() {
+            this.meta = {"has_next": false, "count": 0, "num_pages": 1, "has_previous": false, "start_index": 0, "end_index": 0};
+        },
         /**
          * Receives products. Used parameters of request are:
          * ```
@@ -892,6 +898,12 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
                 return fetching.reject();
             }
 
+            var custom_menus = App.Data.custom_menus.get_menus_for_time(App.Data.timetables.base());
+            if (custom_menus.length == 0) { //no custom menus found
+                this.reset_meta_info();
+                return fetching.resolve();
+            }
+
             Backbone.$.ajax({
                 type: "GET",
                 url: "/weborders/products/",
@@ -899,7 +911,7 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
                     category: id_category,
                     establishment: settings.get("establishment"),
                     search: search,
-                    cmenu: App.Data.custom_menus.get_menus_for_time(App.Data.timetables.base()),
+                    cmenu: custom_menus,
                     page: page,
                     limit: App.SettingsDirectory.json_page_limit
                 },

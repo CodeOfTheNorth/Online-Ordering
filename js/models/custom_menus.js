@@ -30,7 +30,7 @@
 		},
 		addJSON: function(data) {
 			var timetable = new App.Models.Timetable({
-                                timetables: data.timetable,
+                                timetables: [data.timetable],
                                 holidays: []
                             });
 			timetable.workingDay.update({
@@ -56,15 +56,7 @@
 
 	App.Collections.CustomMenus = Backbone.Collection.extend({
 	    model: App.Models.CustomMenu,
-	    addJSON: function(data) {
-            var self = this;
-            data.forEach(function(custom_menu, index) {
-                    var model = new App.Models.CustomMenu();
-                    model.addJSON(custom_menu);
-                    self.add(model);
-                });
-        },
-        //Usage is:
+	    //Usage is:
         //var pickup = App.Data.myorder.checkout.get("pickupTS");
         //var ids = get_menus_for_time(pickup)
         get_menus_for_time: function(time) {
