@@ -31,7 +31,7 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
         mod: 'list_item',
         initialize: function() {
             App.Views.ItemView.prototype.initialize.apply(this, arguments);
-            this.listenTo(this.model, 'change:price', this.render, this);
+            this.listenTo(this.model, 'change:price change:stock_amount', this.render, this);
         },
         bindings: {
             ':el': 'classes: {hide: not(active)}',

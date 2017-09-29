@@ -547,7 +547,14 @@ define(["backbone"], function(Backbone) {
                         }
                     });
                 }
-
+                 //update stock amount after ordering
+                _.mapObject(App.Data.products, function(product_group) {
+                    _.map(product_group.models, function(item){
+                        if(item.attributes.id === product.id) {
+                            item.set('stock_amount', product.stock_amount)
+                        }
+                    })
+                });
                 processModifiers(item);
             });
 
