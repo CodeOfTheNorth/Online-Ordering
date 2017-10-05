@@ -493,11 +493,13 @@
             <div class="subtotal subtotal-title col text-center fl-right"><%= _lp.PAST_ORDERS_TOTAL_TITLE %></div>
             <div class="qty col text-center fl-right"><%= _lp.PAST_ORDERS_QUANTITY_TITLE %></div>
         </div>
-        <div class="orders-box clear">
+        <div class="orders-box clear loading_bg">
             <ul class="orders-list"></ul>
         </div>
     </div>
     <div class="orders-empty"><%= _lp.PROFILE_PAST_ORDERS_EMPTY %></div>
+    <div class='orders_pages_control'></div>
+    <div class='orders_spinner'></div>
 </script>
 
 <script type="text/template" id="profile_past_order-template">

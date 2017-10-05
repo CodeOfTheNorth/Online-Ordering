@@ -390,7 +390,7 @@ input[type="radio"]:checked + .radio::before,
 
 .category-title {
     padding: 13px 25px;
-    border-width: 1px 0;
+    border-width: 0 0 1px 0;
     border-style: solid;
     font-size: 18px;
     font-weight: 600;

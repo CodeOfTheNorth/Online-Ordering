@@ -2349,13 +2349,13 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
          * Receives orders from server.
          * @returns {Object|undefined} jqXHR object.
          */
-        getOrders: function() {
+        getOrders: function(page) {
             if (!this.orders) {
                 return console.error("Orders have not been initialized yet");
             }
 
             var self = this,
-                req = this.orders.get_orders(this.getAuthorizationHeader());
+                req = this.orders.get_orders(this.getAuthorizationHeader(), page);
 
             req.fail(function(jqXHR) {
                 if (jqXHR.status == 403) {
@@ -2363,7 +2363,11 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
                 }
             });
 
-            req.done(function() {
+            req.done(function(data) {
+                if (Array.isArray(data.data)) {
+                   self.orders.set(self.orders.processOrders(data.data));
+                }
+	            self.orders.meta = data.meta;
                 // set first order as past order
                 self.orders.length && self.set('pastOrder', self.orders.at(0));
             });
@@ -2392,6 +2396,24 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
 
             var self = this,
                 req = this.orders.get_order(this.getAuthorizationHeader(), order_id);
+            
+            req.done(function() {
+                var dfd = Backbone.$.Deferred();
+            	// if reordered item comes from the first page, item is set as first on page
+	            // and last item in list is removed to preserve number of items per page
+	            if (!self.orders.meta.has_previous) {
+		            self.orders.pop();
+		            dfd.resolve();
+	            } else {
+	            	//else request orders' first page
+	            	var req = self.getOrders();
+	            	req.then(dfd.resolve.bind(dfd));
+	            }
+	            self.trigger('past_orders_pages_reset');
+	            
+	            return dfd;
+	            
+            });
 
             req.fail(function(jqXHR) {
                 if (jqXHR.status == 403) {

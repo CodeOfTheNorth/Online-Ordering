@@ -139,10 +139,10 @@ define(["categories_view"], function(categories_view) {
             //trace("SUM last_index = ", this.last_index, " of ", this.options.searchModel.get('num_of_products'));
         },
         showSpinner: function() {
-            $('#products-spinner').show();
+            $('#list_items-spinner').show();
         },
         hideSpinner: function(delay) {
-            $('#products-spinner').hide();
+            $('#list_items-spinner').hide();
         }
     });
 

@@ -6,11 +6,16 @@
     "color_schemes": ["default", "blue_&_white", "vintage", "stanford"],
     "routing": {
         "main": {
-            "css": ["main", "cart", "jquery.contentarrow", "products", "myorder", "modifiers", "instructions", "quantity", "product_sets", "profile", "header", "footer", "stanford"],
+            "css": ["main", "cart", "jquery.contentarrow", "products", "myorder", "modifiers", "instructions",
+              "quantity", "product_sets", "profile", "header", "footer", "stanford"],
             "model": ["main", "header", "categories"],
-            "templates": ["main", "header", "myorder", "total", "cart", "products", "modifiers", "product_sets", "instructions", "quantity", "stanfordcard", "profile", "rewards"],
+            "templates": ["main", "header", "myorder", "total", "cart", "products", "modifiers", "product_sets",
+              "instructions", "quantity", "stanfordcard", "profile", "rewards"],
             "views": ["main", "header", "myorder", "cart", "products", "modifiers", "quantity", "profile"],
-            "core": ["generator", "total_view", "products", "categories", "subcategories", "search", "product_sets", "product_sets_view", "modifiers", "jquery_numbermask", "stanfordcard", "customers", "payments", "giftcard", "rewards", "rewards_view",  "instructions_view", "payment_methods", "geolocation"],
+            "core": ["generator", "total_view", "products", "categories", "subcategories", "search", "product_sets",
+                "product_sets_view", "modifiers", "jquery_numbermask", "stanfordcard", "customers", "payments",
+                "giftcard", "rewards", "rewards_view",  "instructions_view", "payment_methods", "geolocation",
+              "pages_control", "pages_control_view"],
             "js" : ["jquery.contentarrow", "jquery.combobox"]
         },
         "index": {
@@ -34,7 +39,8 @@
             "css": ["checkout", "card", "rewards", "pikaday"],
             "views": ["cart", "checkout", "tips", "rewards", "stanfordcard", "card"],
             "templates": ["cart", "checkout", "cart", "tips", "card", "giftcard", "rewards", "payment_methods"],
-            "core": ["products", "customers", "card", "giftcard", "checkout", "delivery_addresses", "giftcard_view", "pikaday", "payment_methods_view"]
+            "core": ["products", "customers", "card", "giftcard", "checkout", "delivery_addresses", "giftcard_view",
+              "pikaday", "payment_methods_view"]
         },
         "confirm": {
             "css": ["confirm"],
