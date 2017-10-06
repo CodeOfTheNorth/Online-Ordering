@@ -171,7 +171,7 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
         modifier_listener: false,
         /**
          * Current modifiers of the order item. This can be value of `modifiers` attribute or modifiers of any child product.
-         * If modifiers aren't specifed yet then this has `false` value.
+         * If modifiers aren't specified yet then this has `false` value.
          * @type {(boolean|App.Collections.ModifierBlocks)}
          * @default false
          */
@@ -278,7 +278,7 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
         },
         /**
          * Updates `sum` attribute of modifiers.
-         * @param {number} multiplier - a quantity koefficient which is used to get right modifiers quantity taking into account the quantity of the parent (Combo) product itself
+         * @param {number} multiplier - a quantity coefficient which is used to get right modifiers quantity taking into account the quantity of the parent (Combo) product itself
          */
         update_mdf_sum: function(multiplier) {
             var mdfGroups = this.get_modifiers(),
@@ -2160,7 +2160,8 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                             myorder.price_changed(response);
                             break;
                         case 'INCORRECT_MODIFIER_QTY':
-                            reportErrorFrm(MSG.INCORRECT_MODIFIER_QTY);
+                            myorder.previousError = MSG.INCORRECT_MODIFIER_QTY;
+                            myorder.empty_myorder();
                             break;
                         default:
                             if (!data.errorMsg) data.errorMsg = MSG.ERROR_NO_MSG_FROM_SERVER;
