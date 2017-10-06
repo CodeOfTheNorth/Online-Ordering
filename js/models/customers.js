@@ -2398,21 +2398,8 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
                 req = this.orders.get_order(this.getAuthorizationHeader(), order_id);
             
             req.done(function() {
-                var dfd = Backbone.$.Deferred();
-            	// if reordered item comes from the first page, item is set as first on page
-	            // and last item in list is removed to preserve number of items per page
-	            if (!self.orders.meta.has_previous) {
-		            self.orders.pop();
-		            dfd.resolve();
-	            } else {
-	            	//else request orders' first page
-	            	var req = self.getOrders();
-	            	req.then(dfd.resolve.bind(dfd));
-	            }
-	            self.trigger('past_orders_pages_reset');
-	            
-	            return dfd;
-	            
+                var req = self.getOrders();
+	            req.then( self.trigger('past_orders_pages_reset') );
             });
 
             req.fail(function(jqXHR) {
