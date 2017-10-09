@@ -1447,6 +1447,7 @@ define(["factory"], function() {
 
             dfd = App.Data.customer.getOrders(cur_page);
             dfd.done(function() {
+                self.set_view_to_top();
                 self.pageModel.enableControls();
                 self.hideSpinner();
             });
@@ -1462,9 +1463,13 @@ define(["factory"], function() {
         hideSpinner: function() {
             $('.orders_spinner').removeClass('ui-visible');
             $('.loading_bg').removeClass('shadow-bg');
+        },
+        set_view_to_top: function () {
+            var scroll_el = $(".orders-box")[0];
+            scroll_el.scrollTo(0,0);
         }
     });
-
+    
     function controlLinks(showSignUp, showLogIn, showMenu, showPWDReset) {
         return function() {
             this.getBinding('$ui').set({
