@@ -352,10 +352,18 @@ define(["profile_view", "giftcard_view", "myorder_view"], function(profile_view)
     var ProfileOrdersView = App.Views.CoreProfileView.CoreProfileOrdersView.extend({
 	    initialize: function(opts) {
             App.Views.FactoryView.prototype.initialize.apply(this, arguments);
+            this.listenTo(App.Data.header, 'change', this.remember_position, this);
             this.start();
         },
         bindings: {
             '.orders': 'toggle: length($collection)'
+        },
+        bindingSources: {
+            pos: function() { return new Backbone.Model({position: 0}) }
+        },
+        remember_position: function () {
+	        this.bindingSources.pos.get('position');
+	        console.log(document.getElementById('section').scrollTop, this.bindingSources.pos.get('position'));
         },
 	     start: function() {
             this.scrollHandler = this.onScroll.bind(this);
@@ -382,7 +390,10 @@ define(["profile_view", "giftcard_view", "myorder_view"], function(profile_view)
             var next_page_koeff = 1.5;
             var is_next_page = this.collection.meta.has_next;
             var next_page_number = this.collection.meta.next_page_number;
-
+            
+            trace("scroll params: ", scrollTop);
+            this.bindingSources.pos.set('position', scrollTop);
+            
             if (scrollTop > 0 && scrollTop >= scrollHeight - (next_page_koeff * page_height) && is_next_page) {
             	if(next_page_number !== this.collection.last_page_loaded) {
             		this.showSpinner();
