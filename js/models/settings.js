@@ -50,7 +50,6 @@ define(["backbone", "async"], function(Backbone) {
          * Initializes the model.
          */
         initialize: function() {
-            var self = this;
             var app = require('app');
             this.get_data_warehouse(); // selection of the data warehouse
             this.set('basePath', app.config.baseUrl.replace(/\/$/, '') || '.');
@@ -59,10 +58,7 @@ define(["backbone", "async"], function(Backbone) {
             this.set('host', app.REVEL_HOST);
             this.set('hostname', /^http[s]*:\/\/(.+)/.exec(app.REVEL_HOST)[1]); //it's the host w/o "http[s]://" substring
             this.ajaxSetup(); // AJAX-requests settings
-            this.loadDfd = new $.Deferred;
-            this.listenTo(this, 'change:establishment', function() {
-                    this.loadDfd = this.load();
-                }, this); // load app
+            this.listenTo(this, 'change:establishment', this.load, this); // load app
         },
         /**
          * Loads the app.
@@ -464,8 +460,7 @@ define(["backbone", "async"], function(Backbone) {
                     },
                     recaptcha_site_key: '6LcTkCETAAAAAO-aSGuRIl6Habqu3f0s8WeAvV5R', // for *.revelup.com domain
                     google_maps_api_key: '',
-                    fb_app_id: '233118313739765', // for *.revelup.com domain
-                    custom_menus: []
+                    fb_app_id: '233118313739765' // for *.revelup.com domain
                 },
                 load = $.Deferred();
 
