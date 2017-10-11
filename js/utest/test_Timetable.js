@@ -708,12 +708,12 @@ define(['js/utest/data/Timetable', 'timetable'], function(timetables) {
         });
 
         describe('get_working_hours()', function() {
-            var date = new Date(2014, 0, 22),
+            var date = new Date(2014, 0, 22), //Jan 22. Wednesday
                 date2 = new Date(2014, 0, 1), // Jan 1. Wednesday. One day timetable
-                date3 = new Date(2014, 1, 2), // Feb 2. sunday. Inside timetable
-                date5 = new Date(2014, 3, 6), // April 6 sunday
-                date6 = new Date(2014, 3, 8), // April 8 tuesday
-                date7 = new Date(2014, 3, 9); // April 9 wednesday
+                date3 = new Date(2014, 1, 2), // Feb 2. Sunday. Inside timetable
+                date5 = new Date(2014, 3, 6), // April 6 Sunday
+                date6 = new Date(2014, 3, 8), // April 8 Tuesday
+                date7 = new Date(2014, 3, 9); // April 9 Wednesday
 
             it('empty timetables', function() {
                 expect(model.get_working_hours(date)).toBe(true);

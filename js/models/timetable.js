@@ -543,7 +543,11 @@ define(["backbone"], function(Backbone) {
                     if (cur_date >= from_date) {
                         return table[i].timetable_data;
                     }
-                } else {
+                }
+                if ($.trim(table[i].from_date) === '' && $.trim(table[i].to_date) === '') { //nonperiodic interval with open dates
+                    return table[i].timetable_data;
+                }
+                else {
                     to_date = new Date(table[i].to_date);
                     if (from_date <= cur_date && cur_date <= to_date) {
                         return table[i].timetable_data;

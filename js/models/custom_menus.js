@@ -50,6 +50,10 @@
         },
         is_available_for_time: function(pickup_time) {
             //pickup_time is a server time
+            var timetable = this.get("timetable").attributes.timetables[0].timetable_data;
+            if(empty_object(timetable)) {
+                return true
+            }
             return this.get("timetable").checking_work_shop(pickup_time);
         }
     });
@@ -69,4 +73,4 @@
             return result;
         }
     });
-})
+});
