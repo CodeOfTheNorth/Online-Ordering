@@ -46,7 +46,7 @@ define({
          * @type {string}
          * @description The actual path of [app]{@link module:facebook} module.
          */
-        facebook: 'js/libs/facebook_sdk', //#WOMA-443 & WOMA-491, the recent lib url: https://connect.facebook.net/en_US/sdk.js
+        facebook: "https://connect.facebook.net/en_US/sdk",
         /**
          * @type {string}
          * @description The actual path of [app]{@link module:app} module.
@@ -480,12 +480,7 @@ define({
          * @type {string}
          * @description The actual path to [raven]{@link module:raven} module. Used for logging
          */
-        raven: 'js/libs/raven.min', //#WOMA-491, version 3.12.1 url: https://cdn.ravenjs.com/3.12.1/raven.min.js
-        /**
-         * @type {string}
-         * @description The actual path to [raven]{@link module:custom_menus} module.
-         */
-        custom_menus: 'js/models/custom_menus'
+        raven: 'https://cdn.ravenjs.com/3.12.1/raven.min' //previously tested with 3.0.4 version
     },
     /**
      * A waiting time of a module loading.
@@ -561,9 +556,6 @@ define({
         },
         "timetable": {
             deps: ["settings"]
-        },
-        "custom_menus": {
-            deps: ["timetable"]
         },
         "factory": {
             deps: ["backbone", "backbone_epoxy_handlers", "backbone_epoxy_filters"]
