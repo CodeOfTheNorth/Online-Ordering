@@ -39,7 +39,7 @@
                 delivery_time: 0,
                 preparation_time: 0,
                 pickup_time_interval: 15, //it does not play the role for checking_work_shop(), but it set just to exclude possible errors
-                enable_asap: false, //the same
+                enable_asap: false //the same
             });
 
             this.set({
@@ -50,6 +50,10 @@
         },
         is_available_for_time: function(pickup_time) {
             //pickup_time is a server time
+            var timetable = this.get("timetable").attributes.timetables[0].timetable_data;
+            if(empty_object(timetable)) {
+                return true
+            }
             return this.get("timetable").checking_work_shop(pickup_time);
         }
     });
@@ -69,4 +73,4 @@
             return result;
         }
     });
-})
+});
