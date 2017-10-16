@@ -47,7 +47,7 @@ define(["backbone"], function(Backbone) {
 
     /**
      * @class
-     * @classdesc Represents workig day model.
+     * @classdesc Represents working day model.
      * @alias App.Models.WorkingDay
      * @augments Backbone.Model
      * @example
@@ -124,12 +124,20 @@ define(["backbone"], function(Backbone) {
          */
         initialize: function() {
             var times = App.Data.settings.get('settings_system');
-            this.pickup_time_interval = Math.abs(times.online_order_time_slot) || 1;
-            this.start_time = times.online_order_start_time_offset;
-            this.end_time = times.online_order_end_time_offset;
-            this.delivery_time = times.estimated_delivery_time;
-            this.preparation_time = times.estimated_order_preparation_time;
-            this.enable_asap = times.enable_asap_due_time;
+            var pickup_time_interval = Math.abs(times.online_order_time_slot) || 1;
+            var start_time = times.online_order_start_time_offset;
+            var end_time = times.online_order_end_time_offset;
+            var delivery_time = times.estimated_delivery_time;
+            var preparation_time = times.estimated_order_preparation_time;
+            var enable_asap = times.enable_asap_due_time;
+            
+            this.set('pickup_time_interval', pickup_time_interval);
+            this.set('start_time', start_time);
+            this.set('end_time', end_time);
+            this.set('delivery_time', delivery_time);
+            this.set('preparation_time', preparation_time);
+            this.set('enable_asap', enable_asap);
+            
         },
         /**
          * Updates models's attributes.
@@ -145,9 +153,9 @@ define(["backbone"], function(Backbone) {
          */
         get_dining_offset: function(isDelivery) {
             if (isDelivery) {
-                return this.delivery_time * 60 * 1000;
+                return this.get('delivery_time') * 60 * 1000;
             } else {
-                return this.preparation_time * 60 * 1000;
+                return this.get('preparation_time') * 60 * 1000;
             }
         },
         /**
@@ -177,9 +185,9 @@ define(["backbone"], function(Backbone) {
          */
         _pickupTimesForPeriod: function(period, isDelivery) {
             var start_minutes, end_minutes,
-                extra_time = (isDelivery ? this.delivery_time : this.preparation_time),
-                start_interval = this.start_time + extra_time,
-                end_interval = (extra_time > this.end_time) ? 0 : this.end_time - extra_time,
+                extra_time = (isDelivery ? this.get('delivery_time') : this.get('preparation_time')),
+                start_interval = this.get('start_time') + extra_time,
+                end_interval = (extra_time > this.get('end_time')) ? 0 : this.get('end_time') - extra_time,
                 options = [];
 
             if (period === "all-the-day") {
@@ -192,7 +200,7 @@ define(["backbone"], function(Backbone) {
                 end_minutes = period.to;
             }
 
-            for (var min = start_minutes + start_interval; min <= end_minutes - end_interval; min += this.pickup_time_interval ) {
+            for (var min = start_minutes + start_interval; min <= end_minutes - end_interval; min += this.get('pickup_time_interval') ) {
                 options.push(min);
             }
 
@@ -278,10 +286,10 @@ define(["backbone"], function(Backbone) {
             }
 
             var works = false,
-                start_interval = this.start_time,
-                end_interval = this.end_time - (isDelivery ? this.delivery_time : this.preparation_time),
+                start_interval = this.get('start_time'),
+                end_interval = this.get('end_time') - (isDelivery ? this.get('delivery_time') : this.get('preparation_time')),
                 time = new TimeFrm(curtime.getHours(), curtime.getMinutes()).get_minutes();
-
+            
             this._unionPeriods(timetable).forEach(function(value) {
                 if (value.from + start_interval <= time && time <= value.to - end_interval) {
                     works = true;
@@ -339,13 +347,13 @@ define(["backbone"], function(Backbone) {
                 var work_shop = this.checking_work_shop(isDelivery);
 
                 this.set({
-                    options: (isToday && work_shop && this.enable_asap) ? [asap_text] : ['closed']
+                    options: (isToday && work_shop && this.get('enable_asap')) ? [asap_text] : ['closed']
                 });
 
                 return this.get('options');
             }
 
-            if (asap && this.enable_asap) {
+            if (asap && this.get('enable_asap')) {
                 options.push(asap_text);
             }
 

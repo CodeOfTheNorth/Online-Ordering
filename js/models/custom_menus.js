@@ -39,7 +39,7 @@
                 delivery_time: 0,
                 preparation_time: 0,
                 pickup_time_interval: 15, //it does not play the role for checking_work_shop(), but it set just to exclude possible errors
-                enable_asap: false, //the same
+                enable_asap: false //the same
             });
 
             this.set({
