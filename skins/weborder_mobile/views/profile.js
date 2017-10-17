@@ -382,7 +382,12 @@ define(["profile_view", "giftcard_view", "myorder_view"], function(profile_view)
             var next_page_koeff = 1.5;
             var is_next_page = this.collection.meta.has_next;
             var next_page_number = this.collection.meta.next_page_number;
-
+            
+            //remember scroll position on page change
+            App.Data.mainModel.set({
+               position: scrollTop
+            });
+            
             if (scrollTop > 0 && scrollTop >= scrollHeight - (next_page_koeff * page_height) && is_next_page) {
             	if(next_page_number !== this.collection.last_page_loaded) {
             		this.showSpinner();
