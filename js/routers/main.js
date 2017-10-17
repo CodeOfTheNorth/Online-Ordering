@@ -2162,7 +2162,7 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
                     page_title: _loc.PROFILE_PAST_ORDERS,
                     back_title: _loc.BACK,
                     back: this.goToBack.bind(this)
-                }); debugger;
+                });
 
                 content = {
                     modelName: 'Profile',
