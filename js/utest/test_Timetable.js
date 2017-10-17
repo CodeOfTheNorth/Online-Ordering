@@ -7,11 +7,23 @@ define(['js/utest/data/Timetable', 'timetable'], function(timetables) {
             def =  {
                 timetable: [],
                 options: [],
-                curTime: null
+                curTime: null,
+                pickup_time_interval: 20,
+                start_time: 25,
+                end_time: 35,
+                delivery_time: 45,
+                preparation_time: 17,
+                enable_asap: true
             },
             set01 = {
                 timetable: false,
-                curTime: new Date(2013, 10, 10)
+                curTime: new Date(2013, 10, 10),
+                pickup_time_interval: 20,
+                start_time: 25,
+                end_time: 35,
+                delivery_time: 45,
+                preparation_time: 17,
+                enable_asap: true
             },
             set0 = {
                 timetable: null,
@@ -19,23 +31,47 @@ define(['js/utest/data/Timetable', 'timetable'], function(timetables) {
             },
             set1 = {
                 timetable: [{to: "11:00", from: "09:00"}],
-                curTime: new Date(2013, 10, 10)
+                curTime: new Date(2013, 10, 10),
+                pickup_time_interval: 20,
+                start_time: 25,
+                end_time: 35,
+                delivery_time: 45,
+                preparation_time: 17,
+                enable_asap: true
             },
             set1n = [{to: 660, from: 540}],
             defSet1 = {
                 timetable: [{to: "11:00", from: "09:00"}],
                 options: [],
-                curTime: new Date(2013, 10, 10)
+                curTime: new Date(2013, 10, 10),
+                pickup_time_interval: 20,
+                start_time: 25,
+                end_time: 35,
+                delivery_time: 45,
+                preparation_time: 17,
+                enable_asap: true
             },
             set2 = {
                 timetable: [{to: "12:00", from: "09:20"}, {to: "11:30", from: "09:00"}],
-                curTime: new Date(2013, 10, 10)
+                curTime: new Date(2013, 10, 10),
+                pickup_time_interval: 20,
+                start_time: 25,
+                end_time: 35,
+                delivery_time: 45,
+                preparation_time: 17,
+                enable_asap: true
             },
             set2n = [{to: 720, from: 560}, {to: 690, from: 540}],
             defSet2 = {
                 timetable: [{to: "12:00", from: "09:20"}, {to: "11:30", from: "09:00"}],
                 options: [],
-                curTime: new Date(2013, 10, 10)
+                curTime: new Date(2013, 10, 10),
+                pickup_time_interval: 20,
+                start_time: 25,
+                end_time: 35,
+                delivery_time: 45,
+                preparation_time: 17,
+                enable_asap: true
             },
             set3 = {
                 timetable: [{to: "11:00", from: "10:10"}],
@@ -92,11 +128,11 @@ define(['js/utest/data/Timetable', 'timetable'], function(timetables) {
 
         // App.Models.WorkingDay Initialization settings
         it("Initialization parameters App.Models.WorkingDay", function() {
-           expect(model.pickup_time_interval).toBe(timeSettings.online_order_time_slot);
-           expect(model.start_time).toBe(timeSettings.online_order_start_time_offset);
-           expect(model.end_time).toBe(timeSettings.online_order_end_time_offset);
-           expect(model.delivery_time).toBe(timeSettings.estimated_delivery_time);
-           expect(model.preparation_time).toBe(timeSettings.estimated_order_preparation_time);
+           expect(model.get('pickup_time_interval')).toBe(timeSettings.online_order_time_slot);
+           expect(model.get('start_time')).toBe(timeSettings.online_order_start_time_offset);
+           expect(model.get('end_time')).toBe(timeSettings.online_order_end_time_offset);
+           expect(model.get('delivery_time')).toBe(timeSettings.estimated_delivery_time);
+           expect(model.get('preparation_time')).toBe(timeSettings.estimated_order_preparation_time);
         });
 
         // App.Models.WorkingDay function update
@@ -401,7 +437,7 @@ define(['js/utest/data/Timetable', 'timetable'], function(timetables) {
             it('10:00 and 10:20 pickup times and curTime 10:10 preparation time 0 delivery false today true', function() {
                 App.Data.settings.get('settings_system').time_format = "12 hour";
                 array = times[1];
-                model.preparation_time = 0;
+                model.set('preparation_time', 0);
                 model.update({curTime: new Date(2013, 10, 10, 10, 10)});
                 expect(model.pickupTimeOptions({today: true})).toEqual(["ASAP", "10:20am"]);
             });
@@ -708,12 +744,12 @@ define(['js/utest/data/Timetable', 'timetable'], function(timetables) {
         });
 
         describe('get_working_hours()', function() {
-            var date = new Date(2014, 0, 22),
+            var date = new Date(2014, 0, 22), //Jan 22. Wednesday
                 date2 = new Date(2014, 0, 1), // Jan 1. Wednesday. One day timetable
-                date3 = new Date(2014, 1, 2), // Feb 2. sunday. Inside timetable
-                date5 = new Date(2014, 3, 6), // April 6 sunday
-                date6 = new Date(2014, 3, 8), // April 8 tuesday
-                date7 = new Date(2014, 3, 9); // April 9 wednesday
+                date3 = new Date(2014, 1, 2), // Feb 2. Sunday. Inside timetable
+                date5 = new Date(2014, 3, 6), // April 6 Sunday
+                date6 = new Date(2014, 3, 8), // April 8 Tuesday
+                date7 = new Date(2014, 3, 9); // April 9 Wednesday
 
             it('empty timetables', function() {
                 expect(model.get_working_hours(date)).toBe(true);
