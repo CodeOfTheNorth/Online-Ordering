@@ -35,6 +35,7 @@ define(["backbone", "factory"], function() {
         initialize: function() {
             App.Views.FactoryView.prototype.initialize.apply(this, arguments);
             this.listenTo(App.Data.myorder.checkout, 'change', this.applyBindings);
+            App.Data.mainModel.set('upfront_active', true);
         },
         bindings: {
             '.menu': 'classes: {active: strictEqual(tab_index, 0)}',
@@ -44,6 +45,7 @@ define(["backbone", "factory"], function() {
             '.order-type-name': 'text: orderType',
             '.pickup-label': 'text: pickupLabel',
             '.delivery-time': 'text: deliveryTime',
+            '.delivery-address-block': 'classes: {hide: deliveryAddressHide}',
             '.promotions-link': 'toggle: promotions_available',
             '.open-now': 'text: select(openNow, _lp_STORE_INFO_OPEN_NOW, _lp_STORE_INFO_CLOSED_NOW)'
         },
@@ -56,7 +58,7 @@ define(["backbone", "factory"], function() {
             'click .about': onClick('onAbout'),
             'click .map': onClick('onMap'),
             'click .promotions-link': onClick('onPromotions'),
-            'click .order-type-name': 'setOrder'
+            'click .order-type-name, .delivery-time': 'setOrder'
         },
         computeds: {
             openNow: function() {
@@ -78,13 +80,26 @@ define(["backbone", "factory"], function() {
                     return _loc.CONFIRM_ARRIVAL_TIME;
             },
             deliveryTime: function() {
-                return '';
+                var date = new Date(App.Data.myorder.checkout.get('pickupTS'));
+                if (date == null) {
+                    App.Data.myorder.checkout.set('pickupTS', new Date().valueOf());
+                    date = new Date(App.Data.myorder.checkout.get('pickupTS'));
+                }
+                var day = App.Data.myorder.checkout.selectedDate();
+                var t = new TimeFrm(date.getHours(), date.getMinutes());
+                return day + ', ' + t.toString();
+            },
+            deliveryAddressHide: function() {
+                return App.Data.myorder.checkout.get('dining_option') != 'DINING_OPTION_DELIVERY';
             }
-
         },
         setOrder: function(e) {
             e.preventDefault();
-            App.Data.mainModel.set('upfront_active', true);
+            App.Data.mainModel.set(
+                App.Data.mainModel.get('orderStarted') ?
+                'upfront_update' :
+                'upfront_active',
+                true);
         }
     });
 

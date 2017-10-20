@@ -28,47 +28,35 @@ define(["upfront_view"], function(upfront_view) {
  * to be used for another algorithm (sequence of actions)
  */
 
-    var UpfrontPageView = App.Views.FactoryView.extend({
+    var UpfrontPageView = App.Views.UpfrontView.UpfrontPageView.extend({
         name: 'upfront',
         mod: 'page',
-        render: function() {
-            App.Views.FactoryView.prototype.render.apply(this, arguments);
+        events: {
+            'click .start-order': 'start_order',
+            'click .just-browsing': 'just_browsing'
+        },
+        start_order: function() {
+            App.Data.mainModel.set('upfront_active', false);
+            App.Data.mainModel.set('orderStarted', true);
+        },
+        just_browsing: function() {
+            App.Data.mainModel.set('upfront_active', false);
+        } //,
+    });
 
-            var orderDetails = this.$('.order-details'),
-                paymentInfo = this.$('.payment-info'),
-                order_type, pickup, actions;
-
-            order_type = App.Views.GeneratorView.create('Upfront', {
-                mod: 'OrderType',
-                model: this.options.checkout,
-                DINING_OPTION_NAME: this.options.DINING_OPTION_NAME,
-                className: 'fl-left'
-            });
-
-            pickup = App.Views.GeneratorView.create('Upfront', {
-                model: this.options.checkout,
-                timetable: this.options.timetable,
-                mod: 'Pickup',
-                className: 'fl-left'
-            });
-
-            actions = App.Views.GeneratorView.create('Upfront', {
-                mod: 'Actions',
-                model: this.options.checkout,
-                className: 'clear button-block'
-            });
-
-            this.subViews.push(order_type, pickup, actions);
-
-            orderDetails.prepend(actions.el);
-            orderDetails.prepend(pickup.el);
-            orderDetails.prepend(order_type.el);
-
-            return this;
+    var UpfrontUpdateView = App.Views.UpfrontView.UpfrontPageView.extend({
+        name: 'upfront',
+        mod: 'update',
+        events: {
+            'click .upfront-update': 'upfront_update'
+        },
+        upfront_update: function() {
+            App.Data.mainModel.set('upfront_update', 2);
         }
     });
 
     return new (require('factory'))(upfront_view.initViews.bind(upfront_view), function() {
         App.Views.UpfrontView.UpfrontPageView = UpfrontPageView;
+        App.Views.UpfrontView.UpfrontUpdateView = UpfrontUpdateView;
     });
 });

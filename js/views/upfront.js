@@ -26,8 +26,41 @@ define(["checkout_view"], function(Backbone) {
     App.Views.CoreUpfrontView = {};
 
     App.Views.CoreUpfrontView.CoreUpfrontPageView = App.Views.FactoryView.extend({
-        name: 'upfront',
-        mod: 'page'
+        render: function() {
+            App.Views.FactoryView.prototype.render.apply(this, arguments);
+
+            var orderDetails = this.$('.order-details'),
+                order_type, pickup, address;
+
+            order_type = App.Views.GeneratorView.create('Upfront', {
+                mod: 'OrderType',
+                model: this.options.checkout,
+                dining_option: this.options.checkout.get('dining_option'),
+                DINING_OPTION_NAME: this.options.DINING_OPTION_NAME,
+                className: 'fl-left'
+            });
+
+            pickup = App.Views.GeneratorView.create('Upfront', {
+                model: this.options.checkout,
+                timetable: this.options.timetable,
+                mod: 'Pickup',
+                className: 'fl-left'
+            });
+
+            address = App.Views.GeneratorView.create('Upfront', {
+                mod: 'Address',
+                model: this.options.checkout,
+                className: 'clear yourAddress'
+            });
+
+            this.subViews.push(order_type, pickup, address);
+
+            orderDetails.append(order_type.el);
+            orderDetails.append(pickup.el);
+            orderDetails.append(address.el);
+
+            return this;
+        }
     });
 
     App.Views.CoreUpfrontView.CoreUpfrontOrderTypeView =
@@ -42,18 +75,16 @@ define(["checkout_view"], function(Backbone) {
         mod: 'pickup'
     });
 
-    App.Views.CoreUpfrontView.CoreUpfrontActionsView = App.Views.FactoryView.extend({
+    App.Views.CoreUpfrontView.CoreUpfrontAddressView = App.Views.FactoryView.extend({
         name: 'upfront',
-        mod: 'actions',
+        mod: 'address',
         events: {
-            'click .start-order': 'start_order',
-            'click .just-browsing': 'just_browsing'
+            'click #getAddress': 'getAddress'
         },
-        start_order: function() {
-            App.Data.mainModel.set('upfront_active', false);
-        },
-        just_browsing: function() {
-            App.Data.mainModel.set('upfront_active', false);
+        getAddress: function(e) {
+            e.preventDefault();
+            // TODO: get location/address and put it inside input field
+            // also pointer should be changed to 'cursor' for this field
         }
     });
 
@@ -62,6 +93,6 @@ define(["checkout_view"], function(Backbone) {
         App.Views.UpfrontView.UpfrontPageView = App.Views.CoreUpfrontView.CoreUpfrontPageView;
         App.Views.UpfrontView.UpfrontOrderTypeView = App.Views.CoreUpfrontView.CoreUpfrontOrderTypeView;
         App.Views.UpfrontView.UpfrontPickupView = App.Views.CoreUpfrontView.CoreUpfrontPickupView;
-        App.Views.UpfrontView.UpfrontActionsView = App.Views.CoreUpfrontView.CoreUpfrontActionsView;
+        App.Views.UpfrontView.UpfrontAddressView = App.Views.CoreUpfrontView.CoreUpfrontAddressView;
     });
 });

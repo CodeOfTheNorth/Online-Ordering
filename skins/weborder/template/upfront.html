@@ -21,10 +21,28 @@
     <div class="upfront-content">
         <h2 class="upfront-title"><%= _lp.UPFRONT_TITLE %></h2>
         <div class="order-details"></div>
-    <div>
+        <div class="clear button-block">
+                <span class="start-order"><%= _lp.UPFRONT_START_ORDER %></span>
+                <span class="just-browsing"><%= _lp.UPFRONT_JUST_BROWSING %></span>
+            </div>
+        </div>
+    </div>
 </script>
 
-<script type="text/template" id="upfront_actions-template">
-    <span class="start-order"><%= _lp.UPFRONT_START_ORDER %></span>
-    <span class="just-browsing"><%= _lp.UPFRONT_JUST_BROWSING %></span>
+<script type="text/template" id="upfront_update-template">
+    <div class="upfront-modal-title"><%= _lp.UPFRONT_UPDATE_TITLE %></div>
+    <div class="upfront-content">
+        <div class="order-details"></div>
+    </div>
+    <div class="upfront-update">
+        <button><%= _lp.UPFRONT_UPDATE %></button>    
+    </div>
+</script>
+
+<script type="text/template" id="upfront_address-template">
+    <div class="label"><%= _lp.UPFRONT_ADDRESS %></div>
+    <div class="item">
+        <input type="text" class="input">
+        <a href="#" id="getAddress"><img src="img/loc_pointer.png"></a>
+    </div>
 </script>

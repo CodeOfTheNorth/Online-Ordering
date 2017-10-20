@@ -28,6 +28,10 @@ define(['products_view'], function(products_view) {
             if (App.Settings.cannot_order_with_empty_inventory && this.model.get('stock_amount') <= 0 ) {
                 return;
             }
+            if (!App.Data.mainModel.get('orderStarted')) {
+                App.Data.mainModel.set('upfront_active', true);
+                return;
+            }
             var self = this,
                 isStanfordItem = App.Data.is_stanford_mode && this.model.get('is_gift'),
                 is_combo = this.model.isComboProduct(),

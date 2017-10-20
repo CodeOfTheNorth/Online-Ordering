@@ -202,7 +202,7 @@ define(["delivery_addresses", "generator"], function(delivery_addresses) {
         name: 'checkout',
         mod: 'order_type',
         bindings: {
-            ':el': 'toggle: not(equal(dining_option, "DINING_OPTION_ONLINE"))',
+            ':el': 'toggle: not(equal(diningOption, "DINING_OPTION_ONLINE"))',
             '.select-wrapper': 'classes: { "no-arrows": hide_arrows }',
             '.order-type-select': 'value: diningOption, options: dining_options'
         },
@@ -330,16 +330,7 @@ define(["delivery_addresses", "generator"], function(delivery_addresses) {
             function selectDate(date) {
                 var one_day = 1000 * 60 * 60 * 24;
                 var diffDays = parseInt((date - today) / one_day);
-                switch (diffDays) {
-                   case 0:
-                      field.val(_loc['DAYS']['TODAY']);
-                      break;
-                   case 1:
-                      field.val(_loc['DAYS']['TOMORROW']);
-                      break;
-                   default:
-                      field.val(date.format()); //field.val(date.format("Dd, Mm dd"));
-                }
+                field.val(App.Data.myorder.checkout.selectedDate(date, diffDays));
                 field.data("day", diffDays);
                 self.changeDay({target: { value: diffDays }});
             }

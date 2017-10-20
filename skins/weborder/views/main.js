@@ -59,6 +59,7 @@ define(["done_view", "generator"], function(done_view) {
             this.listenTo(this.model, 'change:popup', this.popup_change, this);
             this.listenTo(this.model, 'change:profile_panel', this.profile_change, this);
             this.listenTo(this.model, 'change:upfront_active', this.upfront_change, this);
+            this.listenTo(this.model, 'change:upfront_update', this.upfront_update, this);
 
             this.iOSFeatures();
 
@@ -67,7 +68,18 @@ define(["done_view", "generator"], function(done_view) {
             SpinnerView.prototype.initialize.apply(this, arguments);
         },
         bindings: {
-            '.store_choice': 'toggle:needShowStoreChoice'
+            '.store_choice': 'toggle:needShowStoreChoice',
+            '.upfront-backdrop': 'classes: {hide: upfront_non_active}',
+            '.upfront-panel': 'classes: {hide: upfront_non_active}',
+            '#content': 'classes: {blured: not(upfront_non_active)}'
+        },
+        computeds: {
+            upfront_non_active: {
+                deps: ['upfront_active'],
+                get: function(upfront_active) {
+                    return !upfront_active;
+                }
+            }
         },
         render: function() {
             SpinnerView.prototype.render.apply(this, arguments);
@@ -162,24 +174,46 @@ define(["done_view", "generator"], function(done_view) {
             this.subViews[3] = App.Views.GeneratorView.create(data.modelName, data);
         },
         upfront_change: function() {
-            var active = this.model.get('upfront_active');
-            var el = $('.upfront-panel');
-            var bd = $('.upfront-backdrop');
-            if (active) {
-                var data = {
-                    el: el,
-                    collection: App.Data.myorder,
-                    mod: 'Page',
-                    timetable: App.Data.timetables,
-                    customer: App.Data.customer,
-                    DINING_OPTION_NAME: _.clone(_loc.DINING_OPTION_NAME),
-                    checkout: App.Data.myorder.checkout
-                };
-
-                var view = App.Views.GeneratorView.create('Upfront', data);
+            if (!this.model.get('upfront_active')) {
+                return;
             }
-            el[active ? 'show' : 'hide']();
-            bd[active ? 'show' : 'hide']();
+
+            var data = {
+                el: $('.upfront-panel'),
+                mod: 'Page',
+                collection: App.Data.myorder,
+                timetable: App.Data.timetables,
+                customer: App.Data.customer,
+                DINING_OPTION_NAME: _.clone(_loc.DINING_OPTION_NAME),
+                checkout: App.Data.myorder.checkout
+            };
+
+            var view = App.Views.GeneratorView.create('Upfront', data);
+        },
+        upfront_update: function() {
+            var state = this.model.get('upfront_update');
+            if (state != 1) {
+                if (state == 2) {
+                    this.model.unset('popup');
+                }
+                return;
+            }
+            this.model.set('upfront_update', 1);
+
+            // call modal dialog to update upfront data
+            var data = {
+                modelName: 'Upfront',
+                mod: 'Update',
+                title: 'Update!!!',
+                collection: App.Data.myorder,
+                timetable: App.Data.timetables,
+                customer: App.Data.customer,
+                DINING_OPTION_NAME: _.clone(_loc.DINING_OPTION_NAME),
+                checkout: App.Data.myorder.checkout,
+                className: 'upfront-modal'
+            };
+
+            this.model.set('popup', data);
         },
         hide_popup: function(event, status) {
             var callback = _.isObject( this.subViews[2]) ? this.subViews[2].options.action_callback : null;

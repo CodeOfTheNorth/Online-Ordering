@@ -13,7 +13,14 @@
     <div class="store_info">
         <h1 class="title"></h1>
         <div class="order-type"><%= _lp.CHECKOUT_ORDER_TYPE %>: <a href="#" class="order-type-name"></a></div>
-        <div><span class="pickup-label"></span> : <span class="delivery-time"></span></div>
+        <div>
+            <span class="pickup-label"></span> : 
+            <a href="#" class="delivery-time"></a>
+        </div>
+        <div class="delivery-address-block">
+            <span><%= _lp.CARD_DELIVERY_ADDRESS %></span>
+            <a href="#" class="delivery-address"></a>
+        </div>
         <div class="operation-time">
             <span class="open-now"></span>
             (<a class="primary-text link" href="#about"><%= _lp.STORE_INFO_VIEW_OPEN_HOURS %></a>)

@@ -22,3 +22,8 @@
     cursor: pointer;
     z-index: 1000;
 }
+
+
+.blured {
+    filter: blur(2px);
+}

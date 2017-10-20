@@ -34,7 +34,21 @@ define(["backbone"], function(Backbone) {
             needShowStoreChoice: false,
             isBlurContent: false,
             backAction: window.history.back.bind(window.history),
-            upfront_active: false
+            /*
+             * Indicates if initial upfront screen is active
+             */
+            upfront_active: false,
+            /*
+             * Indicates the state of upfront update dialog:
+             * 0 - dialog closed
+             * 1 - dialog opened
+             * 2 - dialog closing by Update button
+             */
+            upfront_update: 0,
+            /*
+             * Indicates if user select 'start ordering' (true) or 'just browsing' (false)
+             */
+            orderStarted: false
         }
     });
 });
