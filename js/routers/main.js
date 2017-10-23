@@ -576,8 +576,11 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
 
             // 'onReorderCompleted' event emits when an order completes a reorder
             this.listenTo(customer.orders, 'onReorderCompleted', function(changes, myorder) {
+                if (myorder && !myorder.length && myorder.previousError === MSG.INCORRECT_MODIFIER_QTY) {
+                    return App.Data.errors.alert(MSG.INCORRECT_MODIFIER_QTY);
+                }
                 if (myorder && !myorder.length && !myorder.priceChanged) {
-                    return App.Data.errors.alert(_loc.PROFILE_REORDER_NO_ITEMS_AVAILABLE);;
+                    return App.Data.errors.alert(_loc.PROFILE_REORDER_NO_ITEMS_AVAILABLE);
                 }
                 if (Array.isArray(changes) && changes.length && !myorder.priceChanged) {
                     App.Data.errors.alert(_loc.ORDER_CHANGED);
@@ -1694,7 +1697,7 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
         },
         signupContent: function() {
             var events = 'change:first_name change:last_name change:email change:phone change:password change:confirm_password change:terms_accepted',
-                customer = App.Data.customer
+                customer = App.Data.customer,
                 self = this;
 
             // listen to any App.Data.customer change

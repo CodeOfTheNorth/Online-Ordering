@@ -500,6 +500,60 @@
     overflow-y: auto;
 }
 
+.profile-orders .orders-box.shadow-bg{
+    opacity: 0;
+}
+
+.profile-orders .orders-box.full_size {
+   margin-bottom: 50px;
+}
+
+.orders_spinner {
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.orders_spinner.ui-visible {
+    opacity: 1;
+    filter: alpha(opacity=100);
+    z-index: 10000;
+}
+
+.profile-orders .orders_pages_control {
+    position: absolute;
+    height: 50px;
+    width: 100%;
+    bottom: 0;
+    background: white;
+}
+
+.profile-orders .orders_pages_control .pages_control{
+    text-align: center;
+    padding: 15px;
+    box-shadow: inset 0px 1px 0px 0px #D7D8D9;
+}
+
+.profile-orders .orders_pages_control .cur_page {
+    color: #00A3E0;
+    border: 1px solid #00A3E0;
+    padding: 4px 4px 4px 4px;
+    border-radius: 2px;
+}
+
+.profile-orders .orders_pages_control .link {
+    font-size: 24px;
+    font-family: "Tahoma", "Arial", sans-serif;
+    line-height: 20px;
+    vertical-align: bottom;
+}
+
+.profile-orders .orders_pages_control .pages_control > span {
+    margin-right: 8px;
+}
+
 .profile-orders .orders-item {
     padding: 10px 0;
     border-bottom-width: 1px;
@@ -558,12 +612,6 @@
 .profile-orders .animate-spin {
     position: relative;
     left: 10px;
-}
-
-.profile-orders .animate-spin::before,
-.profile-past-order .animate-spin::before {
-    content: '\f021';
-    font-family: 'FontAwesome';
 }
 
 .profile-orders .order-items-box .item {

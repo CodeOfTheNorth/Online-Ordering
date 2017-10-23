@@ -390,7 +390,7 @@ input[type="radio"]:checked + .radio::before,
 
 .category-title {
     padding: 13px 25px;
-    border-width: 1px 0;
+    border-width: 0 0 1px 0;
     border-style: solid;
     font-size: 18px;
     font-weight: 600;
@@ -550,13 +550,6 @@ input[type="radio"]:checked + .radio::before,
     z-index: 10001;
 }
 
-#alert .alert_align {
-    display: inline-block;
-    height: 100%;
-    width: 0;
-    vertical-align: middle;
-}
-
 #alert .alert_wrapper {
     display: inline-block;
     min-width: 400px;
@@ -577,6 +570,7 @@ input[type="radio"]:checked + .radio::before,
     padding: 30px 0 10px;
     font-family: 'FontAwesome';
     font-size: 25px;
+    color: rgb(155, 157, 159);
 }
 
 #alert .icon.warning::before {
@@ -585,11 +579,6 @@ input[type="radio"]:checked + .radio::before,
 
 #alert .icon.info::before {
     content: '\f05A';
-}
-
-#alert .message {
-    margin: 35px 20px 75px;
-    font-size: 16px;
 }
 
 #alert .btn_wrapper {

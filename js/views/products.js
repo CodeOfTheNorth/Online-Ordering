@@ -31,7 +31,7 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
         mod: 'list_item',
         initialize: function() {
             App.Views.ItemView.prototype.initialize.apply(this, arguments);
-            this.listenTo(this.model, 'change:price', this.render, this);
+            this.listenTo(this.model, 'change:price change:stock_amount', this.render, this);
         },
         bindings: {
             ':el': 'classes: {hide: not(active)}',
@@ -101,9 +101,6 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
             return this;
         },
         addItem: function(model) {
-            if (model.get("attribute_type") == 2) { // to hide child products
-                return;
-            }
             var settings = App.Data.settings.get('settings_system'),
                 noImg = settings.hide_images,
                 noDesc = settings.hide_products_description,

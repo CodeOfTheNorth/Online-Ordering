@@ -600,13 +600,6 @@ input[type="radio"]:checked + .radio::before,
     z-index: 10001;
 }
 
-#alert .alert_align {
-    display: inline-block;
-    height: 100%;
-    width: 0;
-    vertical-align: middle;
-}
-
 #alert .alert_wrapper {
     display: inline-block;
     min-width: 400px;
@@ -635,11 +628,7 @@ input[type="radio"]:checked + .radio::before,
 
 #alert .icon.info::before {
     content: '\f05A';
-}
-
-#alert .message {
-    margin: 35px 20px 75px;
-    font-size: 16px;
+    color: rgb(155, 157, 159);
 }
 
 #alert .btn_wrapper {
@@ -667,9 +656,9 @@ input[type="radio"]:checked + .radio::before,
 }
 
 #popup_message[id] {
-    margin: 35px 20px 50px;
-    min-height: 100px;
+    min-height: 50px;
     color: rgb(95,98,102);
+    margin: 35px 20px 75px;
 }
 
 #popup_content.info[class] {
@@ -695,14 +684,8 @@ input[type="radio"]:checked + .radio::before,
 #popup_panel[id] > input[type='button'] {
     display: inline-block;
     width: 50%;
-    border: none;
+    border: 0;
     border-radius: 0;
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgb(129,129,129)), color-stop(1, rgb(95,98,102)));
-    background: -o-linear-gradient(bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
-    background: -moz-linear-gradient(bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
-    background: -webkit-linear-gradient(bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
-    background: -ms-linear-gradient(bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
-    background: linear-gradient(to bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
     color: rgb(255,255,255);
 }
 

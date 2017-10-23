@@ -99,8 +99,12 @@ define(["done_view", "generator"], function(done_view) {
                 }, this);
             else
                 content.append(this.addContent(data));
-
+            //set past orders list to previously scrolled position
+            var opts = App.Data.mainModel.toJSON();
+            var position = opts.position || 0;
+            opts.content.modelName === 'Profile' && opts.content.mod === 'Orders' ? this.$('#section').scrollTop(position) :
             this.$('#section').scrollTop(0);
+            
             this.setContentPadding();
         },
         header_change: function() {

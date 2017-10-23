@@ -403,7 +403,7 @@ define(["factory"], function() {
         },
     });
 
-App.Views.CoreProfileView.CoreProfileAddressCreateView = App.Views.FactoryView.extend({
+    App.Views.CoreProfileView.CoreProfileAddressCreateView = App.Views.FactoryView.extend({
     name: 'profile',
     mod: 'address_create',
     bindings: {
@@ -1338,7 +1338,7 @@ App.Views.CoreProfileView.CoreProfileAddressCreateView = App.Views.FactoryView.e
                 return data.product_name_override + (modifiers ? ', ' + modifiers : '');
             }
         }
-    })
+    });
 
     App.Views.CoreProfileView.CoreProfileOrdersItemView = App.Views.FactoryView.extend({
         name: 'profile',
@@ -1390,18 +1390,41 @@ App.Views.CoreProfileView.CoreProfileAddressCreateView = App.Views.FactoryView.e
     App.Views.CoreProfileView.CoreProfileOrdersView = App.Views.FactoryView.extend({
         name: 'profile',
         mod: 'orders',
+        initialize: function(opts) {
+			this.pageModel = new App.Models.PagesCtrl;
+			_.extend(this.bindingSources, {
+				pageModel: this.pageModel
+			});
+			var num_pages = opts && opts.collection.meta.num_pages || 1;
+			this.pageModel.set('page_count', num_pages);
+			App.Views.FactoryView.prototype.initialize.apply(this, arguments);
+			this.listenTo(this.pageModel, "change:cur_page", this.update_orders_page, this);
+			this.listenTo(App.Data.customer, 'past_orders_pages_reset', this.reset_controls, this);
+			this.$('.orders_spinner').css('position', 'absolute').spinner();
+        },
         bindings: {
             '.orders-empty': 'toggle: noOrders',
-            '.orders-list': 'collection: $collection, itemView: "itemView"'
+            '.orders-list': 'collection: $collection, itemView: "itemView"',
+	        '.orders_pages_control': 'updateContent: PagesCtrlView, classes: {hide: less(pageModel_page_count,2)}',
+            '.orders-box': 'classes:{full_size: not(less(pageModel_page_count,2))}'
         },
         computeds: {
             noOrders: {
                 deps: ['$collection'],
                 get: function($collection) {
                     var ordersRequest = this.model.ordersRequest;
-                    if (ordersRequest && ordersRequest.state() == 'resolved' && !$collection.length) {
+                    if (ordersRequest && ordersRequest.state() === 'resolved' && !$collection.length) {
                         return true;
                     }
+                }
+            },
+            PagesCtrlView: {
+                get: function() {
+	                return {
+	                    name: 'Pages',
+	                    mod: 'Main',
+	                    model: this.pageModel
+	                }
                 }
             }
         },
@@ -1413,9 +1436,40 @@ App.Views.CoreProfileView.CoreProfileAddressCreateView = App.Views.FactoryView.e
                 customer: opts.collectionView.model,
                 orderItems: opts.model.get('items')
             }), opts.model.get('id')).delegateEvents();
+        },
+        update_orders_page: function () {
+            var dfd;
+            var self = this;
+            var cur_page = self.pageModel.get('cur_page');
+
+            self.showSpinner();
+            self.pageModel.disableControls();
+
+            dfd = App.Data.customer.getOrders(cur_page);
+            dfd.done(function() {
+                self.set_view_to_top();
+                self.pageModel.enableControls();
+                self.hideSpinner();
+            });
+            return dfd;
+        },
+	    reset_controls: function () {
+		    this.pageModel.set('cur_page', 1);
+	    },
+        showSpinner: function() {
+            $('.loading_bg').addClass('shadow-bg');
+            $('.orders_spinner').addClass('ui-visible');
+        },
+        hideSpinner: function() {
+            $('.orders_spinner').removeClass('ui-visible');
+            $('.loading_bg').removeClass('shadow-bg');
+        },
+        set_view_to_top: function () {
+            var scroll_el = $(".orders-box")[0];
+            scroll_el.scrollTo(0,0);
         }
     });
-
+    
     function controlLinks(showSignUp, showLogIn, showMenu, showPWDReset) {
         return function() {
             this.getBinding('$ui').set({

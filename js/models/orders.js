@@ -547,7 +547,14 @@ define(["backbone"], function(Backbone) {
                         }
                     });
                 }
-
+                 //update stock amount after ordering
+                _.mapObject(App.Data.products, function(product_group) {
+                    _.map(product_group.models, function(item){
+                        if(item.attributes.id === product.id) {
+                            item.set('stock_amount', product.stock_amount)
+                        }
+                    })
+                });
                 processModifiers(item);
             });
 
@@ -660,6 +667,9 @@ define(["backbone"], function(Backbone) {
          * @default App.Models.Order
          */
         model: App.Models.Order,
+        page_limit: 30,
+	    last_page_loaded: 0,
+        meta: {},
         /**
          * Function returning value used as sorting comparator.
          * Orders as sorted by id value descending
@@ -697,7 +707,7 @@ define(["backbone"], function(Backbone) {
          * @param {Object} authorizationHeader - result of {@link App.Models.Customer#getAuthorizationHeader App.Data.customer.getAuthorizationHeader()} call
          * @returns {Object} jqXHR object.
          */
-        get_orders: function(authorizationHeader) {
+        get_orders: function(authorizationHeader, orders_page) {
             if (!_.isObject(authorizationHeader)) {
                 return;
             }
@@ -710,13 +720,8 @@ define(["backbone"], function(Backbone) {
                 data: {
                     establishment: App.Data.settings.get('establishment'),
                     web_order: true,
-                    page: 1,
-                    limit: 30
-                },
-                success: function(data) {
-                    if (Array.isArray(data.data)) {
-                        self.add(self.processOrders(data.data));
-                    }
+                    page: orders_page || 1,
+                    limit: self.page_limit
                 },
                 error: new Function()           // to override global ajax error handler
             });

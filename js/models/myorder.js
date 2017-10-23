@@ -171,7 +171,7 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
         modifier_listener: false,
         /**
          * Current modifiers of the order item. This can be value of `modifiers` attribute or modifiers of any child product.
-         * If modifiers aren't specifed yet then this has `false` value.
+         * If modifiers aren't specified yet then this has `false` value.
          * @type {(boolean|App.Collections.ModifierBlocks)}
          * @default false
          */
@@ -278,7 +278,7 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
         },
         /**
          * Updates `sum` attribute of modifiers.
-         * @param {number} multiplier - a quantity koefficient which is used to get right modifiers quantity taking into account the quantity of the parent (Combo) product itself
+         * @param {number} multiplier - a quantity coefficient which is used to get right modifiers quantity taking into account the quantity of the parent (Combo) product itself
          */
         update_mdf_sum: function(multiplier) {
             var mdfGroups = this.get_modifiers(),
@@ -2159,6 +2159,10 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                             reportErrorFrm(MSG.ERROR_PRICE_CHANGED.replace('%product', response.name).replace('%price', response.price));
                             myorder.price_changed(response);
                             break;
+                        case 'INCORRECT_MODIFIER_QTY':
+                            myorder.previousError = MSG.INCORRECT_MODIFIER_QTY;
+                            myorder.empty_myorder();
+                            break;
                         default:
                             if (!data.errorMsg) data.errorMsg = MSG.ERROR_NO_MSG_FROM_SERVER;
                             data.errorMsg = MSG.ERROR_OCCURRED + ' ' + data.errorMsg;
@@ -2166,12 +2170,12 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                     }//end of switch
                 },
                 error: function(xhr) {
-                    if (xhr.statusText != "abort") {
+                    if (xhr.statusText !== "abort") {
                         reportErrorFrm(MSG.ERROR_GET_CART_TOTALS);
                     }
                 },
                 complete: function(xhr) {
-                    if (xhr.statusText != "abort") {
+                    if (xhr.statusText !== "abort") {
                         myorder.trigger("DiscountsComplete");
                     }
                 }
@@ -2445,7 +2449,7 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
          *                                 and the order should be completed on Revel's server.
          */
         submit_order_and_pay: function(payment_type, validationOnly, capturePhase) {
-            var myorder = this,
+            var myorder = this, host_dbg,
                 get_parameters = App.Data.get_parameters,
                 skin = App.Data.settings.get('skin'),
                 total = myorder.total.get_all(),
@@ -2590,13 +2594,19 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                         ASSERT(false, 'Can\'t verify WOMA-214', e.stack);
                     }
 
+                    /* //debugging with local Node.js server like triPOSHostedPage/server.js
+                    App.Data.settings.set("host_dbg", "http://localhost.revelup.com:3000/create_order_and_pay_v1/");
+                    if (!validationOnly) {
+                        host_dbg = App.Data.settings.get("host_dbg");
+                    }*/
+
                     req = $.ajax({
                         type: "POST",
-                        url: App.Data.settings.get("host") + "/weborders/" + req_action,
+                        url: host_dbg ? host_dbg : App.Data.settings.get("host") + "/weborders/" + req_action,
                         data: myorder_json,
                         dataType: "json",
                         headers: App.Data.customer.getAuthorizationHeader(),
-                        xhrFields: { withCredentials: true },//to send cookie (containing session_id) for CORS requests
+                        xhrFields: { withCredentials: host_dbg ? undefined : true },//to send cookie (containing session_id) for CORS requests
                         success: new Function(), // to override global ajax success handler
                         error: new Function()    // to override global ajax error handler
                     });

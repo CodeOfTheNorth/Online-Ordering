@@ -348,6 +348,79 @@ define(["profile_view", "giftcard_view", "myorder_view"], function(profile_view)
             }
         }
     });
+    
+    var ProfileOrdersView = App.Views.CoreProfileView.CoreProfileOrdersView.extend({
+	    initialize: function(opts) {
+            App.Views.FactoryView.prototype.initialize.apply(this, arguments);
+            this.start();
+        },
+        bindings: {
+            '.orders': 'toggle: length($collection)'
+        },
+	     start: function() {
+            this.scrollHandler = this.onScroll.bind(this);
+            $("#section").on('scroll', this.scrollHandler);
+        },
+	     stop: function() {
+            $("#section").off('scroll', this.scrollHandler);
+        },
+        onScroll: function(evt) {
+            var self = this;
+            if (this.timeout) {
+                return;
+            }
+            this.timeout = setTimeout(function() {
+                self.onScrollProcess(evt);
+                delete self.timeout;
+            }, 100);
+        },
+	     onScrollProcess: function(evt) {
+            var orders_list = evt.target;
+            var page_height = $(orders_list).height();
+            var scrollHeight = orders_list.scrollHeight;
+            var scrollTop = orders_list.scrollTop;
+            var next_page_koeff = 1.5;
+            var is_next_page = this.collection.meta.has_next;
+            var next_page_number = this.collection.meta.next_page_number;
+            
+            //remember scroll position on page change
+            App.Data.mainModel.set({
+               position: scrollTop
+            });
+            
+            if (scrollTop > 0 && scrollTop >= scrollHeight - (next_page_koeff * page_height) && is_next_page) {
+            	if(next_page_number !== this.collection.last_page_loaded) {
+            		this.showSpinner();
+            		this.add_orders_to_list();
+	            }
+            }
+        },
+	    add_orders_to_list: function () {
+	    	var self = this;
+	    	var header = App.Data.customer.getAuthorizationHeader();
+	    	var next_page_number = self.collection.meta.next_page_number;
+	    	var req = self.collection.get_orders(header, next_page_number);
+		    self.collection.last_page_loaded = next_page_number;
+		    
+		    req.done(function(data) {
+                if (Array.isArray(data.data)) {
+                   self.collection.add(self.collection.processOrders(data.data));
+                }
+	            self.collection.meta = data.meta;
+                self.collection.last_page_loaded = data.meta.next_page_number && (data.meta.next_page_number - 1);
+            });
+		    
+            req.always(function() { self.hideSpinner() });
+            
+            return req;
+	    },
+	    showSpinner: function() {
+            $('#list_items-spinner').show();
+        },
+        hideSpinner: function(delay) {
+            $('#list_items-spinner').hide();
+        }
+    });
 
     return new (require('factory'))(profile_view.initViews.bind(profile_view), function() {
         App.Views.ProfileView.ProfilePaymentsSelectionView = ProfilePaymentsSelectionView;
@@ -364,5 +437,6 @@ define(["profile_view", "giftcard_view", "myorder_view"], function(profile_view)
         App.Views.ProfileView.ProfileOrderItemUpsellView = ProfileOrderItemUpsellView;
         App.Views.ProfileView.ProfilePastOrderView = ProfilePastOrderView;
         App.Views.ProfileView.ProfilePastOrderContainerView = ProfilePastOrderContainerView;
+        App.Views.ProfileView.ProfileOrdersView = ProfileOrdersView;
     });
 });
