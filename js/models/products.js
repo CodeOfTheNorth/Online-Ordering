@@ -898,7 +898,7 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
                 return fetching.reject();
             }
 
-            var custom_menus = App.Data.custom_menus.get_menus_for_time(App.Data.timetables.base());
+            var custom_menus = App.Data.custom_menus.get_menus_for_time(App.Data.timetables.getCustomMenuTime());
             if (custom_menus.length == 0) { //no custom menus found
                 this.reset_meta_info();
                 return fetching.resolve();

@@ -189,7 +189,7 @@ define(["backbone", "collection_sort"], function(Backbone) {
             var self = this;
             var dfd = $.Deferred();
 
-            var custom_menus = App.Data.custom_menus.get_menus_for_time(App.Data.timetables.base());
+            var custom_menus = App.Data.custom_menus.get_menus_for_time(App.Data.timetables.getCustomMenuTime());
             if (custom_menus.length == 0) {
                 //no custom menus are found
                 return dfd.resolve();
@@ -225,6 +225,19 @@ define(["backbone", "collection_sort"], function(Backbone) {
                 }
             });
             return dfd;
+        },
+        /*
+         * Reload categories and reset all related data
+         * @returns {undefined}
+         */
+        reload_categories: function() {
+            this.reset();
+            App.Data.parentCategories.reset();
+            var self = this;
+            this.get_categories().then(function() {
+                App.Data.parentCategories.add(self.getParents());
+                App.Data.mainModel.set('categoriesReloading', true);
+            });
         },
         /**
          * Changes a category on inactive.

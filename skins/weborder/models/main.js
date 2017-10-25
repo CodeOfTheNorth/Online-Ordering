@@ -48,7 +48,11 @@ define(["backbone"], function(Backbone) {
             /*
              * Indicates if user select 'start ordering' (true) or 'just browsing' (false)
              */
-            orderStarted: false
+            orderStarted: false,
+            /*
+             * Indicates that categories have been reloaded, to refresh some dependent views
+             */
+            categoriesReloading: false
         }
     });
 });

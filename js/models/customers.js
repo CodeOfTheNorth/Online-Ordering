@@ -2396,7 +2396,7 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
 
             var self = this,
                 req = this.orders.get_order(this.getAuthorizationHeader(), order_id);
-            
+
             req.done(function() {
                 var req = self.getOrders();
 	            req.then( self.trigger('past_orders_pages_reset') );
