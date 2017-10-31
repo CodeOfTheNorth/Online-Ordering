@@ -896,14 +896,6 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
             });
         },
         /**
-         * Find child order product by product id.
-         * @param {number} id_product - product id
-         * @returns {Object} - order item (instance of App.Models.Myorder) if the child product found, otherwise it returns {undefined}.
-         */
-        find_child_product: function(product_id) {
-            return this.get('product').get('product_sets').find_product(product_id);
-        },
-        /**
          * Get price for combo product.
          * @return {number} - combo product price
          */
