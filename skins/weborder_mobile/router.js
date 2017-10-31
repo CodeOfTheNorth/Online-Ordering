@@ -725,7 +725,7 @@ define(["main_router"], function(main_router) {
                     return this.navigate('index', true);
                 }
 
-                if (combo_order.get('id_product') == product.get('id_product')) {
+                if (typeof product === 'undefined') {
                     //the case to customize Upsell root product
                     order = combo_order;
                 } else {
