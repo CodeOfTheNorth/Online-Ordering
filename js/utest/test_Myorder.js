@@ -3847,20 +3847,6 @@ define(['js/utest/data/Myorder', 'js/utest/data/Products', 'myorder', 'products'
             expect(model.has_child_products()).toBe(true);
         });
 
-        it('find_child_product()', function() {
-            var product = new Backbone.Model(),
-                product_sets = {
-                    find_product: function() {}
-                };
-            product.get_modifiers = function() {};
-            product.set('product_sets', product_sets);
-            model.set('product', product);
-            spyOn(product_sets, 'find_product');
-
-            model.find_child_product(100);
-            expect(product_sets.find_product).toHaveBeenCalledWith(100);
-        });
-
         it('get_product_price()', function() {
             var product = new Backbone.Model();
             product.set('combo_price', 15);
