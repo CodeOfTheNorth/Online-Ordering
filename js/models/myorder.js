@@ -499,7 +499,7 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                 modifiers = this.get_modifiers(),
                 size = modifiers.getSizeModel(),
                 dining_option = App.Data.myorder.checkout.get('dining_option'),
-                isDelivery = dining_option == 'DINING_OPTION_DELIVERY',
+                isDelivery = dining_option === 'DINING_OPTION_DELIVERY',
 
                 forced = modifiers.checkForced(),
                 exceeded = modifiers.checkAmount(),
@@ -1839,9 +1839,11 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                     } else {
                         fields = fields.concat(check_customer.errorList);
                     }
+                } else if (customer.get('shipping_selected') === -1 && !customer.get('shipping_services').length) {
+                  errorMsg = MSG.ERROR_SHIPPING_SERVICES_NOT_FOUND;
                 }
             }
-
+            
             if (fields.length) {
                 return error(MSG.ERROR_EMPTY_NOT_VALID_DATA.replace(/%s/, fields.join(', '))); // user notification
             } else if (errorMsg) {
