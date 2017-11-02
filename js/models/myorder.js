@@ -1839,7 +1839,7 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                     } else {
                         fields = fields.concat(check_customer.errorList);
                     }
-                } else if (customer.get('shipping_selected') === -1 && !customer.get('shipping_services').length) {
+                } else if (check_customer.status === 'ERROR_SHIPPING_SERVICES_NOT_FOUND') {
                   errorMsg = MSG.ERROR_SHIPPING_SERVICES_NOT_FOUND;
                 }
             }
