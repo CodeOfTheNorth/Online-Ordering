@@ -171,7 +171,7 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
         modifier_listener: false,
         /**
          * Current modifiers of the order item. This can be value of `modifiers` attribute or modifiers of any child product.
-         * If modifiers aren't specifed yet then this has `false` value.
+         * If modifiers aren't specified yet then this has `false` value.
          * @type {(boolean|App.Collections.ModifierBlocks)}
          * @default false
          */
@@ -278,7 +278,7 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
         },
         /**
          * Updates `sum` attribute of modifiers.
-         * @param {number} multiplier - a quantity koefficient which is used to get right modifiers quantity taking into account the quantity of the parent (Combo) product itself
+         * @param {number} multiplier - a quantity coefficient which is used to get right modifiers quantity taking into account the quantity of the parent (Combo) product itself
          */
         update_mdf_sum: function(multiplier) {
             var mdfGroups = this.get_modifiers(),
@@ -499,7 +499,7 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                 modifiers = this.get_modifiers(),
                 size = modifiers.getSizeModel(),
                 dining_option = App.Data.myorder.checkout.get('dining_option'),
-                isDelivery = dining_option == 'DINING_OPTION_DELIVERY',
+                isDelivery = dining_option === 'DINING_OPTION_DELIVERY',
 
                 forced = modifiers.checkForced(),
                 exceeded = modifiers.checkAmount(),
@@ -1825,9 +1825,11 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                     } else {
                         fields = fields.concat(check_customer.errorList);
                     }
+                } else if (check_customer.status === 'ERROR_SHIPPING_SERVICES_NOT_FOUND') {
+                  errorMsg = MSG.ERROR_SHIPPING_SERVICES_NOT_FOUND;
                 }
             }
-
+            
             if (fields.length) {
                 return error(MSG.ERROR_EMPTY_NOT_VALID_DATA.replace(/%s/, fields.join(', '))); // user notification
             } else if (errorMsg) {
@@ -2152,12 +2154,12 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                     }//end of switch
                 },
                 error: function(xhr) {
-                    if (xhr.statusText != "abort") {
+                    if (xhr.statusText !== "abort") {
                         reportErrorFrm(MSG.ERROR_GET_CART_TOTALS);
                     }
                 },
                 complete: function(xhr) {
-                    if (xhr.statusText != "abort") {
+                    if (xhr.statusText !== "abort") {
                         myorder.trigger("DiscountsComplete");
                     }
                 }
