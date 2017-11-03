@@ -337,6 +337,7 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
          */
         check: function(dining_option) {
             var err = [];
+            var errShipping = [];
 
             !this.get('first_name') && err.push(_loc.PROFILE_FIRST_NAME);
             !this.get('last_name') && err.push(_loc.PROFILE_LAST_NAME);
@@ -348,6 +349,11 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
             if (this.isNewAddressSelected(dining_option)) {
                 err = err.concat(this._check_delivery_fields());
             }
+            
+            if (this.isNewAddressSelected(dining_option) &&
+              (Boolean(this.get('shipping_selected') === -1 || this.get('shipping_services').length))) {
+                errShipping.push(MSG.ERROR_SHIPPING_SERVICES_NOT_FOUND);
+            }
 
             if (err.length) {
                 return {
@@ -356,7 +362,13 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
                     errorList: err
                 };
             }
-
+            
+            if (errShipping.length) {
+                return {
+                    status: "ERROR_SHIPPING_SERVICES_NOT_FOUND",
+                    errorList: errShipping
+                };
+            }
             return {
                 status: "OK"
             };
