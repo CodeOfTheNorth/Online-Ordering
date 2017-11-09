@@ -240,7 +240,8 @@ define(["checkout_view"], function(checkout_view) {
         setProfileData: function() {
             var promises = this.options.promises(),
                 customer = this.options.customer,
-                paymentInfo = this.$('.payment-info'), rewards,
+                paymentInfo = this.$('.payment-info'),
+                rewards,
                 self = this;
             
            if(this.options.enableRewardCard && customer.get('user_id')) {
