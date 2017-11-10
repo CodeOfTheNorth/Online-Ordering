@@ -73,10 +73,12 @@
         </script>
         <link rel="stylesheet" type="text/css" href="css/main.css?ver=1">
         <link rel="stylesheet" type="text/css" href="css/spinner.min.css?ver=1" />
-
-
-
-        <script type="text/javascript" language="javascript" src="js/libs/require.js" data-main="js/main.js?ver=1"> </script>
+        <!--<script>-->
+            <!--window.less={-->
+              <!--env: 'development',-->
+              <!--relativeUrls: true-->
+            <!--}-->
+        <!--</script>-->
         <!--[if IE]>
         <script>
             document.createElement("header");
@@ -117,6 +119,10 @@
         <iframe id="payment_ifrm" style="display:none;" scrolling="auto" frameborder="0"></iframe>
     </body>
     <script type="text/javascript" language="javascript" src="js/init.js?ver=1"> </script>
+    <link rel="stylesheet/less" type = 'text/less' href="../dev/skins/customize/css/colors.less">
+    <script type="text/javascript" src="../core/js/libs/less.v2.7.1.min.js" data-env="development"></script>
+    <script type="text/javascript" language="javascript" src="js/libs/require.js" data-main="js/main.js?ver=1"> </script>
+
     <script>
         // start spinner
         var mainSpinner = new MainSpinner;
