@@ -204,12 +204,8 @@ define(["checkout_view"], function(checkout_view) {
                 }
             },
             rewardsView: function() {
-                if(this.options.enableRewardCard) {
-                    return {
-                        name: 'Checkout',
-                        mod: 'RewardsCard',
-                        model: this.collection.rewardsCard
-                    };
+                if(this.options.enableRewardCard && this.options.customer.get('user_id')) {
+                    return true;
                 }
             },
             otherDiningOptionsView: {
@@ -379,7 +375,18 @@ define(["checkout_view"], function(checkout_view) {
         setProfileData: function() {
             var promises = this.options.promises(),
                 customer = this.options.customer,
+                rewards,
+                rewardsBox = this.$('.rewards-box'),
                 self = this;
+            
+            if(this.options.enableRewardCard && customer.get('user_id')) {
+               rewards = App.Views.GeneratorView.create('Checkout', {
+                   mod: 'RewardsCard',
+                   model: this.collection.rewardsCard
+                });
+               this.subViews.push(rewards);
+               rewardsBox.append(rewards.el);
+           }
 
             if (promises.length) {
                 Backbone.$.when.apply(Backbone.$, promises).then(function() {
@@ -415,6 +422,7 @@ define(["checkout_view"], function(checkout_view) {
             this.giftCard.set({ selected: false, cardNumber: null });
             this.tokens.reset();
             this.giftCards.reset();
+            this.$('.rewards-box').empty();
         },
         toStep1: function() {
             this.setBinding('ui_step', 1);
