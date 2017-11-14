@@ -1,3 +1,6 @@
+#popup {
+    width: 800px;
+}
 
 .upfront-panel {
     background-color: rgba(0, 0, 0, .5);
@@ -8,12 +11,23 @@
     left: 0;
     bottom: 0;
     color: white;
+    overflow-y: auto;
+    overflow-x: hidden;    
 }
 
 .upfront-panel *,
 .upfront-modal * {
     font-family: "Helvetica Neue", "TeXGyreHerosRegular", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;;
     font-weight: 300;
+}
+
+.upfront-modal {
+    text-align: left;
+    height: 500px;
+    width: 800px;
+/*    overflow-y: auto;
+    overflow-x: hidden;*/
+    position: relative;    
 }
 
 .upfront-panel .select-wrapper * {
@@ -30,12 +44,19 @@
     z-index: 201;
 }
 
-.upfront-content {
+/*.upfront-content {
     padding: 70px 40px;
-}
+}*/
 
 .upfront-modal .upfront-content {
-    padding: 10px 40px 60px;
+    /*padding: 10px 40px 60px;*/
+    position: absolute;
+    left: 30px;
+    top: 40px;
+    height: calc(100% - 105px);
+    width: calc(100% - 30px);
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .upfront-content .label {
@@ -43,8 +64,12 @@
     text-align: left;
 }
 
+.upfront-content label.optional-text {
+    color: white;
+}
+
 .upfront-title {
-    padding-bottom: 30px;
+    padding: 10px 30px;
     font-size: 26px;
 }
 
@@ -53,11 +78,16 @@
     font-size: 16px;
     font-weight: 300;
     font-family: Helvetica Neue;
-    text-align: left;    
+    text-align: left;  
+    position: absolute;
+    left: 30px;
+    top: 0;
+    height: 20px;    
 }
 
 .button-block {
     padding-top: 30px;
+    padding-left: 50px;
 }
 
 .button-block span {
@@ -78,7 +108,7 @@
     cursor: pointer;
 }
 
-.yourAddress {
+/*.yourAddress {
     padding-top: 10px;
 }
 
@@ -98,10 +128,14 @@
     padding-right: 5px;
     border-right: 1px solid #ccc;
     cursor: inherit;
-}
+}*/
 
 .upfront-update {
     height: 55px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
 }
 
 .upfront-update button {
@@ -112,3 +146,192 @@
     color: white;
     cursor: pointer;
 }
+
+/* from checkout */
+
+.upfront-content {
+    width: 100%;
+/*    position: absolute;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;*/
+}
+
+.upfront-content .order-details-title {
+    border-top: none;
+}
+
+.upfront-content .order-details,
+.upfront-content .payment-info {
+    padding: 0 25px 25px;
+}
+
+.upfront-content .label {
+    padding: 15px 0 1px 14px;
+    font-size: 13px;
+}
+
+.upfront-content .item {
+    display: inline-block;
+    margin-right: 15px;
+    vertical-align: middle;
+}
+
+.upfront-content .item .select-wrapper {
+    vertical-align: middle;
+}
+
+.upfront-content .payment-systems {
+    float: right;
+    padding-top: 9px;
+    font-size: 0;
+}
+
+.upfront-content .payment-systems .card-logo {
+    display: inline-block;
+    height: 22px;
+    margin-left: 8px;
+}
+
+.upfront-content .payment-systems .card-logo img {
+    display: block;
+    height: 100%;
+}
+
+.upfront-content .size1[class] {
+    width: 144px;
+}
+
+.upfront-content .size2[class] {
+    width: 230px;
+}
+
+.upfront-content .size3[class] {
+    width: 316px;
+}
+
+.upfront-content .size4[class] {
+    width: 100px;
+}
+
+.upfront-content .shipping-select {
+    min-width: 380px;
+}
+
+.upfront-content .shipping-status {
+    width: 44px;
+    height: 44px;
+    position: relative;
+    font-size: 10px;
+}
+
+.upfront-content .notes {
+    width: 487px;
+    margin: 4px;
+}
+
+.upfront-content .payment-methods-label[class] {
+    padding-bottom: 5px;
+}
+
+/*.payment-method {
+    min-width: 116px;
+    padding: 11px;
+    margin-bottom: 15px;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    letter-spacing: 2px;
+    cursor: pointer;
+}*/
+
+/*.payment-method[data-payment=paypal] {
+    font-family: Verdana;
+    font-weight: 700;
+    font-style: italic;
+    letter-spacing: normal;
+}*/
+
+/*.payment-method[data-payment=paypal]::before {
+    content: '\f1ed';
+    font-family: 'FontAwesome';
+    font-size: 16px;
+    padding-right: 5px;
+}*/
+
+.tip-amount-box {
+    width: 110px;
+    position: relative;
+}
+
+.tip-amount-box::before {
+    content: attr(data-currency);
+    display: block;
+    width: 30px;
+    font-size: 16px;
+    padding: 13px 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: right;
+}
+
+.tip-amount-box .tipAmount {
+    padding-left: 30px;
+}
+
+.upfront-content .cancel::before {
+    display: block;
+    padding: 12px 7px 12px 4px;
+    font-size: 21px;
+}
+
+@-moz-document url-prefix() {
+    .upfront-content .cancel::before {
+        padding: 10px 7px 10px 4px;
+    }
+}
+
+.upfront-content .types {
+    min-width: 144px;
+}
+
+.ctrl-box {
+    position: relative;
+}
+
+.upfront-content .ctrl-input {
+    padding-right: 30px;
+}
+
+.upfront-content .btnApply,
+.upfront-content .rewards-card-apply,
+.upfront-content .see-rewards {
+    display: inline-block;
+    padding: 10px 15px 10px 0;
+    margin-left: -5px;
+    font-size: 13px;
+}
+
+.upfront-content .img {
+    width: 100%;
+    height: 100%;
+}
+
+.upfront-content .change_address_link {
+    margin-top: 31px;
+    padding: 14px 20px;
+}
+
+#addresses {
+    min-width: 487px;
+}
+
+.upfront-content .optional-text[class] {
+    color: #dddddd;
+}
+
+.upfront-modal .upfront-content .optional-text[class] {
+    color: #888888;
+}
+

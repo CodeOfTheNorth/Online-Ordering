@@ -25,12 +25,188 @@ define(["checkout_view"], function(Backbone) {
 
     App.Views.CoreUpfrontView = {};
 
+    App.Views.CoreUpfrontView.CoreUpfrontMainView = App.Views.FactoryView.extend({
+        name: 'upfront',
+        mod: 'main',
+        bindings: {
+//            '.rewards-card-apply': 'classes: {hide: length(rewardsCard_discounts)}',
+//            '.see-rewards':  'classes: {hide: not(length(rewardsCard_discounts))}',
+//            '.cancel-input': 'classes: {hide: not(length(rewardsCard_discounts))}',
+//            '.rewardCard': 'attr: {readonly: reward_card_readonly}, restrictInput: "0123456789", kbdSwitcher: "numeric", pattern: /^\\d*$/',
+            '.phone': 'restrictInput: "0123456789+", kbdSwitcher: "tel", pattern: /^\\+?\\d{0,15}$/',
+            '.personal': 'toggle: not(isAuthorized)'
+        },
+        computeds: {
+            isAuthorized: {
+                deps: ['customer_access_token'],
+                get: function() {
+                    return this.getBinding('$customer').isAuthorized();
+                }
+            }
+//            ,
+//            reward_card_readonly: {
+//                deps: ["rewardsCard_discounts", "customer_rewardCards"],
+//                get: function() {
+//                    return this.getBinding('rewardsCard_discounts').length > 0 || this.getBinding('customer_rewardCards').length > 0;
+//                }
+//            }
+        },
+        initialize: function() {
+            var self = this;
+            this.listenTo(this.model, 'change:dining_option', this.controlAddress, this);
+            this.listenTo(this.model, 'change:dining_option', this.controlDeliveryOther, this);
+//            this.listenTo(this.options.rewardsCard, 'change:number', this.updateData, this);
+            this.listenTo(this.options.customer, 'change:first_name change:last_name change:email change:phone', this.updateData, this);
+            this.customer = this.options.customer;
+            this.card = App.Data.card;
+            this.address_index = -1;
+            App.Views.FactoryView.prototype.initialize.apply(this, arguments);
+
+            this.model.get('dining_option') === 'DINING_OPTION_DELIVERY' &&
+                 this.controlAddress(null, 'DINING_OPTION_DELIVERY');
+
+            this.model.get('dining_option') === 'DINING_OPTION_SHIPPING' &&
+                 this.controlAddress(null, 'DINING_OPTION_SHIPPING');
+
+            this.model.get('dining_option') === 'DINING_OPTION_CATERING' &&
+                 this.controlAddress(null, 'DINING_OPTION_CATERING');
+
+            this.model.get('dining_option') === 'DINING_OPTION_OTHER' &&
+                 this.controlDeliveryOther(null, 'DINING_OPTION_OTHER');
+
+            this.listenTo(this.options.customer.get('rewardCards'), "add remove reset", function() {
+                self.options.customer.trigger('change:rewardCards'); //it's to update binding value customer_rewardCards
+            });
+
+            this.listenTo(this.options.customer, 'onUserAddressCreated onUserAddressUpdate', function() {
+                this.controlAddress(null, this.model.get('dining_option'));
+            }, this);
+        },
+        render: function() {
+            var settings = App.Data.settings.get('settings_system'),
+//                customer = this.options.customer,
+                model = {};
+//                self = this;
+
+            model.firstName = this.customer.escape('first_name');
+            model.lastName = this.customer.escape('last_name');
+            model.email = this.customer.escape('email');
+            model.phone = this.customer.escape('phone');
+//            model.rewardCard = this.options.rewardsCard.escape('number');
+            model.isFirefox = /firefox/i.test(navigator.userAgent);
+//            model.enableRewardCard = settings.enable_reward_cards_collecting;
+            model.business_name = settings.business_name;
+            model.address = settings.address;
+            model.isMobile = typeof cssua.ua.mobile != 'undefined';
+
+            this.$el.html(this.template(model));
+
+            this.$('.firstName, .lastName').numberMask({pattern: /^.*$/ }).on("keypressNumber", function(event) {
+                try {
+                    var start = event.target.selectionStart,
+                        end = event.target.selectionEnd,
+                        direction = event.target.selectionDirection;
+                } catch(e) {
+                    console.log('There is not selection API');
+                }
+                var new_value = this.value.replace(/(^[a-z])|\s([a-z])/g, function(m, g1, g2){
+                    return g1 ? g1.toUpperCase() : ' ' + g2.toUpperCase();
+                });
+                this.value = new_value;
+                try {
+                    event.target.setSelectionRange(start, end, direction);
+                } catch(e) {}
+            });
+
+            return this;
+        },
+        events: {
+            'blur .firstName': 'changeFirstName',
+            'change .firstName': 'changeFirstName',
+            'blur .lastName': 'changeLastName',
+            'change .lastName': 'changeLastName',
+            'blur .email': 'changeEmail',
+            'change .email': 'changeEmail',
+            'blur .phone': 'changePhone',
+            'change .phone': 'changePhone',
+//            'blur .rewardCard': 'changeRewardCard',
+//            'click .rewards-card-apply': 'applyRewardsCard',
+//            'click .see-rewards': 'showRewards',
+//            'click .cancel-input': 'resetRewards'
+        },
+        changeFirstName: function(e) {
+            this.customer.set('first_name', e.target.value);
+//            this.card.set('firstName', e.target.value);
+        },
+        changeLastName: function(e) {
+            this.customer.set('last_name', e.target.value);
+//            this.card.set('secondName', e.target.value);
+        },
+        changeEmail: function(e) {
+            this.customer.set('email', e.target.value.trim());
+        },
+        changePhone: function(e) {
+            this.customer.set('phone', e.target.value);
+        },
+//        changeRewardCard: function(e) {
+//            this.options.rewardsCard.set('number', e.target.value);
+//        },
+        controlAddress: function(model, value) {
+            var address = this.subViews.shift();
+
+            // remove address if it exists
+            address && address.remove();
+
+            if (value === 'DINING_OPTION_DELIVERY' || value === 'DINING_OPTION_SHIPPING' || value === 'DINING_OPTION_CATERING') {
+                address = new App.Views.UpfrontView.UpfrontAddressView({
+                    customer: this.customer,
+                    checkout: this.model,
+                    address_index: this.address_index // -1 means that default profile address should be selected
+                });
+                this.subViews.push(address);
+                this.$('.delivery_address').append(address.el);
+                delete this.address_index;
+            }
+        },
+        controlDeliveryOther: function(model, value) {
+            if(value === 'DINING_OPTION_OTHER') {
+                if (!this.otherView) {
+
+                    this.otherView = new App.Views.CoreUpfrontView.CoreUpfrontOtherView({model: this.model, collection: this.model.get('other_dining_options')});
+                    this.$('.delivery_other').append(this.otherView.el);
+                }
+                this.$('.delivery_other').show();
+            } else {
+                this.$('.delivery_other').hide();
+            }
+        },
+        updateData: function() {
+            var customer = this.customer;
+            this.$('.firstName').val(customer.get('first_name'));
+            this.$('.lastName').val(customer.get('last_name'));
+            this.$('.email').val(customer.get('email'));
+            this.$('.phone').val(customer.get('phone'));
+//            this.$('.rewardCard').val(this.options.rewardsCard.get('number'));
+        }
+//        ,
+//        applyRewardsCard: function() {
+//            this.options.rewardsCard.trigger('onApplyRewardsCard');
+//        },
+//        showRewards: function() {
+//            this.options.rewardsCard.trigger('onRewardsReceived');
+//        },
+//        resetRewards: function() {
+//            this.options.rewardsCard.resetData();
+//        }
+    });
+
     App.Views.CoreUpfrontView.CoreUpfrontPageView = App.Views.FactoryView.extend({
         render: function() {
             App.Views.FactoryView.prototype.render.apply(this, arguments);
 
             var orderDetails = this.$('.order-details'),
-                order_type, pickup, address;
+                order_type, pickup, //address,
+                main;
 
             order_type = App.Views.GeneratorView.create('Upfront', {
                 mod: 'OrderType',
@@ -47,17 +223,28 @@ define(["checkout_view"], function(Backbone) {
                 className: 'fl-left'
             });
 
-            address = App.Views.GeneratorView.create('Upfront', {
-                mod: 'Address',
-                model: this.options.checkout,
-                className: 'clear yourAddress'
+            main = App.Views.GeneratorView.create('Upfront', {
+                model: this.collection.checkout,
+                customer: this.options.customer,
+//                rewardsCard: this.collection.rewardsCard,
+                mod: 'Main',
+                className: 'clear overflow-hidden'
             });
 
-            this.subViews.push(order_type, pickup, address);
+//            address = App.Views.GeneratorView.create('Upfront', {
+//                mod: 'Address',
+//                model: this.options.checkout,
+//                customer: this.options.customer,
+//                checkout: this.options.checkout,
+//                className: 'clear yourAddress'
+//            });
 
-            orderDetails.append(order_type.el);
-            orderDetails.append(pickup.el);
-            orderDetails.append(address.el);
+            this.subViews.push(order_type, pickup, main /* address */);
+
+            orderDetails.prepend(main.el);
+            orderDetails.prepend(pickup.el);
+            orderDetails.prepend(order_type.el);
+//            orderDetails.append(address.el);
 
             return this;
         }
@@ -75,24 +262,68 @@ define(["checkout_view"], function(Backbone) {
         mod: 'pickup'
     });
 
-    App.Views.CoreUpfrontView.CoreUpfrontAddressView = App.Views.FactoryView.extend({
+//    App.Views.CoreUpfrontView.CoreUpfrontAddressView = App.Views.FactoryView.extend({
+//        name: 'upfront',
+//        mod: 'address',
+//        events: {
+//            'click #getAddress': 'getAddress'
+//        },
+//        getAddress: function(e) {
+//            e.preventDefault();
+//            // TODO: get location/address and put it inside input field
+//            // also pointer should be changed to 'cursor' for this field
+//        }
+//    });
+
+    App.Views.CoreUpfrontView.CoreUpfrontAddressView = App.Views.DeliveryAddressesView.extend({
         name: 'upfront',
-        mod: 'address',
-        events: {
-            'click #getAddress': 'getAddress'
+        mod: 'address'
+    });
+
+    App.Views.CoreUpfrontView.CoreUpfrontAddressSelectionView = App.Views.DeliveryAddressesSelectionView.extend({
+        name: 'upfront',
+        mod: 'address_selection'
+    });
+
+    App.Views.CoreUpfrontView.CoreUpfrontOtherItemView = App.Views.FactoryView.extend({
+        name: 'upfront',
+        mod: 'other_item',
+        bindings: {
+            'input': 'valueTrim: value, events: ["blur", "change"]',
+            'select': 'value: value, options: choices',
+            '[data-isrequired]': 'classes: {required: required}'
         },
-        getAddress: function(e) {
-            e.preventDefault();
-            // TODO: get location/address and put it inside input field
-            // also pointer should be changed to 'cursor' for this field
+        render: function() {
+            App.Views.FactoryView.prototype.render.apply(this, arguments);
+
+            var choices = this.model.get('choices');
+            // select the first option by default
+            Array.isArray(choices) && choices[0] && this.model.set('value', choices[0]);
         }
+    });
+
+    App.Views.CoreUpfrontView.CoreUpfrontOtherView = App.Views.FactoryView.extend({
+        name: 'upfront',
+        mod: 'other',
+        className: 'checkout_other_view',
+        bindings: {
+            '.list': 'collection: $collection'
+        },
+        initialize: function() {
+            App.Views.FactoryView.prototype.initialize.apply(this, arguments);
+        },
+        itemView: App.Views.CoreUpfrontView.CoreUpfrontOtherItemView
     });
 
     return new (require('factory'))(function() {
         App.Views.UpfrontView = {};
         App.Views.UpfrontView.UpfrontPageView = App.Views.CoreUpfrontView.CoreUpfrontPageView;
+        App.Views.UpfrontView.UpfrontMainView = App.Views.CoreUpfrontView.CoreUpfrontMainView;
         App.Views.UpfrontView.UpfrontOrderTypeView = App.Views.CoreUpfrontView.CoreUpfrontOrderTypeView;
         App.Views.UpfrontView.UpfrontPickupView = App.Views.CoreUpfrontView.CoreUpfrontPickupView;
         App.Views.UpfrontView.UpfrontAddressView = App.Views.CoreUpfrontView.CoreUpfrontAddressView;
+        App.Views.UpfrontView.UpfrontAddressSelectionView = App.Views.CoreUpfrontView.CoreUpfrontAddressSelectionView;
+        App.Views.CoreUpfrontView.UpfrontOtherView = App.Views.CoreUpfrontView.CoreUpfrontOtherView;
+        App.Views.CoreUpfrontView.UpfrontOtherItemView = App.Views.CoreUpfrontView.CoreUpfrontOtherItemView;
     });
 });

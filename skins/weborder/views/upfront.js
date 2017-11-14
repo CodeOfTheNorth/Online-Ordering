@@ -28,6 +28,19 @@ define(["upfront_view"], function(upfront_view) {
  * to be used for another algorithm (sequence of actions)
  */
 
+    var UpfrontMainView = App.Views.CoreUpfrontView.CoreUpfrontMainView.extend({
+        controlAddress: function(model, value) {
+            var arrAdd= this.$('.arrival_address');
+            App.Views.CoreUpfrontView.CoreUpfrontMainView.prototype.controlAddress.apply(this, arguments);
+            if (value === 'DINING_OPTION_DELIVERY' || value === 'DINING_OPTION_SHIPPING' ) {
+                arrAdd.hide();
+            } else {
+                arrAdd.show();
+            }
+        }
+    });
+
+
     var UpfrontPageView = App.Views.UpfrontView.UpfrontPageView.extend({
         name: 'upfront',
         mod: 'page',
@@ -55,8 +68,29 @@ define(["upfront_view"], function(upfront_view) {
         }
     });
 
+    var UpfrontAddressView = App.Views.CoreUpfrontView.CoreUpfrontAddressView.extend({
+        name: 'upfront',
+        mod: 'address',
+        render: function() {
+            App.Views.CoreUpfrontView.CoreUpfrontAddressView.prototype.render.apply(this, arguments);
+
+            var addressSelection = App.Views.GeneratorView.create('Upfront', {
+                mod: 'AddressSelection',
+                checkout: this.options.checkout,
+                customer: this.options.customer,
+                address_index: this.options.address_index
+            });
+            this.subViews.push(addressSelection);
+            this.$('.address-selection').html(addressSelection.el);
+
+            return this;
+        }
+    });
+
     return new (require('factory'))(upfront_view.initViews.bind(upfront_view), function() {
+        App.Views.UpfrontView.UpfrontMainView = UpfrontMainView;
         App.Views.UpfrontView.UpfrontPageView = UpfrontPageView;
         App.Views.UpfrontView.UpfrontUpdateView = UpfrontUpdateView;
+        App.Views.UpfrontView.UpfrontAddressView = UpfrontAddressView;
     });
 });

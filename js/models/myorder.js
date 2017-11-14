@@ -1835,7 +1835,7 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                   errorMsg = MSG.ERROR_SHIPPING_SERVICES_NOT_FOUND;
                 }
             }
-            
+
             if (fields.length) {
                 return error(MSG.ERROR_EMPTY_NOT_VALID_DATA.replace(/%s/, fields.join(', '))); // user notification
             } else if (errorMsg) {
@@ -1859,7 +1859,7 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                     });
                     this.create_order_and_pay(PAYMENT_TYPE.NO_PAYMENT, true);
                 } else {
-                    success();
+                    success && success();
                 }
             }
         },

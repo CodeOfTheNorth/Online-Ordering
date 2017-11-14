@@ -202,9 +202,9 @@ define(["delivery_addresses", "generator"], function(delivery_addresses) {
         name: 'checkout',
         mod: 'order_type',
         bindings: {
-            ':el': 'toggle: not(equal(diningOption, "DINING_OPTION_ONLINE"))',
+            ':el': 'toggle: not(equal(dining_option, "DINING_OPTION_ONLINE"))',
             '.select-wrapper': 'classes: { "no-arrows": hide_arrows }',
-            '.order-type-select': 'value: diningOption, options: dining_options'
+            '.order-type-select': 'value: dining_option, options: dining_options'
         },
         computeds: {
             hide_arrows: function() {
@@ -241,11 +241,13 @@ define(["delivery_addresses", "generator"], function(delivery_addresses) {
         }
     });
 
+    // remove - ???
     App.Views.CoreCheckoutView.CoreCheckoutAddressView = App.Views.DeliveryAddressesView.extend({
         name: 'checkout',
         mod: 'address'
     });
 
+    // remove - ???
     App.Views.CoreCheckoutView.CoreCheckoutAddressSelectionView = App.Views.DeliveryAddressesSelectionView.extend({
         name: 'checkout',
         mod: 'address_selection'

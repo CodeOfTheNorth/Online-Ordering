@@ -61,6 +61,7 @@ define(["done_view", "generator"], function(done_view) {
             this.listenTo(this.model, 'change:profile_panel', this.profile_change, this);
             this.listenTo(this.model, 'change:upfront_active', this.upfront_change, this);
             this.listenTo(this.model, 'change:upfront_update', this.upfront_update, this);
+            this.listenTo(this.model, 'change:orderStarted', this.order_started, this);
 
             this.iOSFeatures();
 
@@ -179,14 +180,16 @@ define(["done_view", "generator"], function(done_view) {
                 return;
             }
 
+            this.orderClone = App.Data.myorder.clone(); //_.clone(App.Data.myorder);
+
             var data = {
                 el: $('.upfront-panel'),
                 mod: 'Page',
-                collection: App.Data.myorder,
+                collection: this.orderClone,
                 timetable: App.Data.timetables,
                 customer: App.Data.customer,
-                DINING_OPTION_NAME: _.clone(_loc.DINING_OPTION_NAME),
-                checkout: App.Data.myorder.checkout
+                DINING_OPTION_NAME: App.Data.mainModel.get('DINING_OPTION_NAME'), //_loc.DINING_OPTION_NAME, // _.clone(_loc.DINING_OPTION_NAME),
+                checkout: this.orderClone.checkout
             };
 
             var view = App.Views.GeneratorView.create('Upfront', data);
@@ -195,26 +198,34 @@ define(["done_view", "generator"], function(done_view) {
             var state = this.model.get('upfront_update');
             if (state != 1) {
                 if (state == 2) {
+                    App.Data.myorder.checkout.set(this.orderClone.checkout.toJSON());
                     this.model.unset('popup');
                 }
                 return;
             }
             this.model.set('upfront_update', 1);
 
+            this.orderClone = App.Data.myorder.clone(); //_.clone(App.Data.myorder);
+
             // call modal dialog to update upfront data
             var data = {
                 modelName: 'Upfront',
                 mod: 'Update',
                 title: 'Update!!!',
-                collection: App.Data.myorder,
+                collection: this.orderClone,
                 timetable: App.Data.timetables,
                 customer: App.Data.customer,
-                DINING_OPTION_NAME: _.clone(_loc.DINING_OPTION_NAME),
-                checkout: App.Data.myorder.checkout,
+                DINING_OPTION_NAME: App.Data.mainModel.get('DINING_OPTION_NAME'), //_loc.DINING_OPTION_NAME, //_.clone(_loc.DINING_OPTION_NAME),
+                checkout: this.orderClone.checkout,
                 className: 'upfront-modal'
             };
 
             this.model.set('popup', data);
+        },
+        order_started: function(e) {
+            if (this.model.get('orderStarted')) {
+                App.Data.myorder.checkout.set(this.orderClone.checkout.toJSON());
+            }
         },
         hide_popup: function(event, status) {
             var callback = _.isObject( this.subViews[2]) ? this.subViews[2].options.action_callback : null;

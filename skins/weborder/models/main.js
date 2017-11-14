@@ -52,7 +52,15 @@ define(["backbone"], function(Backbone) {
             /*
              * Indicates that categories have been reloaded, to refresh some dependent views
              */
-            categoriesReloading: false
+            categoriesReloading: false,
+            /*
+             * Contains a copy of myorder while editing it, to be able to cancel without data changing
+             */
+            orderClone: null,
+            /*
+             *
+             */
+            DINING_OPTION_NAME: null
         }
     });
 });

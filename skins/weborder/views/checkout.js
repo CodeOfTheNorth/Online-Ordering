@@ -91,37 +91,38 @@ define(["checkout_view"], function(checkout_view) {
 
             var orderDetails = this.$('.order-details'),
                 paymentInfo = this.$('.payment-info'),
-                order_type, pickup, main, paymentMethods, tips, discount, rewards,
+//                order_type, pickup, main,
+                paymentMethods, tips, discount, rewards,
                 chooseCreditCard, creditCard, chooseGiftCard, giftCard,
                 stanfordCard, stanfordPlans, billingAddress;
 
-            order_type = App.Views.GeneratorView.create('Checkout', {
-                mod: 'OrderType',
-                model: this.collection.checkout,
-                DINING_OPTION_NAME: this.options.DINING_OPTION_NAME,
-                className: 'fl-left'
-            });
+//            order_type = App.Views.GeneratorView.create('Checkout', {
+//                mod: 'OrderType',
+//                model: this.collection.checkout,
+//                DINING_OPTION_NAME: this.options.DINING_OPTION_NAME,
+//                className: 'fl-left'
+//            });
+//
+//            pickup = App.Views.GeneratorView.create('Checkout', {
+//                model: this.collection.checkout,
+//                timetable: this.options.timetable,
+//                mod: 'Pickup',
+//                className: 'fl-left'
+//            });
 
-            pickup = App.Views.GeneratorView.create('Checkout', {
-                model: this.collection.checkout,
-                timetable: this.options.timetable,
-                mod: 'Pickup',
-                className: 'fl-left'
-            });
+//            main = App.Views.GeneratorView.create('Checkout', {
+//                model: this.collection.checkout,
+//                customer: this.options.customer,
+//                rewardsCard: this.collection.rewardsCard,
+//                mod: 'Main',
+//                className: 'clear overflow-hidden' // add overflow:hidden to fix Bug 45243
+//            });
 
-            main = App.Views.GeneratorView.create('Checkout', {
-                model: this.collection.checkout,
-                customer: this.options.customer,
-                rewardsCard: this.collection.rewardsCard,
-                mod: 'Main',
-                className: 'clear overflow-hidden' // add overflow:hidden to fix Bug 45243
-            });
+//            this.subViews.push(order_type, pickup, main);
 
-            this.subViews.push(order_type, pickup, main);
-
-            orderDetails.prepend(main.el);
-            orderDetails.prepend(pickup.el);
-            orderDetails.prepend(order_type.el);
+//            orderDetails.prepend(main.el);
+//            orderDetails.prepend(pickup.el);
+//            orderDetails.prepend(order_type.el);
 
             paymentMethods = App.Views.GeneratorView.create('PaymentMethods', {
                 mod: 'Main',
@@ -307,6 +308,7 @@ define(["checkout_view"], function(checkout_view) {
         }
     });
 
+    // remove
     var CheckoutAddressView = App.Views.CoreCheckoutView.CoreCheckoutAddressView.extend({
         name: 'checkout',
         mod: 'address',
