@@ -35,9 +35,14 @@ define(["total_view"], function(total_view) {
         }),
         computeds: extendProto('computeds', {
             haveDiscountCodeOrRewards: {
-                deps: ['_lp_MYORDER_HAVE_DISCOUNT_CODE_OR_REWARDS', '_lp_MYORDER_DISCOUNT_CODE', '_lp_REWARDS_NUMBER', '_lp_REWARDS_REDEEM', 'rewardsCard_number'],
-                get: function(MYORDER_HAVE_DISCOUNT_CODE_OR_REWARDS, MYORDER_DISCOUNT_CODE, REWARDS_NUMBER, REWARDS_REDEEM, number) {
-                    return MYORDER_HAVE_DISCOUNT_CODE_OR_REWARDS.replace('%s', wrap(MYORDER_DISCOUNT_CODE, 'discount-link')).replace('%s', wrap(number ? REWARDS_REDEEM : REWARDS_NUMBER, 'rewards-link'));
+                deps: ['_lp_MYORDER_HAVE_DISCOUNT_CODE_OR_REWARDS', '_lp_MYORDER_DISCOUNT_CODE', '_lp_REWARDS_NUMBER', '_lp_REWARDS_REDEEM', 'rewardsCard_number', '_lp_OR',],
+                get: function(MYORDER_HAVE_DISCOUNT_CODE_OR_REWARDS, MYORDER_DISCOUNT_CODE, REWARDS_NUMBER, REWARDS_REDEEM, number, OR) {
+	                function rewardLink() {
+		                var appendix = '<span>'+OR+'&nbsp;'+'</span>';
+		                if (!App.Data.customer.get('user_id')) return '';
+                    return appendix + wrap(number ? REWARDS_REDEEM : REWARDS_NUMBER, 'rewards-link');
+	                }
+	                return MYORDER_HAVE_DISCOUNT_CODE_OR_REWARDS.replace('%s', wrap(MYORDER_DISCOUNT_CODE, 'discount-link')).replace('%s', rewardLink());
                 }
             },
             haveDiscountCode: {
