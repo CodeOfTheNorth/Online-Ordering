@@ -517,7 +517,9 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
             var child = new App.Collections.ChildProducts(),
                 inventory = App.Settings.cannot_order_with_empty_inventory,
                 self = this,
-                newProduct, newModifiers;
+                newProduct,
+                newModifiers,
+                id_category;
 
             this.set('child_products', child);
 
@@ -545,7 +547,11 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
 
                 newProduct = new App.Models.Product(item.product);
                 newModifiers = new App.Collections.ModifierBlocks().addJSON(item.modifiers);
-                App.Data.products[self.get('id_category')].add(newProduct);
+                id_category = self.get('id_category');
+                if (!App.Data.products[id_category]) {
+                    App.Data.products[id_category] = new App.Collections.Products();
+                }
+                App.Data.products[id_category].add(newProduct);
                 if (!App.Data.modifiers[newProduct.get('id')])
                     App.Data.modifiers[newProduct.get('id')] = newModifiers;
             });
