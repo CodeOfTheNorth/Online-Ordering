@@ -714,24 +714,23 @@ define(["main_router"], function(main_router) {
                 }
             });
         },
-        combo_child_products: function(combo_order, product_id, options) {
+        combo_child_products: function(combo_order, product) {
             this.prepare('modifiers', function() {
                 var self = this, order,
                     header = App.Data.header,
                     isEditMode = true,
-                    originOrder = null,
-                    action = _.isObject(options) ? options.action : undefined;
+                    originOrder = null;
 
                 if (!combo_order) {
                     return this.navigate('index', true);
                 }
 
-                if (combo_order.get('id_product') == product_id) {
+                if (typeof product === 'undefined') {
                     //the case to customize Upsell root product
                     order = combo_order;
                 } else {
                     //the case for custmization of child products
-                    order = combo_order.find_child_product(product_id);
+                    order = product;
                 }
 
                 if (!order) {

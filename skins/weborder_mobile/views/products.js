@@ -123,7 +123,7 @@ define(["products_view"], function(products_view) {
             }
         },
         customize: function() {
-            App.Data.router.combo_child_products(this.model, this.model.get("id_product"));
+            App.Data.router.combo_child_products(this.model);
         },
         no_combo: function() {
             App.Data.router.modifiers(this.model.get('product').get('id_category'), this.model.get("id_product"), {no_combo: true, combo_root: this.model});

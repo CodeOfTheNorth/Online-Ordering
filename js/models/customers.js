@@ -337,6 +337,7 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
          */
         check: function(dining_option) {
             var err = [];
+            var errShipping = [];
 
             !this.get('first_name') && err.push(_loc.PROFILE_FIRST_NAME);
             !this.get('last_name') && err.push(_loc.PROFILE_LAST_NAME);
@@ -349,6 +350,12 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
                 err = err.concat(this._check_delivery_fields());
             }
 
+            if (dining_option === 'DINING_OPTION_SHIPPING' &&
+                this.isNewAddressSelected(dining_option) &&
+                this.get('shipping_selected') === -1) {
+                errShipping.push(MSG.ERROR_SHIPPING_SERVICES_NOT_FOUND);
+            }
+
             if (err.length) {
                 return {
                     status: "ERROR_EMPTY_FIELDS",
@@ -357,6 +364,12 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
                 };
             }
 
+            if (errShipping.length) {
+                return {
+                    status: "ERROR_SHIPPING_SERVICES_NOT_FOUND",
+                    errorList: errShipping
+                };
+            }
             return {
                 status: "OK"
             };
@@ -2396,7 +2409,7 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
 
             var self = this,
                 req = this.orders.get_order(this.getAuthorizationHeader(), order_id);
-            
+
             req.done(function() {
                 var req = self.getOrders();
 	            req.then( self.trigger('past_orders_pages_reset') );

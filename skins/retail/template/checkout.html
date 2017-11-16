@@ -78,7 +78,20 @@
                 </select>
             </div>
         </div>
-        <% } %>
+        <% } else { %>
+	    <div class="address-edit">
+	        <div class="item">
+	            <div class="label required optional-text"><%= _lp.PROFILE_COUNTRY %>:</div>
+	            <div class="select-wrapper">
+	                <select class="country size1">
+	                <% for (var i in countries) { %>
+	                    <option value="<%= i %>" <% if(i.toLowerCase() == country.toLowerCase()) { %>selected="selected"<% } %>><%= countries[i] %></option>
+	                <% } %>
+	                </select>
+	            </div>
+	        </div>
+        </div>
+	    <% } %>
         <% if(typeof province == 'string') { %>
         <div class="province-box inline-block">
             <div class="label required optional-text"><%= _lp.PROFILE_PROVINCE %></div>
@@ -90,26 +103,12 @@
             <input type="text" name="zipcode" class="input ios-safari-caret size2">
         </div>
     </div>
-
     <% if(isShippingServices) { %>
-    <div class="address-edit">
-        <div class="item">
-            <div class="label required optional-text"><%= _lp.PROFILE_COUNTRY %>:</div>
-            <div class="select-wrapper">
-                <select class="country size1">
-                <% for (var i in countries) { %>
-                    <option value="<%= i %>" <% if(i.toLowerCase() == country.toLowerCase()) { %>selected="selected"<% } %>><%= countries[i] %></option>
-                <% } %>
-                </select>
-            </div>
-        </div>
-    </div>
-
     <div class="item">
         <div class="label required optional-text"><%= _lp.CHECKOUT_SHIPPING_HANDLING %></div>
         <div class="inline-block">
             <div class="select-wrapper">
-                <select class="shipping-select select size1"></select>
+                <select class="shipping-select select"></select>
             </div>
             <div class="shipping-status fl-right"></div>
         </div>

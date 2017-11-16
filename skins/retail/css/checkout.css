@@ -119,6 +119,10 @@
     vertical-align: middle;
 }
 
+.checkout-page .shipping-select {
+    min-width: 380px;
+}
+
 .checkout-page .shipping-status {
     width: 44px;
     height: 44px;

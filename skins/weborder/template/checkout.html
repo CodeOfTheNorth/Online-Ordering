@@ -161,13 +161,15 @@
 </script>
 
 <script type="text/template" id="checkout_rewards_card-template">
-    <div class="label optional-text"><%= _lp.CHECKOUT_REWARD_CARD %></div>
-    <div class="ctrl-box item size1">
-        <input type="text" class="rewardCard input ctrl-input ios-safari-caret">
-        <label class="ctrl-wrapper cancel">
-            <input type="button" class="ctrl cancel-input">
-        </label>
+    <div class="reward-cards-container">
+        <div class="label optional-text"><%= _lp.CHECKOUT_REWARD_CARD %></div>
+        <div class="ctrl-box item size1">
+            <input type="text" class="rewardCard input ctrl-input ios-safari-caret">
+            <label class="ctrl-wrapper cancel">
+                <input type="button" class="ctrl cancel-input">
+            </label>
+        </div>
+        <span class="rewards-card-apply link primary-text"><%= _lp.CHECKOUT_DISC_CODE_APPLY %></span>
+        <span class="see-rewards link primary-text"><%= _lp.CHECKOUT_SEE_REWARDS %></span>
     </div>
-    <span class="rewards-card-apply link primary-text"><%= _lp.CHECKOUT_DISC_CODE_APPLY %></span>
-    <span class="see-rewards link primary-text"><%= _lp.CHECKOUT_SEE_REWARDS %></span>
 </script>

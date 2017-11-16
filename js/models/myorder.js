@@ -499,7 +499,7 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                 modifiers = this.get_modifiers(),
                 size = modifiers.getSizeModel(),
                 dining_option = App.Data.myorder.checkout.get('dining_option'),
-                isDelivery = dining_option == 'DINING_OPTION_DELIVERY',
+                isDelivery = dining_option === 'DINING_OPTION_DELIVERY',
 
                 forced = modifiers.checkForced(),
                 exceeded = modifiers.checkAmount(),
@@ -894,14 +894,6 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                 });
                 self.update_prices();
             });
-        },
-        /**
-         * Find child order product by product id.
-         * @param {number} id_product - product id
-         * @returns {Object} - order item (instance of App.Models.Myorder) if the child product found, otherwise it returns {undefined}.
-         */
-        find_child_product: function(product_id) {
-            return this.get('product').get('product_sets').find_product(product_id);
         },
         /**
          * Get price for combo product.
@@ -1839,9 +1831,11 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                     } else {
                         fields = fields.concat(check_customer.errorList);
                     }
+                } else if (check_customer.status === 'ERROR_SHIPPING_SERVICES_NOT_FOUND') {
+                  errorMsg = MSG.ERROR_SHIPPING_SERVICES_NOT_FOUND;
                 }
             }
-
+            
             if (fields.length) {
                 return error(MSG.ERROR_EMPTY_NOT_VALID_DATA.replace(/%s/, fields.join(', '))); // user notification
             } else if (errorMsg) {
