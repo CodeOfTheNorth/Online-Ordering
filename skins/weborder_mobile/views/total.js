@@ -25,7 +25,7 @@ define(["total_view"], function(total_view) {
 
     var TotalCheckout = App.Views.CoreTotalView.CoreTotalCheckoutView.extend({
         bindings: extendProto('bindings', {
-            '.discount-links': 'toggle: any(showDiscountCode, showRewards)',
+            '.discount-links': 'toggle: any(showDiscountCode, showRewards), classes: {hide: all(not(showDiscountCode), not(haveRewards) )}',
             '.have-discounts': 'html: haveDiscountCodeOrRewards, toggle: all(showDiscountCode, showRewards)',
             '.have-discount-code': 'html: haveDiscountCode, toggle: all(showDiscountCode, not(showRewards))',
             '.have-rewards': 'html: haveRewards, toggle: all(not(showDiscountCode), showRewards)',
@@ -54,6 +54,7 @@ define(["total_view"], function(total_view) {
             haveRewards: {
                 deps: ['_lp_MYORDER_HAVE_DISCOUNT_CODE', '_lp_REWARDS_NUMBER', '_lp_REWARDS_REDEEM', 'rewardsCard_number'],
                 get: function(MYORDER_HAVE_DISCOUNT_CODE, REWARDS_NUMBER, REWARDS_REDEEM, number) {
+                    if (!App.Data.customer.get('user_id')) return '';
                     return number ? wrap(REWARDS_REDEEM, 'rewards-link') : MYORDER_HAVE_DISCOUNT_CODE.replace('%s', wrap(REWARDS_NUMBER, 'rewards-link'));
                 }
             },
