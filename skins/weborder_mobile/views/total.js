@@ -54,7 +54,7 @@ define(["total_view"], function(total_view) {
             haveRewards: {
                 deps: ['_lp_MYORDER_HAVE_DISCOUNT_CODE', '_lp_REWARDS_NUMBER', '_lp_REWARDS_REDEEM', 'rewardsCard_number'],
                 get: function(MYORDER_HAVE_DISCOUNT_CODE, REWARDS_NUMBER, REWARDS_REDEEM, number) {
-                    if (!App.Data.customer.get('user_id')) return;
+                    if (!App.Data.customer.get('user_id')) return '';
                     return number ? wrap(REWARDS_REDEEM, 'rewards-link') : MYORDER_HAVE_DISCOUNT_CODE.replace('%s', wrap(REWARDS_NUMBER, 'rewards-link'));
                 }
             },
