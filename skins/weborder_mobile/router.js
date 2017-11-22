@@ -714,7 +714,7 @@ define(["main_router"], function(main_router) {
                 }
             });
         },
-        combo_child_products: function(combo_order, product) {
+        combo_child_products: function(combo_order, product, onUpdate) {
             this.prepare('modifiers', function() {
                 var self = this, order,
                     header = App.Data.header,
@@ -798,7 +798,7 @@ define(["main_router"], function(main_router) {
                                 self.stopListening(self, 'route', back);
                                 combo_order.trigger("change:modifiers");
                                 self.stopListening(order, 'change', setHeaderToUpdate);
-                                self.return_to_combo_product(cache_id);
+                                self.return_to_combo_product(cache_id, onUpdate);
                             }
                         }
                     });
@@ -878,7 +878,7 @@ define(["main_router"], function(main_router) {
                 }
             });
         },
-        return_to_combo_product: function(cache_id) {
+        return_to_combo_product: function(cache_id, onUpdate) {
             var header = App.Data.header;
 
             if (!cache_id) {
@@ -907,6 +907,7 @@ define(["main_router"], function(main_router) {
                 }
             });
 
+            onUpdate && onUpdate();
             header.trigger('reinit');
             this.change_page();
         },
