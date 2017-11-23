@@ -337,6 +337,7 @@ define(["backbone", "stanfordcard_view", "factory", "generator"], function(Backb
                         App.Data.myorder.add(self.model);
                     } else {
                         self.options.real.update(self.model);
+                        self.model.set('matrix_updated', true);
                     }
                     $('#popup .cancel').trigger('click', ['OK']);
                 }, function(errorMsg) {
