@@ -151,16 +151,16 @@ define(["backbone", "factory", 'generator', 'list'], function(Backbone) {
             var productSet = this.options.productSet;
 
             var el = $(".input", $(e.currentTarget)),
-                notChecked = el.attr('checked') == "checked" ? false : true,
+                checked = el.attr('checked') == "checked",
                 exactAmount = productSet.get('maximum_amount');
 
 
-            if (notChecked && this.options.type == 'checkbox' && exactAmount > 0 && productSet.get_selected_qty() >= exactAmount) {
+            if (!checked && this.options.type == 'checkbox' && exactAmount > 0 && productSet.get_selected_qty() >= exactAmount) {
                 return;
             }
 
             if(this.options.type == 'radio') {
-                if (!notChecked) {
+                if (checked) {
                     return;
                 }
                 this.$el.parent().find('.input[checked="checked"]').removeAttr('checked');
@@ -169,41 +169,14 @@ define(["backbone", "factory", 'generator', 'list'], function(Backbone) {
                  });
             }
 
-            this.model.set('selected', notChecked);
-            if (!notChecked) {
+            this.model.set('selected', !checked);
+            if (checked) {
                 productSet.get('order_products').where({selected: false}).forEach(function(product) {
                     product.set('quantity', 1, {silent: true});
                 });
             }
 
-            this.$('.input').attr('checked', notChecked ? 'checked' : false);//            var productSet = this.options.productSet;
-            var el = $(".input", $(e.currentTarget)),
-                notChecked = el.attr('checked') == "checked" ? false : true,
-                exactAmount = productSet.get('maximum_amount');
-
-
-            if (notChecked && this.options.type == 'checkbox' && exactAmount > 0 && productSet.get_selected_qty() >= exactAmount) {
-                return;
-            }
-
-            if(this.options.type == 'radio') {
-                if (!notChecked) {
-                    return;
-                }
-                this.$el.parent().find('.input[checked="checked"]').removeAttr('checked');
-                 productSet.get('order_products').where({selected: true}).forEach(function(product) {
-                     product.set('selected', false);
-                 });
-            }
-
-            this.model.set('selected', notChecked);
-            if (!notChecked) {
-                productSet.get('order_products').where({selected: false}).forEach(function(product) {
-                    product.set('quantity', 1, {silent: true});
-                });
-            }
-
-            this.$('.input').attr('checked', notChecked ? 'checked' : false);
+            this.$('.input').attr('checked', !checked ? 'checked' : false);
         },
         customize: function(event) {
             event.stopImmediatePropagation();
@@ -260,7 +233,7 @@ define(["backbone", "factory", 'generator', 'list'], function(Backbone) {
             this.model.trigger('change:modifiers');
         },
         check_model: function() {
-            var checked = this.$(".input").attr('checked') == "checked" ? true : false;
+            var checked = this.$(".input").attr('checked') === "checked";
             if (checked && this.model.check_order().status != 'OK') {
                 this.$(".input").click(); //return back to the unchecked state
             }
