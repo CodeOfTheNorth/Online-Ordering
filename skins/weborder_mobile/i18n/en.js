@@ -216,7 +216,7 @@
         'REWARDS_BALANCE_INFO_0': 'You\'ve earned',
         'REWARDS_BALANCE_INFO_1': '$1 Reward Points for order items',
         'REWARDS_BALANCE_INFO_2': '$1 Reward Points for store visits',
-        'REWARDS_BALANCE_INFO_3': '$1$2 Reward Points for store purchases',
+        'REWARDS_BALANCE_INFO_3': '$1 Reward Points for store purchases',
         'REWARDS_REDEEM': 'Redeem Rewards',
         'CONFIRM_SUBMIT': 'Submit',
         'SEARCH_ENTER_STRING': 'Search',

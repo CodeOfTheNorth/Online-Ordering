@@ -178,7 +178,7 @@ define(["profile_view", "giftcard_view", "myorder_view"], function(profile_view)
                         count++;
                     }
                     if (purchases != null) {
-                        str += (count > 0 ? " and " : " ") + strFormat(_loc.REWARDS_BALANCE_INFO_3, App.Settings.currency_symbol, purchases);
+                        str += (count > 0 ? " and " : " ") + strFormat(_loc.REWARDS_BALANCE_INFO_3, purchases);
                     }
                     return str + ".";
                 }
