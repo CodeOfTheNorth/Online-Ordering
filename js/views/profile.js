@@ -1011,7 +1011,7 @@ define(["factory"], function() {
         name: 'profile',
         mod: 'reward_card_balance',
         bindings: {
-            '.purchase-points': 'text: currencyFormat(balance_purchases)',
+            '.purchase-points': 'text: balance_purchases',
             '.item-points': 'text: balance_points',
             '.visit-points': 'text: balance_visits',
             '.purchase-points-line': 'toggle: not(equal(balance_purchases, null))',
