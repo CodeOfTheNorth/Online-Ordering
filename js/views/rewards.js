@@ -219,7 +219,7 @@
             '.rewards-number': 'text: number',
             '.total-points': 'text: balance_points',
             '.total-visits': 'text: balance_visits',
-            '.total-purchases': 'text: currencyFormat(balance_purchases)',
+            '.total-purchases': 'text: balance_purchases',
             '.rewards-unavailable': 'toggle: not(length(rewards))',
             '.total-points-redemption': 'toggle: redemption_points',
             '.total-points-redemption__value': 'text: redemption_points',
