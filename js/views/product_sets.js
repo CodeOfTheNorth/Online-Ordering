@@ -149,7 +149,6 @@ define(["backbone", "factory", 'generator', 'list'], function(Backbone) {
                 return;
             }
             var productSet = this.options.productSet;
-
             var el = $(".input", $(e.currentTarget)),
                 checked = el.attr('checked') == "checked",
                 exactAmount = productSet.get('maximum_amount');
@@ -216,7 +215,20 @@ define(["backbone", "factory", 'generator', 'list'], function(Backbone) {
                 return;
             }
 
-            this.$(".customize").click();
+            var productSet = this.options.productSet;
+            var el = $(".input", $(e.currentTarget)),
+                checked = el.attr('checked') == "checked" ? false : true,
+                exactAmount = productSet.get('maximum_amount');
+
+            if (checked && this.options.type == 'checkbox' && exactAmount > 0 && productSet.get_selected_qty() >= exactAmount) {
+                return;
+            }
+
+            if (el.attr('checked') !== "checked" && this.model.check_order().status != 'OK') {
+                this.$(".customize").click();
+            } else {
+                this.radio_clicked(e, true);
+            }
         },
         update_elements: function() {
             var quantity;
