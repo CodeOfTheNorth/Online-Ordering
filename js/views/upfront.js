@@ -29,10 +29,6 @@ define(["checkout_view"], function(Backbone) {
         name: 'upfront',
         mod: 'main',
         bindings: {
-//            '.rewards-card-apply': 'classes: {hide: length(rewardsCard_discounts)}',
-//            '.see-rewards':  'classes: {hide: not(length(rewardsCard_discounts))}',
-//            '.cancel-input': 'classes: {hide: not(length(rewardsCard_discounts))}',
-//            '.rewardCard': 'attr: {readonly: reward_card_readonly}, restrictInput: "0123456789", kbdSwitcher: "numeric", pattern: /^\\d*$/',
             '.phone': 'restrictInput: "0123456789+", kbdSwitcher: "tel", pattern: /^\\+?\\d{0,15}$/',
             '.personal': 'toggle: not(isAuthorized)'
         },
@@ -43,19 +39,11 @@ define(["checkout_view"], function(Backbone) {
                     return this.getBinding('$customer').isAuthorized();
                 }
             }
-//            ,
-//            reward_card_readonly: {
-//                deps: ["rewardsCard_discounts", "customer_rewardCards"],
-//                get: function() {
-//                    return this.getBinding('rewardsCard_discounts').length > 0 || this.getBinding('customer_rewardCards').length > 0;
-//                }
-//            }
         },
         initialize: function() {
             var self = this;
             this.listenTo(this.model, 'change:dining_option', this.controlAddress, this);
             this.listenTo(this.model, 'change:dining_option', this.controlDeliveryOther, this);
-//            this.listenTo(this.options.rewardsCard, 'change:number', this.updateData, this);
             this.listenTo(this.options.customer, 'change:first_name change:last_name change:email change:phone', this.updateData, this);
             this.customer = this.options.customer;
             this.card = App.Data.card;
@@ -84,17 +72,13 @@ define(["checkout_view"], function(Backbone) {
         },
         render: function() {
             var settings = App.Data.settings.get('settings_system'),
-//                customer = this.options.customer,
                 model = {};
-//                self = this;
 
             model.firstName = this.customer.escape('first_name');
             model.lastName = this.customer.escape('last_name');
             model.email = this.customer.escape('email');
             model.phone = this.customer.escape('phone');
-//            model.rewardCard = this.options.rewardsCard.escape('number');
             model.isFirefox = /firefox/i.test(navigator.userAgent);
-//            model.enableRewardCard = settings.enable_reward_cards_collecting;
             model.business_name = settings.business_name;
             model.address = settings.address;
             model.isMobile = typeof cssua.ua.mobile != 'undefined';
@@ -128,19 +112,13 @@ define(["checkout_view"], function(Backbone) {
             'blur .email': 'changeEmail',
             'change .email': 'changeEmail',
             'blur .phone': 'changePhone',
-            'change .phone': 'changePhone',
-//            'blur .rewardCard': 'changeRewardCard',
-//            'click .rewards-card-apply': 'applyRewardsCard',
-//            'click .see-rewards': 'showRewards',
-//            'click .cancel-input': 'resetRewards'
+            'change .phone': 'changePhone'
         },
         changeFirstName: function(e) {
             this.customer.set('first_name', e.target.value);
-//            this.card.set('firstName', e.target.value);
         },
         changeLastName: function(e) {
             this.customer.set('last_name', e.target.value);
-//            this.card.set('secondName', e.target.value);
         },
         changeEmail: function(e) {
             this.customer.set('email', e.target.value.trim());
@@ -148,9 +126,6 @@ define(["checkout_view"], function(Backbone) {
         changePhone: function(e) {
             this.customer.set('phone', e.target.value);
         },
-//        changeRewardCard: function(e) {
-//            this.options.rewardsCard.set('number', e.target.value);
-//        },
         controlAddress: function(model, value) {
             var address = this.subViews.shift();
 
@@ -186,18 +161,7 @@ define(["checkout_view"], function(Backbone) {
             this.$('.lastName').val(customer.get('last_name'));
             this.$('.email').val(customer.get('email'));
             this.$('.phone').val(customer.get('phone'));
-//            this.$('.rewardCard').val(this.options.rewardsCard.get('number'));
         }
-//        ,
-//        applyRewardsCard: function() {
-//            this.options.rewardsCard.trigger('onApplyRewardsCard');
-//        },
-//        showRewards: function() {
-//            this.options.rewardsCard.trigger('onRewardsReceived');
-//        },
-//        resetRewards: function() {
-//            this.options.rewardsCard.resetData();
-//        }
     });
 
     App.Views.CoreUpfrontView.CoreUpfrontPageView = App.Views.FactoryView.extend({
@@ -226,25 +190,15 @@ define(["checkout_view"], function(Backbone) {
             main = App.Views.GeneratorView.create('Upfront', {
                 model: this.collection.checkout,
                 customer: this.options.customer,
-//                rewardsCard: this.collection.rewardsCard,
                 mod: 'Main',
                 className: 'clear overflow-hidden'
             });
 
-//            address = App.Views.GeneratorView.create('Upfront', {
-//                mod: 'Address',
-//                model: this.options.checkout,
-//                customer: this.options.customer,
-//                checkout: this.options.checkout,
-//                className: 'clear yourAddress'
-//            });
-
-            this.subViews.push(order_type, pickup, main /* address */);
+            this.subViews.push(order_type, pickup, main);
 
             orderDetails.prepend(main.el);
             orderDetails.prepend(pickup.el);
             orderDetails.prepend(order_type.el);
-//            orderDetails.append(address.el);
 
             return this;
         }
@@ -261,19 +215,6 @@ define(["checkout_view"], function(Backbone) {
         name: 'upfront',
         mod: 'pickup'
     });
-
-//    App.Views.CoreUpfrontView.CoreUpfrontAddressView = App.Views.FactoryView.extend({
-//        name: 'upfront',
-//        mod: 'address',
-//        events: {
-//            'click #getAddress': 'getAddress'
-//        },
-//        getAddress: function(e) {
-//            e.preventDefault();
-//            // TODO: get location/address and put it inside input field
-//            // also pointer should be changed to 'cursor' for this field
-//        }
-//    });
 
     App.Views.CoreUpfrontView.CoreUpfrontAddressView = App.Views.DeliveryAddressesView.extend({
         name: 'upfront',

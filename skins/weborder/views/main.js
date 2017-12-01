@@ -180,7 +180,7 @@ define(["done_view", "generator"], function(done_view) {
                 return;
             }
 
-            this.orderClone = App.Data.myorder.clone(); //_.clone(App.Data.myorder);
+            this.orderClone = App.Data.myorder.clone();
 
             var data = {
                 el: $('.upfront-panel'),
@@ -188,7 +188,7 @@ define(["done_view", "generator"], function(done_view) {
                 collection: this.orderClone,
                 timetable: App.Data.timetables,
                 customer: App.Data.customer,
-                DINING_OPTION_NAME: App.Data.mainModel.get('DINING_OPTION_NAME'), //_loc.DINING_OPTION_NAME, // _.clone(_loc.DINING_OPTION_NAME),
+                DINING_OPTION_NAME: App.Data.mainModel.get('DINING_OPTION_NAME'),
                 checkout: this.orderClone.checkout
             };
 
@@ -205,7 +205,7 @@ define(["done_view", "generator"], function(done_view) {
             }
             this.model.set('upfront_update', 1);
 
-            this.orderClone = App.Data.myorder.clone(); //_.clone(App.Data.myorder);
+            this.orderClone = App.Data.myorder.clone();
 
             // call modal dialog to update upfront data
             var data = {
@@ -215,7 +215,7 @@ define(["done_view", "generator"], function(done_view) {
                 collection: this.orderClone,
                 timetable: App.Data.timetables,
                 customer: App.Data.customer,
-                DINING_OPTION_NAME: App.Data.mainModel.get('DINING_OPTION_NAME'), //_loc.DINING_OPTION_NAME, //_.clone(_loc.DINING_OPTION_NAME),
+                DINING_OPTION_NAME: App.Data.mainModel.get('DINING_OPTION_NAME'),
                 checkout: this.orderClone.checkout,
                 className: 'upfront-modal'
             };

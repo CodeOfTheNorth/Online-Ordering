@@ -25,8 +25,6 @@
     text-align: left;
     height: 500px;
     width: 800px;
-/*    overflow-y: auto;
-    overflow-x: hidden;*/
     position: relative;    
 }
 
@@ -44,12 +42,7 @@
     z-index: 201;
 }
 
-/*.upfront-content {
-    padding: 70px 40px;
-}*/
-
 .upfront-modal .upfront-content {
-    /*padding: 10px 40px 60px;*/
     position: absolute;
     left: 30px;
     top: 40px;
@@ -108,28 +101,6 @@
     cursor: pointer;
 }
 
-/*.yourAddress {
-    padding-top: 10px;
-}
-
-.yourAddress .item {
-    position: relative;
-    width: 476px;
-}
-
-.yourAddress .item .input {
-    padding-left: 50px;
-}
-
-.yourAddress .item a {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    padding-right: 5px;
-    border-right: 1px solid #ccc;
-    cursor: inherit;
-}*/
-
 .upfront-update {
     height: 55px;
     position: absolute;
@@ -151,10 +122,6 @@
 
 .upfront-content {
     width: 100%;
-/*    position: absolute;
-    top: 0;
-    bottom: 0;
-    overflow-y: auto;*/
 }
 
 .upfront-content .order-details-title {
@@ -234,31 +201,6 @@
     padding-bottom: 5px;
 }
 
-/*.payment-method {
-    min-width: 116px;
-    padding: 11px;
-    margin-bottom: 15px;
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 5px;
-    letter-spacing: 2px;
-    cursor: pointer;
-}*/
-
-/*.payment-method[data-payment=paypal] {
-    font-family: Verdana;
-    font-weight: 700;
-    font-style: italic;
-    letter-spacing: normal;
-}*/
-
-/*.payment-method[data-payment=paypal]::before {
-    content: '\f1ed';
-    font-family: 'FontAwesome';
-    font-size: 16px;
-    padding-right: 5px;
-}*/
-
 .tip-amount-box {
     width: 110px;
     position: relative;
@@ -334,4 +276,3 @@
 .upfront-modal .upfront-content .optional-text[class] {
     color: #888888;
 }
-
