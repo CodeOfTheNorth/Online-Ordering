@@ -349,9 +349,10 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
             if (this.isNewAddressSelected(dining_option)) {
                 err = err.concat(this._check_delivery_fields());
             }
-            
-            if (this.isNewAddressSelected(dining_option) &&
-              (Boolean(this.get('shipping_selected') === -1 || this.get('shipping_services').length))) {
+
+            if (dining_option === 'DINING_OPTION_SHIPPING' &&
+                this.isNewAddressSelected(dining_option) &&
+                this.get('shipping_selected') === -1) {
                 errShipping.push(MSG.ERROR_SHIPPING_SERVICES_NOT_FOUND);
             }
 
@@ -362,7 +363,7 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
                     errorList: err
                 };
             }
-            
+
             if (errShipping.length) {
                 return {
                     status: "ERROR_SHIPPING_SERVICES_NOT_FOUND",

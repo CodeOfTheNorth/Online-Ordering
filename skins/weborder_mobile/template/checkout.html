@@ -22,19 +22,6 @@
         <li class="delivery_other font-size2">
         </li>
     </ul>
-    <% if(enableRewardCard) { %>
-    <div class="list-title list-header-text">
-        <span class="font-size1"><%= _lp.CHECKOUT_REWARD_CARD %></span>
-    </div>
-    <div class="rewardCard block text-right font-size2">
-        <div class="input-control">
-            <input type="text" placeholder="<%= _lp.CHECKOUT_REWARD_CARD_NUMBER %>" class="rewardCard ios-safari-caret input-colors" value="<%= rewardCard %>">
-            <span class="ctrl-wrapper cancel-input"></span>
-        </div>
-        <span class="rewards-card-apply rewards-card-btn btn-inline regular-text"><%= _lp.CHECKOUT_APPLY %></span>
-        <span class="see-rewards rewards-card-btn btn-inline regular-text"><%= _lp.CHECKOUT_SEE_REWARDS %></span>
-    </div>
-    <% } %>
 </script>
 
 <script type="text/template" id="checkout_other-template">

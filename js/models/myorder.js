@@ -155,7 +155,13 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
              * @type {boolean}
              * @default false
              */
-            selected: false
+            selected: false,
+            /*
+             * Indicates if matrix was updated inside dialog
+             * @type {boolean}
+             * @default false
+             */
+            matrix_updated: false
         },
         /**
          * Indicates that listeners are already assigned to `product` events. It gets rid of re-assigning.

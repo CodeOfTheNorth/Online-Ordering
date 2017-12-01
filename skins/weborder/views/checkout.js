@@ -234,16 +234,6 @@ define(["checkout_view"], function(checkout_view) {
                 paymentInfo.append(discount.el);
             }
 
-            if(this.options.enableRewardCard) {
-                rewards = App.Views.GeneratorView.create('Checkout', {
-                    model: this.collection.rewardsCard,
-                    mod: 'RewardsCard',
-                    className: 'item'
-                });
-                this.subViews.push(rewards);
-                paymentInfo.append(rewards.el);
-            }
-
             this.iOSSafariCaretFix();
 
             return this;
@@ -251,30 +241,43 @@ define(["checkout_view"], function(checkout_view) {
         setProfileData: function() {
             var promises = this.options.promises(),
                 customer = this.options.customer,
+                paymentInfo = this.$('.payment-info'),
+                rewards,
                 self = this;
-
-            if (promises.length) {
-                Backbone.$.when.apply(Backbone.$, promises).then(function() {
-                    if (customer.payments) {
-                        customer.payments.selectFirstItem();
-                        self.token.set({
-                            selected: customer.payments.length > 0,
-                            paymentsExist: true
-                        });
-                        self.tokens.reset(customer.payments.models);
-                        customer.payments.ignoreSelectedToken = self.token.get('ignoreSelectedToken');
-                        customer.payments.listenTo(self.token, 'change:ignoreSelectedToken', function(model, value) {
-                            this.ignoreSelectedToken = value;
-                        });
-                    }
-                    if (customer.giftCards) {
-                        self.giftCard.set('selected', true);
-                        customer.giftCards.selectFirstItem();
-                    }
+            
+           if(this.options.enableRewardCard && customer.get('user_id')) {
+               rewards = App.Views.GeneratorView.create('Checkout', {
+                    model: this.collection.rewardsCard,
+                    mod: 'RewardsCard',
+                    className: 'item'
                 });
-            }
+               this.subViews.push(rewards);
+               paymentInfo.append(rewards.el);
+           }
+            
+           if (promises.length) {
+               Backbone.$.when.apply(Backbone.$, promises).then(function() {
+                   if (customer.payments) {
+                       customer.payments.selectFirstItem();
+                       self.token.set({
+                           selected: customer.payments.length > 0,
+                           paymentsExist: true
+                       });
+                       self.tokens.reset(customer.payments.models);
+                       customer.payments.ignoreSelectedToken = self.token.get('ignoreSelectedToken');
+                       customer.payments.listenTo(self.token, 'change:ignoreSelectedToken', function(model, value) {
+                           this.ignoreSelectedToken = value;
+                       });
+                   }
+                   if (customer.giftCards) {
+                       self.giftCard.set('selected', true);
+                       customer.giftCards.selectFirstItem();
+                   }
+               });
+           }
         },
         removeProfileData: function() {
+            this.$('.reward-cards-container').hide();
             this.token.set({
                 paymentsExist: false,
                 selected: false

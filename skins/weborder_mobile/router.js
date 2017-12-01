@@ -300,7 +300,7 @@ define(["main_router"], function(main_router) {
             // onGetRewards event occurs when Rewards Card's 'Submit' button is clicked on 'Rewards Card Info' popup
             this.listenTo(App.Data.myorder.rewardsCard, 'onGetRewards', function() {
                 App.Data.mainModel.trigger('loadStarted');
-                App.Data.myorder.rewardsCard.getRewards();
+                App.Data.myorder.rewardsCard.getRewards(App.Data.customer.getAuthorizationHeader());
             });
 
             // onRedemptionApplied event occurs when 'Apply Reward' btn is clicked
@@ -714,7 +714,7 @@ define(["main_router"], function(main_router) {
                 }
             });
         },
-        combo_child_products: function(combo_order, product) {
+        combo_child_products: function(combo_order, product, onUpdate) {
             this.prepare('modifiers', function() {
                 var self = this, order,
                     header = App.Data.header,
@@ -798,7 +798,7 @@ define(["main_router"], function(main_router) {
                                 self.stopListening(self, 'route', back);
                                 combo_order.trigger("change:modifiers");
                                 self.stopListening(order, 'change', setHeaderToUpdate);
-                                self.return_to_combo_product(cache_id);
+                                self.return_to_combo_product(cache_id, onUpdate);
                             }
                         }
                     });
@@ -878,7 +878,7 @@ define(["main_router"], function(main_router) {
                 }
             });
         },
-        return_to_combo_product: function(cache_id) {
+        return_to_combo_product: function(cache_id, onUpdate) {
             var header = App.Data.header;
 
             if (!cache_id) {
@@ -907,6 +907,7 @@ define(["main_router"], function(main_router) {
                 }
             });
 
+            onUpdate && onUpdate();
             header.trigger('reinit');
             this.change_page();
         },
@@ -2203,26 +2204,6 @@ define(["main_router"], function(main_router) {
                 header: headerModes.Modifiers,
                 footer: footerModes.None,
                 contentClass: 'primary-bg',
-                content: content
-            });
-
-            this.change_page();
-        },
-        terms: function() {
-            var content = this.termsContent();
-
-            App.Data.header.set({
-                page_title: _loc.PROFILE_TOU,
-                back_title: _loc.BACK,
-                back: content.back,
-                link: content.next,
-                link_title: _loc.PROFILE_TOU_BTN_ACCEPT_2
-            });
-
-            App.Data.mainModel.set({
-                header: headerModes.Modifiers,
-                footer: footerModes.None,
-                contentClass: 'primary-bg regular-text profile-terms-of-use',
                 content: content
             });
 
