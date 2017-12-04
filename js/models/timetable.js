@@ -130,14 +130,14 @@ define(["backbone"], function(Backbone) {
             var delivery_time = times.estimated_delivery_time;
             var preparation_time = times.estimated_order_preparation_time;
             var enable_asap = times.enable_asap_due_time;
-            
+
             this.set('pickup_time_interval', pickup_time_interval);
             this.set('start_time', start_time);
             this.set('end_time', end_time);
             this.set('delivery_time', delivery_time);
             this.set('preparation_time', preparation_time);
             this.set('enable_asap', enable_asap);
-            
+
         },
         /**
          * Updates models's attributes.
@@ -289,7 +289,7 @@ define(["backbone"], function(Backbone) {
                 start_interval = this.get('start_time'),
                 end_interval = this.get('end_time') - (isDelivery ? this.get('delivery_time') : this.get('preparation_time')),
                 time = new TimeFrm(curtime.getHours(), curtime.getMinutes()).get_minutes();
-            
+
             this._unionPeriods(timetable).forEach(function(value) {
                 if (value.from + start_interval <= time && time <= value.to - end_interval) {
                     works = true;
@@ -951,6 +951,15 @@ define(["backbone"], function(Backbone) {
             }
 
             return res;
+        },
+        /*
+         * Get TODAY according to server's time
+         * @returns {time} date-time of today (time is set to 00:00:00)
+         */
+        today: function() {
+            var t = this.get_server_time(new Date());
+            t.setHours(0, 0, 0 ,0);
+            return t;
         }
     });
 });
