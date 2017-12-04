@@ -310,8 +310,7 @@ define(["delivery_addresses", "generator"], function(delivery_addresses) {
             this.templateData.pickupTimeLabel = '';
             this.$el.html(this.template(this.templateData));
 
-            var today = new Date();
-            today.setHours(0,0,0,0);
+            var today = App.Data.timetables.today();
             if (this.pickupTime.length == 0) {
                 return this;
             }
