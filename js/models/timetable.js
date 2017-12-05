@@ -960,6 +960,15 @@ define(["backbone"], function(Backbone) {
                 return new Date(App.Data.myorder.checkout.get('pickupTS'));
             }
             return this.base();
+        },
+        /*
+         * Get TODAY according to server's time
+         * @returns {time} date-time of today (time is set to 00:00:00)
+         */
+        today: function() {
+            var t = this.get_server_time(new Date());
+            t.setHours(0, 0, 0 ,0);
+            return t;
         }
     });
 });
