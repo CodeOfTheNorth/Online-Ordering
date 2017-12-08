@@ -668,7 +668,7 @@ define(["backbone"], function(Backbone) {
          */
         model: App.Models.Order,
         page_limit: 30,
-	    last_page_loaded: 0,
+	      last_page_loaded: 0,
         meta: {},
         /**
          * Function returning value used as sorting comparator.
