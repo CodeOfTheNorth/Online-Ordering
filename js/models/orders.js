@@ -468,8 +468,9 @@ define(["backbone"], function(Backbone) {
                 });
 
                 myorder.get_cart_totals().always( function() {
-                    if (parseFloat(myorder.total.get_total()) != _order.get('final_total')) {
-                        changes.push('FinalTotal');
+                    var total = parseFloat(myorder.total.get_total());
+                    if (total != _order.get('final_total')) {
+                        changes.push(total == 0 ? 'FinalTotalZero': 'FinalTotal');
                     }
                     self.trigger('onReorderCompleted', changes, myorder);
                 });
@@ -579,11 +580,12 @@ define(["backbone"], function(Backbone) {
             }
 
             function processModifiers(item) {
-                var product = item.product,
-                    modifiers = item.modifiers;
+                if (!item.modifiers) {
+                    return;
+                }
 
                 // Preparing modifiers
-                modifiers.forEach(function(modifier) {
+                item.modifiers.forEach(function(modifier) {
                     var new_modifiers = [];
 
                     modifier.modifiers.forEach(function(base_modifier) {

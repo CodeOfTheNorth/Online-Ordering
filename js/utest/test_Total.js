@@ -281,6 +281,7 @@ define(['total', 'js/utest/data/Total'], function(total, data) {
             expect(total.set).toHaveBeenCalledWith(setData);
             expect(tip.empty).toHaveBeenCalled();
             expect(setData).toEqual({
+                final_total: 0,
                 tax : 0,
                 subtotal : 0,
                 surcharge: 0
