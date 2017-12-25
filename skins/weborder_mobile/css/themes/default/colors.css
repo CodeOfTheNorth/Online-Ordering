@@ -37,14 +37,16 @@
 }
 /* [tab_text] Store details tabs button background */
 .tab-text {
-  color: rgba(255, 255, 255, 0.3);
+  /*color: rgba(255, 255, 255, 0.3);*/
+  color: #FFFFFF;
 }
 .tab-text .active,
 .myorderList .qty {
   color: #FFFFFF;
 }
 .tab-center {
-  border-color: rgba(255, 255, 255, 0.3);
+  /*border-color: rgba(255, 255, 255, 0.3);*/
+  border-color: #FFFFFF;
 }
 /* [tab_active_underline] Store details tabs button background */
 .tabs::after {

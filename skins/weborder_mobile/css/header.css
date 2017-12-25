@@ -3,12 +3,28 @@
     z-index: 100;
 }
 
+.custom-mode #header{
+    min-height: 7em;
+    z-index: 99;
+    position: initial;
+}
+
 #header.hidden {
     z-index: -1;
 }
 
-#header > * {
-    margin: 0 1.4em;
+/*#header > * {*/
+    /*margin: 0 1.4em;*/
+/*}*/
+
+#header_title_bar {
+    padding: 0 1.4em;
+}
+
+#header_title_bar.inCustomMode {
+    border: 5px solid rgb(0, 255, 196);
+    position: relative;
+    z-index: 100;
 }
 
 #header h1 {
@@ -165,7 +181,7 @@
     left: 68.5%;
 }
 
-.tabs > li {
+.tabs div > li {
     display: block;
     padding: 0 1.4em;
     width: 33%;

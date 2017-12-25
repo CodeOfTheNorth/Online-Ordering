@@ -1,3 +1,19 @@
+.store-info .custom-text-wrapper{
+    position: relative;
+}
+
+.store-info #text_setting{
+    border: none;
+    height: 100%;
+    width: 62%;
+    position: absolute;
+    right: 0;
+}
+
+.store-info #text_setting.inCustomMode{
+    border: 3px solid red;
+}
+
 .store-info .img-block {
     height: 20em;
     width: 100%;

@@ -235,6 +235,11 @@
     margin-top: 2px;
 }
 
+#cards_custom_wrapper {
+    border: 5px solid red;
+    border-top: 0;
+}
+
 .payment-item {
     padding: .8em 0 .8em 1em;
     margin-bottom: 2px;

@@ -355,6 +355,7 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
             // start listen to state changes
             this.once('initialized', function() {
                 self.runStateTracking.bind(this);
+              
                 // notify parent window if it exists
                 var parent = window.opener || (window.parent != window ? window.parent : false);
                 if (parent) {
