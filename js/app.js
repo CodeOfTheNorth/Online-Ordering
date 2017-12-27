@@ -226,7 +226,7 @@
         // set config for require
         require.config(app.config);
 
-        require(['cssua', 'raven', 'functions', 'generator', 'errors', 'errors_view', 'myorder', 'settings', 'timetable', 'custom_menus', 'log', 'tax', 'main_router', 'locale'], function() {
+        require(['cssua', 'raven', 'functions', 'generator', 'errors', 'errors_view', 'myorder', 'settings', 'timetable', 'log', 'tax', 'main_router', 'locale'], function() {
             var win = Backbone.$(window);
 
             raven_init();
@@ -374,8 +374,6 @@
                 require([settings.get('skin') + '/router'], function(module) {
                     Backbone.$.when(locale.dfd_load, settings.loadDfd).then(function() {
                         App.Data.timetables = new App.Models.Timetable;
-                        App.Data.custom_menus = new App.Collections.CustomMenus;
-                        App.Data.custom_menus.addJSON(App.Settings.custom_menus);
                         if(module instanceof require('main_router')) {
                             module.initRouter();
                         }

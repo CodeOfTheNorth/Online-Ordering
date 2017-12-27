@@ -58,6 +58,10 @@ define(["backbone"], function(Backbone) {
              */
             orderClone: null,
             /*
+             * Contains a copy of customer while editing, to be able to cance without data changing
+             */
+            customerClone: null,
+            /*
              *
              */
             DINING_OPTION_NAME: null

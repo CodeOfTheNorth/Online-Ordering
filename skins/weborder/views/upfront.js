@@ -49,12 +49,15 @@ define(["upfront_view"], function(upfront_view) {
             'click .just-browsing': 'just_browsing'
         },
         start_order: function() {
-            App.Data.mainModel.set('upfront_active', false);
-            App.Data.mainModel.set('orderStarted', true);
+            var check = this.collection.check_order({customer: true});
+            if (check.status == 'OK') {
+                App.Data.mainModel.set('upfront_active', false);
+                App.Data.mainModel.set('orderStarted', true);
+            }
         },
         just_browsing: function() {
             App.Data.mainModel.set('upfront_active', false);
-        } //,
+        }
     });
 
     var UpfrontUpdateView = App.Views.UpfrontView.UpfrontPageView.extend({
@@ -64,7 +67,10 @@ define(["upfront_view"], function(upfront_view) {
             'click .upfront-update': 'upfront_update'
         },
         upfront_update: function() {
-            App.Data.mainModel.set('upfront_update', 2);
+            var check = this.collection.check_order({customer: true});
+            if (check.status == 'OK') {
+                App.Data.mainModel.set('upfront_update', 2);
+            }
         }
     });
 

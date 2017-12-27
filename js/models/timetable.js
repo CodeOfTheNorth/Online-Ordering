@@ -601,10 +601,10 @@ define(["backbone"], function(Backbone) {
          * @param {number} [format_output=0] - format of time output:
          * - 0: applies `time_format` attribute value;
          * - 1: 24-hours format.
-         * @returns {?boolean}
+         * @returns {boolean, array or null}
          * - TRUE - around the clock;
          * - FALSE - closed;
-         * - NULL - working hours is undefined. timetables is empty.
+         * - NULL - working hours are undefined. timetables is empty.
          */
         get_working_hours: function(current_date, format_output) {
             format_output = format_output === 1 ? 1 : 0;
@@ -630,13 +630,20 @@ define(["backbone"], function(Backbone) {
             var timetable_in_format = [];
             for (var i = 0; i < current_day_timetable.length; i++) {
                 var time = current_day_timetable[i],
-                    time_from = new TimeFrm(time.from.split(":")[0] * 1, time.from.split(":")[1] * 1, time_format).toString(),
-                    time_to = new TimeFrm(time.to.split(":")[0] * 1, time.to.split(":")[1] * 1, time_format).toString();
+                    time_from = time.from.split(":"),
+                    time_to = time.to.split(":"),
+                    h_from = parseInt(time_from[0]),
+                    m_from = parseInt(time_from[1]),
+                    h_to = parseInt(time_to[0]),
+                    m_to = parseInt(time_to[1]);
 
                 timetable_in_format.push({
-                    from: time_from, // output of time in requirement format
-                    to: time_to // output of time in requirement format
+                    from: new TimeFrm(h_from, m_from, time_format).toString(), // output of time in requirement format
+                    to: new TimeFrm(h_to, m_to, time_format).toString(), // output of time in requirement format
+                    from_int: h_from * 60 + m_from,
+                    to_int: h_to * 60 + m_to
                 });
+
             }
             return timetable_in_format;
         },
@@ -953,15 +960,6 @@ define(["backbone"], function(Backbone) {
             return res;
         },
         /*
-         * Get the time, depending on the state of 'orderStarted': if order has been started
-         */
-        getCustomMenuTime: function() {
-            if (App.Data.mainModel.get('orderStarted')) {
-                return new Date(App.Data.myorder.checkout.get('pickupTS'));
-            }
-            return this.base();
-        },
-        /*
          * Get TODAY according to server's time
          * @returns {time} date-time of today (time is set to 00:00:00)
          */
@@ -969,6 +967,170 @@ define(["backbone"], function(Backbone) {
             var t = this.get_server_time(new Date());
             t.setHours(0, 0, 0 ,0);
             return t;
+        },
+        /*
+         * Format date to 'Day_of_week_short, MM/DD/YYYY', like 'Fri, 08/12/2017'
+         * @returns {string} formatted date
+         */
+        format_date: function(date) {
+            date = new Date(date);
+            return _loc.PIKADAY.i18n.weekdaysShort[date.getDay() % 7] + ', ' +
+                   ('0' + date.getDate()).slice(-2) + '/' +
+                   ('0' + (date.getMonth() + 1)).slice(-2) + '/' +
+                   date.getFullYear();
+        }
+    });
+
+    /*
+     * Extends App.Models.Timetable to support product's timetables
+     */
+
+    App.Models.ProductTimeTable = App.Models.Timetable.extend({
+        /*
+         * Gets time of product's availiability (schedule).
+         *
+         * products' timetables is an array, containing timetables of all custom menus
+         * to which this product belongs to
+         *
+         * @param {Date} date - the date when we like to get product's hours
+         *
+         * @returns {array} all periods of availiability; could be empty array
+         * every period has the same format as function get_working_hours()
+         */
+
+        get_product_hours: function(date) {
+            var timetables = this.get('timetables'),
+                ranges = [],
+                date_from,
+                date_to;
+            var weekDay = this.get_day_of_week(date.getDay() % 7);
+
+            if (this.isHoliday(date)) {
+                return ranges;
+            }
+
+            for (var i in timetables) {
+                if (!timetables[i].active) {
+                    continue;
+                }
+                date_from = timetables[i].from_date ?
+                    new Date(timetables[i].from_date).setHours(0, 0, 0, 0) :
+                    new Date(this.get_base_time()).setHours(0, 0, 0, 0);
+                date_to = timetables[i].to_date ?
+                    new Date(timetables[i].to_date).setHours(23, 59, 59, 999) :
+                    new Date(this.get_base_time()).setHours(2400, 0, 0, 0); // 100 days
+
+                // check if date is in the range [date_from, date_to]
+                if (date < date_from || date > date_to) {
+                    continue;
+                }
+
+                for (var j in timetables[i]['timetable_data'][weekDay]) {
+                    var from = this.str_to_time(timetables[i]['timetable_data'][weekDay][j]['from']),
+                        to   = this.str_to_time(timetables[i]['timetable_data'][weekDay][j]['to']);
+                    if (from === null || to === null) {
+                        continue;
+                    }
+                    ranges.push({from_int: from, to_int: to});
+                }
+            }
+
+            // check if ranges of hours have intersections; combine if required
+            if (ranges.length > 1) {
+                var changed = false;
+
+                do {
+                    changed = false;
+                    if (ranges.length == 1) {
+                        continue;
+                    }
+                    for (var i = 0; i < ranges.length - 1 && !changed; i++) {
+                        for (var j = i+1; j < ranges.length; j++) {
+                            // check if 2 ranges could be combined
+                            if ((ranges[j].to_int >= ranges[i].from_int) && (ranges[j].to_int <= ranges[i].to_int) ||
+                                    (ranges[j].from_int >= ranges[i].from_int) && (ranges[j].from_int <= ranges[i].to_int) ||
+                                    (ranges[i].to_int >= ranges[j].from_int) && (ranges[i].to_int <= ranges[j].to_int) ||
+                                    (ranges[i].from_int >= ranges[j].from_int) && (ranges[i].from_int <= ranges[j].to_int)) {
+                                ranges[i].from_int = Math.min(ranges[i].from_int, ranges[j].from_int);
+                                ranges[i].to_int = Math.max(ranges[i].to_int, ranges[j].to_int);
+                                ranges.splice(j, 1);
+                                changed = true;
+                                break;
+                            }
+                        }
+                    }
+                } while (changed);
+            }
+
+            for (var i in ranges) {
+                ranges[i].from = this.time_to_str(ranges[i].from_int);
+                ranges[i].to = this.time_to_str(ranges[i].to_int);
+            }
+
+            return ranges;
+        },
+        /*
+         * convert time (string representation) to minutes
+         * @param {string} str, like '13:00', 24-h format
+         * @returns {integer} minutes since midnight;
+         * '13:00' -> 780
+         */
+        str_to_time: function(str) {
+            var time = str && str.split && str.split(':');
+            if (!time || (Array.isArray(time) && time.length != 2) ) {
+                return null;
+            }
+            return parseInt(time[0]) * 60 + parseInt(time[1]);
+        },
+        /*
+         * convert time (minutes) to string representation
+         * @param {integer} time
+         * @returns {string}, like '13:00' if 24-h format is used
+         */
+        time_to_str: function(time) {
+            time = parseInt(time);
+            var h = Math.floor(time/60);
+            var m = time - h * 60;
+
+            return new TimeFrm(h, m, this.get('time_format')).toString();
+        },
+        /*
+         * Check if product is available for ordering at requested date-time
+         */
+        available: function() {
+            var date = App.Data.mainModel && App.Data.mainModel.get('orderStarted') ?
+                new Date(App.Data.myorder.checkout.get('pickupTS')):
+                this.base();
+            var time = date.getHours() * 60 + date.getMinutes();
+            var working = this.get_working_hours(date),
+                saling =  this.get_product_hours(date);
+            var in_working_time = false;
+
+            // check if time is inside working time ranges
+            for (var i in working) {
+                if (this.time_in_range(working[i], time)) {
+                    in_working_time = true;
+                    break;
+                }
+            }
+            if (!in_working_time) {
+                return false;
+            }
+
+            // check if time is inside saling time range(s)
+            for (var i in saling) {
+                if (this.time_in_range(saling[i], time)) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+        time_in_range: function(range, time) {
+            if (range.from_int <= time && time <= range.to_int) {
+                return true;
+            }
+            return false;
         }
     });
 });

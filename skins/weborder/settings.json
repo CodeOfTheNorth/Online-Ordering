@@ -8,7 +8,7 @@
         "main": {
             "css": ["main", "cart", "jquery.contentarrow", "products", "myorder", "modifiers", "instructions",
               "quantity", "product_sets", "profile", "header", "footer", "stanford", "upfront", "pikaday"],
-            "model": ["main", "header", "categories"],
+            "model": ["main", "header", "categories", "myorder"],
             "templates": ["main", "header", "myorder", "total", "cart", "products", "modifiers", "product_sets",
               "instructions", "quantity", "stanfordcard", "profile", "rewards", "upfront"],
             "views": ["main", "header", "myorder", "cart", "products", "modifiers", "quantity", "profile", "upfront"],

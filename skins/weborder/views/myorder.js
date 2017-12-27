@@ -266,7 +266,8 @@ define(["myorder_view"], function(myorder_view) {
 
     var MyOrderMatrixFooterView = App.Views.CoreMyOrderView.CoreMyOrderMatrixFooterView.extend({
         bindings: {
-            '.product_price_label': 'classes: {hide: select(isGift, false, true)}'
+            '.product_price_label': 'classes: {hide: select(isGift, false, true)}',
+            '.action_button': 'text: action_button, classes: {disabled: unavailable}'
         },
         computeds: {
             isGift: {
@@ -274,7 +275,28 @@ define(["myorder_view"], function(myorder_view) {
                 get: function(product) {
                     return Boolean(product.get('is_gift'));
                 }
+            },
+            action_button: {
+                deps: ['product'],
+                get: function(product) {
+                    return this.unavailable(product) ?
+                        _loc.PRODUCT_UNAVAILABLE +
+                            (this.negative_amount(product) ? ' / ' + _loc.PRODUCT_SOLD_OUT : '') :
+                        _loc.MYORDER_ADD_ITEM;
+                }
+            },
+            unavailable: {
+                deps: ['product'],
+                get: function(product) {
+                    return this.unavailable(product);
+                }
             }
+        },
+        unavailable: function(product) {
+            return (this.negative_amount(product) || !product.get('schedule').available());
+        },
+        negative_amount: function(product) {
+            return !(App.Settings.cannot_order_with_empty_inventory ? product.get('stock_amount') > 0 : true);
         },
         render: function() {
             App.Views.CoreMyOrderView.CoreMyOrderMatrixFooterView.prototype.render.apply(this, arguments);

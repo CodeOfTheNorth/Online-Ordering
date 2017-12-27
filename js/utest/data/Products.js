@@ -31,6 +31,7 @@ define([], function() {
             "active": true,
             "created_date": null,
             "timetables": null,
+            "schedule": null,
             "compositeId": null,
             "size_chart" : "",
             "is_combo": false,
@@ -71,6 +72,7 @@ define([], function() {
             "active": true,
             "created_date": 0,
             "timetables": null,
+            "schedule": null,
             "compositeId": null,
             "size_chart" : "",
             "is_combo": false,
@@ -111,6 +113,7 @@ define([], function() {
             "created_date": '2015/01/01',
             "original_tax": null,
             "timetables": null,
+            "schedule": null,
             "compositeId": '12_1',
             "size_chart" : "",
             "is_combo": false,
@@ -449,6 +452,7 @@ define([], function() {
                 "name": 'Test 1',
                 "id_category": 12,
                 "timetables": null,
+                "schedule": null,
                 "is_gift": false,
                 "sort": 2
             }

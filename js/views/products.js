@@ -83,10 +83,12 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
         initialize: function() {
             App.Views.ListView.prototype.initialize.apply(this, arguments);
             this.listenTo(this.collection, 'add', this.addItem, this);
+            this.listenTo(App.Data.myorder.checkout, 'change:pickupTS', this.render, this);
         },
         render: function() {
             var self = this;
             App.Views.ListView.prototype.render.apply(this, arguments);
+            this.subViews.remove();
             this.collection.each( function(item) {
                 self.addItem(item);
             });
@@ -100,6 +102,9 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
             }
             return this;
         },
+//        time_changed: function() {
+//            this.render();
+//        },
         addItem: function(model) {
             var settings = App.Data.settings.get('settings_system'),
                 noImg = settings.hide_images,
@@ -109,13 +114,27 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
             view = this.createView('Product', {
                 el: $('<li class="product"></li>'),
                 mod: 'ListItem',
-                model: model
+                model: model,
+                disableCache: true
             }, 'product_' + root_cache_id + "_" + model.get("compositeId"));
             noDesc && view.$el.addClass('short');
             noImg && view.$el.addClass('no-image');
             var sort = model.get('sort');
-            sort = (App.Settings.cannot_order_with_empty_inventory && model.get('stock_amount') > 0) ?
-                    sort - 1000000 : sort;
+            var schedule = model.get('schedule');
+            var available = schedule ? schedule.available() : true;
+            /*
+             * First of all available products are shown,
+             * then unavilable with positive inventory (if applicable),
+             * then with negative inventory (if applicable, 'Sold Out')
+             */
+            if (!App.Settings.cannot_order_with_empty_inventory) {
+                if (available) {
+                    sort -= 500000;
+                }
+            } else {
+                sort = model.get('stock_amount') > 0 ? (available ? sort - 1000000 : sort - 500000) : sort;
+            }
+
             App.Views.ListView.prototype.addItem.call(this, view, this.$('.products'), sort);
 
             this.subViews.push(view);
@@ -138,7 +157,8 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
         bindings: {
             '.size_chart_wrapper': 'toggle: _product_size_chart',
             'a.size_chart': 'attr:{href: _product_size_chart}',
-            '.timetables': 'toggle:showTimetable'
+            '.timetables': 'toggle:showTimetable',
+            '.timetablesRanges': 'text: showTimeRanges'
         },
         events: {
             'change .gift_card_number': 'gift_change',
@@ -147,6 +167,9 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
         computeds: {
             showTimetable: function() {
                 return !this.options.hide_timetable && !this._hide_timetable;
+            },
+            showTimeRanges: function() {
+                return format_timetables(this.product.get('timetables'));
             }
         },
         getData: function() {

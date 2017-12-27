@@ -473,10 +473,6 @@ define(['js/utest/data/Settings', 'settings'], function(settings) {
                 expect(typeof(sys.type_of_service)).toBe("number");
             });
 
-            it("Use custom menus", function() {
-                expect(typeof(sys.use_custom_menus)).toBe("boolean");
-            });
-
             it('Holidays', function() {
                 expect(Array.isArray(sys.holidays)).toBeTruthy();
             });

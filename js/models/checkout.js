@@ -294,14 +294,14 @@ define(["backbone"], function(Backbone) {
             date = typeof date != 'undefined' ? date : new Date(this.get('pickupTS'));
             diffDays = typeof diffDays != 'undefined' ? diffDays : this.get('pickupDay');
             switch (diffDays) {
-               case 0:
-                  selDate = _loc['DAYS']['TODAY'];
-                  break;
-               case 1:
-                  selDate = _loc['DAYS']['TOMORROW'];
-                  break;
-               default:
-                  selDate = date.format();
+                case 0:
+                    selDate = _loc['DAYS']['TODAY'];
+                    break;
+                case 1:
+                    selDate = _loc['DAYS']['TOMORROW'];
+                    break;
+                default:
+                    selDate = App.Data.timetables.format_date(date);
             }
             return selDate;
         }

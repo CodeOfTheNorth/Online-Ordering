@@ -81,8 +81,8 @@ define(["backbone", "factory"], function() {
             },
             deliveryTime: function() {
                 var date = new Date(App.Data.myorder.checkout.get('pickupTS'));
-                if (date == null) {
-                    App.Data.myorder.checkout.set('pickupTS', new Date().valueOf());
+                if (!date || !App.Data.myorder.checkout.get('pickupTS')) {
+                    App.Data.myorder.checkout.set('pickupTS', App.Data.timetables.get_server_time(new Date()).valueOf());
                     date = new Date(App.Data.myorder.checkout.get('pickupTS'));
                 }
                 var day = App.Data.myorder.checkout.selectedDate();

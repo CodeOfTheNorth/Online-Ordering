@@ -214,6 +214,11 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
              * @type {?string}
              */
             timetables: null,
+            /*
+             * Available time for ordering the product, created on the base of timetables
+             * @type {object}
+             */
+            schedule: null,
             /**
              * Unique product id (`id` + '_' + `id_category`). Used for a model identification
              * in {@link App.Collections.Products} collection.
@@ -293,10 +298,6 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
 
             if (App.skin == App.Skins.RETAIL)
                 this.images();
-
-            // listen to timetables change
-            this.listenTo(this, 'change:timetables', this.convertTimetables);
-            this.convertTimetables();
         },
         /**
          * Sets a passed data as own attributes.
@@ -824,15 +825,21 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
          * Used to compare two products
          * if cannot_order_with_empty_inventory == true,
          * then products with stock_amount > 0 are set in the beginning of the list
+         * It also takes into account availiability of the product, when applicable
          * @param {model} product
          * @returns {integer} sort value
          */
         comparator: function(product) {
             var sort = product.get('sort');
+            var schedule = product.get('schedule');
+            var available = schedule ? schedule.available() : true;
             if (!App.Settings.cannot_order_with_empty_inventory) {
+                if (!available) {
+                    return sort - 500000;
+                }
                 return sort;
             }
-            return product.get('stock_amount') > 0 ? sort - 10000000 : sort;
+            return product.get('stock_amount') > 0 ? (available ? sort - 1000000 : sort - 500000) : sort;
         },
         /**
          * Sets `compositeId` attribute as unique id of model. `id` attribute cannot be used
@@ -904,12 +911,6 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
                 return fetching.reject();
             }
 
-            var custom_menus = App.Data.custom_menus.get_menus_for_time(App.Data.timetables.getCustomMenuTime());
-            if (custom_menus.length == 0) { //no custom menus found
-                this.reset_meta_info();
-                return fetching.resolve();
-            }
-
             Backbone.$.ajax({
                 type: "GET",
                 url: "/weborders/products/",
@@ -917,7 +918,6 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
                     category: id_category,
                     establishment: settings.get("establishment"),
                     search: search,
-                    cmenu: custom_menus,
                     page: page,
                     limit: App.SettingsDirectory.json_page_limit
                 },
@@ -928,13 +928,16 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
                         self.onProductsError();
                         return fetching.reject();
                     }
-                    var products = data.data, category;
+                    var products = data.data,
+                        category;
                     for (var i = 0; i < products.length; i++) {
                         if(products[i].is_gift && settings.get('skin') === 'mlb') continue; // mlb skin does not support gift cards (bug #9395)
                         products[i].compositeId = products[i].id + '_' + products[i].id_category;
                         category = App.Data.categories.find({id: products[i].id_category});
                         products[i].sort_value = category ? (category.get('sort') * 100000 + products[i].sort) : products[i].sort;
                         products[i].category_sort_value = category ? (category.get('sort_val') * 100000 + products[i].sort) : products[i].sort;
+                        products[i].schedule = new App.Models.ProductTimeTable();
+                        products[i].schedule.set('timetables', products[i].timetables);
                         products[i].filterResult = true;
                         self.add(products[i]);
                     }

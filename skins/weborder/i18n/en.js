@@ -263,6 +263,9 @@
         'PAST_ORDER': 'Past Order',
         'PROFILE_LOYALTY_NUMBER': 'Loyalty Number',
         'PROFILE_ADDRESS_LINE1': 'Address',
-        'PRODUCT_SOLD_OUT': 'Sold out'
+        'PRODUCT_SOLD_OUT': 'Sold out',
+        'PRODUCT_UNAVAILABLE': 'Unavailable',
+        'PRODUCT_REMOVED_FROM_ORDER': 'One product was removed from the order because of time changing: ',
+        'PRODUCTS_REMOVED_FROM_ORDER': 'Some products were removed from the order because of time changing:'
     } // end of locale
 }); // end of module

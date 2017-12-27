@@ -276,7 +276,8 @@ ul.products li.product {
     position: relative;
 }
 
-.product_sold_out {
+.product_sold_out,
+.product_unavailable {
     width: 98%;
     height: 98%;
     background-color: rgba(0,0,0,.5);
@@ -286,7 +287,8 @@ ul.products li.product {
     text-align: center;
 }
 
-.product_sold_out > span {
+.product_sold_out > span,
+.product_unavailable > span {
     position: absolute;
     top: 50%;
     transform: translate(-50%,-50%);
@@ -295,5 +297,5 @@ ul.products li.product {
     font-family: Times New Roman;
     font-style: italic;
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1.4em;
 }
