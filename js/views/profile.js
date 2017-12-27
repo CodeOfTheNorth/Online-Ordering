@@ -1392,7 +1392,7 @@ define(["factory"], function() {
         bindings: {
             '.orders-empty': 'toggle: noOrders',
             '.orders-list': 'collection: $collection, itemView: "itemView"',
-	        '.orders_pages_control': 'updateContent: PagesCtrlView, classes: {hide: less(pageModel_page_count,2)}',
+            '.orders_pages_control': 'updateContent: PagesCtrlView, classes: {hide: less(pageModel_page_count,2)}',
             '.orders-box': 'classes:{full_size: not(less(pageModel_page_count,2))}'
         },
         computeds: {
@@ -1453,7 +1453,7 @@ define(["factory"], function() {
         },
         set_view_to_top: function () {
             var scroll_el = $(".orders-box")[0];
-            scroll_el.scrollTo(0,0);
+            scroll_el && scroll_el.scrollTo(0,0);
         }
     });
     

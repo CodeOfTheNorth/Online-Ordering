@@ -199,6 +199,7 @@ define(['backbone', 'tip', 'delivery'], function(Backbone) {
          */
         empty: function() {
             this.set({
+                final_total: 0,
                 tax : 0,
                 subtotal : 0,
                 surcharge: 0

@@ -583,7 +583,11 @@ define(["backbone", "backbone_extensions", "factory"], function(Backbone) {
                     return App.Data.errors.alert(_loc.PROFILE_REORDER_NO_ITEMS_AVAILABLE);
                 }
                 if (Array.isArray(changes) && changes.length && !myorder.priceChanged) {
-                    App.Data.errors.alert(_loc.ORDER_CHANGED);
+                    if (_.contains(changes, 'FinalTotalZero')) {
+                        App.Data.errors.alert(_loc.ORDER_CHANGED_ZERO);
+                    } else {
+                        App.Data.errors.alert(_loc.ORDER_CHANGED);
+                    }
                 }
             });
 
