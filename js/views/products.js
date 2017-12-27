@@ -102,9 +102,6 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
             }
             return this;
         },
-//        time_changed: function() {
-//            this.render();
-//        },
         addItem: function(model) {
             var settings = App.Data.settings.get('settings_system'),
                 noImg = settings.hide_images,

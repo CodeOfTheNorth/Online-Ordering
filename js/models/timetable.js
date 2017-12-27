@@ -1106,7 +1106,7 @@ define(["backbone"], function(Backbone) {
                 saling =  this.get_product_hours(date);
             var in_working_time = false;
 
-            // check if time is inside working time ranges
+            // check if time is inside working time range(s)
             for (var i in working) {
                 if (this.time_in_range(working[i], time)) {
                     in_working_time = true;

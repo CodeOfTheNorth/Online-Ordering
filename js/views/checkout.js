@@ -241,13 +241,11 @@ define(["delivery_addresses", "generator"], function(delivery_addresses) {
         }
     });
 
-    // remove - ???
     App.Views.CoreCheckoutView.CoreCheckoutAddressView = App.Views.DeliveryAddressesView.extend({
         name: 'checkout',
         mod: 'address'
     });
 
-    // remove - ???
     App.Views.CoreCheckoutView.CoreCheckoutAddressSelectionView = App.Views.DeliveryAddressesSelectionView.extend({
         name: 'checkout',
         mod: 'address_selection'

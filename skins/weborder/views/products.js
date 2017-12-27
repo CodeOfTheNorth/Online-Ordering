@@ -24,9 +24,6 @@ define(['products_view'], function(products_view) {
     'use strict';
 
     var ProductListItemView = App.Views.CoreProductView.CoreProductListItemView.extend({
-        initialize: function() {
-            App.Views.CoreProductView.CoreProductListItemView.prototype.initialize.apply(this, arguments);
-        },
         bindings: {
             '.product_unavailable': "classes: {hide: available}"
         },
@@ -45,10 +42,6 @@ define(['products_view'], function(products_view) {
                     return product.get('schedule').available();
                 }
             }
-        },
-        time_changed: function() {
-            this.applyBindings();
-            this.delegateEvents({'click' : 'showModifiers'});
         },
         showModifiers: function(event, options) {
             var empty = !(App.Settings.cannot_order_with_empty_inventory ?
