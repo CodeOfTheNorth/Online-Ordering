@@ -134,7 +134,7 @@
 }
 
 .upfront-content .label {
-    padding: 15px 0 1px 14px;
+    padding: 15px 0 1px 5px;
     font-size: 13px;
 }
 
@@ -174,11 +174,11 @@
 }
 
 .upfront-content .size3[class] {
-    width: 316px;
+    width: 246px;
 }
 
 .upfront-content .size4[class] {
-    width: 100px;
+    width: 420px;
 }
 
 .upfront-content .shipping-select {
