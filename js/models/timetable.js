@@ -1015,10 +1015,10 @@ define(["backbone"], function(Backbone) {
                 }
                 date_from = timetables[i].from_date ?
                     new Date(timetables[i].from_date).setHours(0, 0, 0, 0) :
-                    new Date(this.get_base_time()).setHours(0, 0, 0, 0);
+                    new Date(this.get_base_time()).setHours(-2400, 0, 0, 0); // -100 days
                 date_to = timetables[i].to_date ?
                     new Date(timetables[i].to_date).setHours(23, 59, 59, 999) :
-                    new Date(this.get_base_time()).setHours(2400, 0, 0, 0); // 100 days
+                    new Date(this.get_base_time()).setHours(2400, 0, 0, 0); // +100 days
 
                 // check if date is in the range [date_from, date_to]
                 if (date < date_from || date > date_to) {
@@ -1068,6 +1068,30 @@ define(["backbone"], function(Backbone) {
             }
 
             return ranges;
+        },
+        /*
+         * Gets product hours for the whole week
+         * @param {date} date on the week
+         * @returns {timetable} timetable with ranges, combined from all available timetables
+         */
+        get_product_week: function(date) {
+            var timetable_data = {};
+            date = date || new Date();
+
+            var startDay = new Date(date.setDate(date.getDate() - date.getDay())),
+                currentDay = new Date();
+            var keep_format = this.get('time_format');
+            this.set('time_format', '24 hour');
+
+            for (var i = 0; i < 7; i++) {
+                var day = new Date(currentDay.setDate(startDay.getDate() + i));
+                var weekDay = day.getDay();
+                var timetable_day = this.get_product_hours(day);
+                timetable_data[weekDays[weekDay]] = timetable_day ? timetable_day : [];
+            }
+
+            this.set('time_format', keep_format);
+            return [{timetable_data: timetable_data}];
         },
         /*
          * convert time (string representation) to minutes

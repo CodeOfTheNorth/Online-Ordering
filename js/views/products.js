@@ -166,7 +166,7 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
                 return !this.options.hide_timetable && !this._hide_timetable;
             },
             showTimeRanges: function() {
-                return format_timetables(this.product.get('timetables'));
+                return format_timetables(this.product.get('schedule').get_product_week());
             }
         },
         getData: function() {
