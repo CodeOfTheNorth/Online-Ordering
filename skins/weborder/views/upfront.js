@@ -49,8 +49,9 @@ define(["upfront_view"], function(upfront_view) {
             'click .just-browsing': 'just_browsing'
         },
         start_order: function() {
-            var check = this.collection.check_order({customer: true});
+            var check = this.collection.check_order({customer: true, customerData: this.options.customer});
             if (check.status == 'OK') {
+                App.Data.customer.set(this.options.customer.toJSON());
                 App.Data.mainModel.set('upfront_active', false);
                 App.Data.mainModel.set('orderStarted', true);
             }
@@ -67,8 +68,9 @@ define(["upfront_view"], function(upfront_view) {
             'click .upfront-update': 'upfront_update'
         },
         upfront_update: function() {
-            var check = this.collection.check_order({customer: true});
+            var check = this.collection.check_order({customer: true, customerData: this.options.customer});
             if (check.status == 'OK') {
+                App.Data.customer.set(this.options.customer.toJSON());
                 App.Data.mainModel.set('upfront_update', 2);
             }
         }

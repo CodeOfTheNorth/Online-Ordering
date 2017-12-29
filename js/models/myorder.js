@@ -1833,7 +1833,7 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
             }
 
             if (options.customer) {
-                var customer = App.Data.customer,
+                var customer = options.customerData || App.Data.customer,
                     check_customer = customer.check(dining_option);
 
                 if (check_customer.status === 'ERROR') {

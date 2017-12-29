@@ -12,7 +12,8 @@
     bottom: 0;
     color: white;
     overflow-y: auto;
-    overflow-x: hidden;    
+    overflow-x: hidden;
+    padding-bottom: 30px;
 }
 
 .upfront-panel *,
