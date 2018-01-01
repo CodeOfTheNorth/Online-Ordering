@@ -44,7 +44,7 @@ define(["backbone", "factory", 'generator', 'list'], function(Backbone) {
         mod: 'item',
         events: {
             'click .customize': 'customize',
-            'click .checkbox-outer': 'change',
+            'click .checkbox-outer': 'change'
         },
         bindings: {
             '.mdf_quantity select': 'value: decimal(quantity), options:qty_options',
@@ -144,6 +144,39 @@ define(["backbone", "factory", 'generator', 'list'], function(Backbone) {
             this.update_elements();
             return this;
         },
+        radio_clicked: function(e, changed) {
+            if (!changed) {
+                return;
+            }
+            var productSet = this.options.productSet;
+            var el = $(".input", $(e.currentTarget)),
+                checked = el.attr('checked') == "checked",
+                exactAmount = productSet.get('maximum_amount');
+
+
+            if (!checked && this.options.type == 'checkbox' && exactAmount > 0 && productSet.get_selected_qty() >= exactAmount) {
+                return;
+            }
+
+            if(this.options.type == 'radio') {
+                if (checked) {
+                    return;
+                }
+                this.$el.parent().find('.input[checked="checked"]').removeAttr('checked');
+                 productSet.get('order_products').where({selected: true}).forEach(function(product) {
+                     product.set('selected', false);
+                 });
+            }
+
+            this.model.set('selected', !checked);
+            if (checked) {
+                productSet.get('order_products').where({selected: false}).forEach(function(product) {
+                    product.set('quantity', 1, {silent: true});
+                });
+            }
+
+            this.$('.input').attr('checked', !checked ? 'checked' : false);
+        },
         customize: function(event) {
             event.stopImmediatePropagation();
             event.preventDefault();
@@ -166,6 +199,7 @@ define(["backbone", "factory", 'generator', 'list'], function(Backbone) {
                     App.Data.mainModel.set('popup', {
                             modelName: 'MyOrder',
                             mod: 'MatrixCombo',
+                            action_create: self.radio_clicked(event, clone.get('matrix_updated')),
                             cache_id: self.options.myorder_root.get('id_product')
                         });
                     self.model.trigger("model_changed");
@@ -180,38 +214,20 @@ define(["backbone", "factory", 'generator', 'list'], function(Backbone) {
             if(!App.Settings.online_orders) {
                 return;
             }
+
             var productSet = this.options.productSet;
             var el = $(".input", $(e.currentTarget)),
                 checked = el.attr('checked') == "checked" ? false : true,
                 exactAmount = productSet.get('maximum_amount');
 
-
             if (checked && this.options.type == 'checkbox' && exactAmount > 0 && productSet.get_selected_qty() >= exactAmount) {
                 return;
             }
 
-            if(this.options.type == 'radio') {
-                if (checked) {
-                    this.$el.parent().find('.input[checked="checked"]').removeAttr('checked');
-                    productSet.get('order_products').where({selected: true}).forEach(function(product) {
-                        product.set('selected', false);
-                    });
-                }
-                else {
-                    return;
-                }
-            }
-
-            this.model.set('selected', checked);
-            if (!checked) {
-                productSet.get('order_products').where({selected: false}).forEach(function(product) {
-                    product.set('quantity', 1, {silent: true});
-                });
-            }
-
-            this.$('.input').attr('checked', checked ? 'checked' : false);
-            if (checked && this.model.check_order().status != 'OK') {
+            if (el.attr('checked') !== "checked" && this.model.check_order().status != 'OK') {
                 this.$(".customize").click();
+            } else {
+                this.radio_clicked(e, true);
             }
         },
         update_elements: function() {
@@ -229,7 +245,7 @@ define(["backbone", "factory", 'generator', 'list'], function(Backbone) {
             this.model.trigger('change:modifiers');
         },
         check_model: function() {
-            var checked = this.$(".input").attr('checked') == "checked" ? true : false;
+            var checked = this.$(".input").attr('checked') === "checked";
             if (checked && this.model.check_order().status != 'OK') {
                 this.$(".input").click(); //return back to the unchecked state
             }

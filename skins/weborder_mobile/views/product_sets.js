@@ -33,7 +33,13 @@ define(["product_sets_view"], function(product_sets_view) {
         customize: function(event) {
             event.stopImmediatePropagation();
             event.preventDefault();
-            App.Data.router.combo_child_products(this.options.myorder_root, this.model);
+            var self = this;
+            App.Data.router.combo_child_products(
+                this.options.myorder_root,
+                this.model,
+                function(){
+                    self.radio_clicked(event, true);
+            });
         }
     });
 

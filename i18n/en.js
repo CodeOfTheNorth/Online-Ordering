@@ -683,6 +683,7 @@
         "PROFILE_GIFT_CARD_REMOVE": "Are you sure you want to remove this Gift Card?",
         "PROFILE_ACCEPT_TOU": "Would you like to receive Promotions for use online & at stores?",
         "ORDER_CHANGED": "Modifications have been made to the previous order. Please review your items before checking out.",
+        "ORDER_CHANGED_ZERO": "You cannot reorder it",
         "FOOTER_TERMS_OF_SERVICE": "Terms of Service",
         "FOOTER_PRIVACY_POLICY": "Privacy Policy",
         'BILLING_ADDRESS_TITLE': 'Specify a card billing address',

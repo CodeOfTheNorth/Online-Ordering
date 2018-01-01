@@ -2378,6 +2378,7 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
 
             req.done(function(data) {
                 if (Array.isArray(data.data)) {
+                   self.orders.reset();
                    self.orders.add(self.orders.processOrders(data.data));
                 }
 	            self.orders.meta = data.meta;
