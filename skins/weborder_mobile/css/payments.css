@@ -1,5 +1,5 @@
-#payments_custom_wrapper {
-    border: 5px solid red;
+#payments_custom_wrapper.custom-mode {
+    border: 5px solid #9edad4;
     border-bottom: 0;
 }
 

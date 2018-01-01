@@ -19,3 +19,8 @@
 .footer-bg-wrap {
     padding: 1px; /*it's to expand the background to the all footer space*/
 }
+
+#checkout_footer.custom-mode {
+     border: 5px solid #9edad4;
+    box-sizing: border-box;
+}

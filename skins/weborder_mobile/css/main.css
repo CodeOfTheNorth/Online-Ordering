@@ -4,11 +4,11 @@
  */
 
 @font-face {
-  font-family: 'FontAwesome';
-  src: url('../fonts/fontawesome-webfont.eot?v=4.4.0');
-  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.4.0') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff2?v=4.4.0') format('woff2'), url('../fonts/fontawesome-webfont.woff?v=4.4.0') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.4.0') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.4.0#fontawesomeregular') format('svg');
-  font-weight: normal;
-  font-style: normal;
+    font-family: 'FontAwesome';
+    src: url('../fonts/fontawesome-webfont.eot?v=4.4.0');
+    src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.4.0') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff2?v=4.4.0') format('woff2'), url('../fonts/fontawesome-webfont.woff?v=4.4.0') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.4.0') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.4.0#fontawesomeregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
 
 * {
@@ -157,6 +157,11 @@ h1, h2, h3 {
     -webkit-overflow-scrolling: touch; /* set native iOS scrolling */
 }
 
+#section.custom-mode,  #section_content.custom-mode{
+    border: 5px solid #9edad4;
+    box-sizing: border-box;
+}
+
 #section > div {
     padding: 0 1.8em;
     min-height: 100%;
@@ -243,7 +248,6 @@ h1, h2, h3 {
     vertical-align: middle;
     width: 98%;
 }
-
 
 #list_items-spinner {
     font-size: 1.4em;
@@ -543,7 +547,7 @@ select::-ms-expand { /*Removes default IE style*/
 }
 
 .info #popup_message[id], .warning #popup_message[id] {
-    color: rgb(95,98,102);
+    color: rgb(95, 98, 102);
 }
 
 #popup_message[id] {
@@ -569,13 +573,13 @@ select::-ms-expand { /*Removes default IE style*/
 }
 
 #popup_panel[id] #popup_cancel {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgb(129,129,129)), color-stop(1, rgb(95,98,102)));
-    background: -o-linear-gradient(bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
-    background: -moz-linear-gradient(bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
-    background: -webkit-linear-gradient(bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
-    background: -ms-linear-gradient(bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
-    background: linear-gradient(to bottom, rgb(129,129,129) 0%, rgb(95,98,102) 100%);
-    color: rgb(255,255,255);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgb(129, 129, 129)), color-stop(1, rgb(95, 98, 102)));
+    background: -o-linear-gradient(bottom, rgb(129, 129, 129) 0%, rgb(95, 98, 102) 100%);
+    background: -moz-linear-gradient(bottom, rgb(129, 129, 129) 0%, rgb(95, 98, 102) 100%);
+    background: -webkit-linear-gradient(bottom, rgb(129, 129, 129) 0%, rgb(95, 98, 102) 100%);
+    background: -ms-linear-gradient(bottom, rgb(129, 129, 129) 0%, rgb(95, 98, 102) 100%);
+    background: linear-gradient(to bottom, rgb(129, 129, 129) 0%, rgb(95, 98, 102) 100%);
+    color: rgb(255, 255, 255);
 }
 
 .placeholder::before {

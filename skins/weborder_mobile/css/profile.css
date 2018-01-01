@@ -235,8 +235,8 @@
     margin-top: 2px;
 }
 
-#cards_custom_wrapper {
-    border: 5px solid red;
+#cards_custom_wrapper.custom-mode {
+    border: 5px solid #9edad4;
     border-top: 0;
 }
 
