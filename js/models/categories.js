@@ -188,13 +188,18 @@ define(["backbone", "collection_sort"], function(Backbone) {
         get_categories: function() {
             var self = this;
             var dfd = $.Deferred();
+            var data = {
+                establishment: App.Data.settings.get("establishment")
+            };
+
+            if (App.skin == App.Skins.WEBORDER) {
+                data.data = 'all';
+            }
 
             $.ajax({
                 type: "GET",
                 url: App.Data.settings.get("host") + "/weborders/product_categories/",
-                data: {
-                    establishment: App.Data.settings.get("establishment")
-                },
+                data: data,
                 traditional: true, // it removes "[]" from "category" get parameter name
                 dataType: "json",
                 successResp: function(data) {

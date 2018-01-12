@@ -49,7 +49,9 @@ define(["upfront_view"], function(upfront_view) {
             'click .just-browsing': 'just_browsing'
         },
         start_order: function() {
-            var check = this.collection.check_order({customer: true, customerData: this.options.customer});
+            var check = App.Data.customer.get('access_token') ?
+                {status: 'OK'} :
+                this.collection.check_order({customer: true, customerData: this.options.customer});
             if (check.status == 'OK') {
                 App.Data.customer.set(this.options.customer.toJSON());
                 App.Data.mainModel.set('upfront_active', false);

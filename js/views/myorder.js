@@ -226,12 +226,10 @@ define(["backbone", "stanfordcard_view", "factory", "generator"], function(Backb
             this.subViews.push(this.viewProduct);
         },
         renderProductFooter: function() {
-            var model = this.model,
-                product = this.model.get("product");
-
             var view = this.createView('MyOrder', {
                 el: this.$(".product_info_footer"),
                 model: this.model,
+                product: this.model.get('product'),
                 mod: model.isComboProduct() ? 'MatrixFooterCombo' : 'MatrixFooterUpsell',
                 action: this.options.action,
                 real: this.options.real,

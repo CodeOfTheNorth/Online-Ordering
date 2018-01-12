@@ -174,14 +174,14 @@ define(["checkout_view"], function(Backbone) {
 
             order_type = App.Views.GeneratorView.create('Upfront', {
                 mod: 'OrderType',
-                model: this.options.checkout,
-                dining_option: this.options.checkout.get('dining_option'),
+                model: this.collection.checkout,
+                dining_option: this.collection.checkout.get('dining_option'),
                 DINING_OPTION_NAME: this.options.DINING_OPTION_NAME,
                 className: 'fl-left'
             });
 
             pickup = App.Views.GeneratorView.create('Upfront', {
-                model: this.options.checkout,
+                model: this.collection.checkout,
                 timetable: this.options.timetable,
                 mod: 'Pickup',
                 className: 'fl-left'
@@ -264,7 +264,7 @@ define(["checkout_view"], function(Backbone) {
         App.Views.UpfrontView.UpfrontPickupView = App.Views.CoreUpfrontView.CoreUpfrontPickupView;
         App.Views.UpfrontView.UpfrontAddressView = App.Views.CoreUpfrontView.CoreUpfrontAddressView;
         App.Views.UpfrontView.UpfrontAddressSelectionView = App.Views.CoreUpfrontView.CoreUpfrontAddressSelectionView;
-        App.Views.CoreUpfrontView.UpfrontOtherView = App.Views.CoreUpfrontView.CoreUpfrontOtherView;
-        App.Views.CoreUpfrontView.UpfrontOtherItemView = App.Views.CoreUpfrontView.CoreUpfrontOtherItemView;
+        App.Views.UpfrontView.UpfrontOtherView = App.Views.CoreUpfrontView.CoreUpfrontOtherView;
+        App.Views.UpfrontView.UpfrontOtherItemView = App.Views.CoreUpfrontView.CoreUpfrontOtherItemView;
     });
 });

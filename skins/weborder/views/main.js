@@ -188,8 +188,7 @@ define(["done_view", "generator"], function(done_view) {
                 collection: this.orderClone,
                 timetable: App.Data.timetables,
                 customer: App.Data.customer.clone(),
-                DINING_OPTION_NAME: App.Data.mainModel.get('DINING_OPTION_NAME'),
-                checkout: this.orderClone.checkout
+                DINING_OPTION_NAME: App.Data.mainModel.get('DINING_OPTION_NAME')
             };
 
             var view = App.Views.GeneratorView.create('Upfront', data);
@@ -211,12 +210,10 @@ define(["done_view", "generator"], function(done_view) {
             var data = {
                 modelName: 'Upfront',
                 mod: 'Update',
-                title: 'Update!!!',
                 collection: this.orderClone,
                 timetable: App.Data.timetables,
                 customer: App.Data.customer.clone(),
                 DINING_OPTION_NAME: App.Data.mainModel.get('DINING_OPTION_NAME'),
-                checkout: this.orderClone.checkout,
                 className: 'upfront-modal'
             };
 

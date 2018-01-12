@@ -911,16 +911,22 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
                 return fetching.reject();
             }
 
+            var data = {
+                category: id_category,
+                establishment: settings.get("establishment"),
+                search: search,
+                page: page,
+                limit: App.SettingsDirectory.json_page_limit
+            };
+
+            if (App.skin == App.Skins.WEBORDER) {
+                data.data = 'all';
+            }
+
             Backbone.$.ajax({
                 type: "GET",
                 url: "/weborders/products/",
-                data: {
-                    category: id_category,
-                    establishment: settings.get("establishment"),
-                    search: search,
-                    page: page,
-                    limit: App.SettingsDirectory.json_page_limit
-                },
+                data: data,
                 traditional: true, // it removes "[]" from "category" get parameter name
                 dataType: "json",
                 success: function(data) {
