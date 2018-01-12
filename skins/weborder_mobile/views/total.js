@@ -24,7 +24,7 @@ define(["total_view"], function (total_view) {
 	'use strict';
 	var TotalCheckout = App.Views.CoreTotalView.CoreTotalCheckoutView.extend({
 		initialize: function () {
-			App.Views.FactoryView.prototype.initialize.apply(this, arguments);
+			App.Views.CoreTotalView.CoreTotalCheckoutView.prototype.initialize.apply(this, arguments);
 			this.listenTo(this.options.customer.get('rewardCards'), "add remove reset", function () {
 				this.removeBindings();
 				this.applyBindings();
