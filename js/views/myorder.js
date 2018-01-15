@@ -230,7 +230,7 @@ define(["backbone", "stanfordcard_view", "factory", "generator"], function(Backb
                 el: this.$(".product_info_footer"),
                 model: this.model,
                 product: this.model.get('product'),
-                mod: model.isComboProduct() ? 'MatrixFooterCombo' : 'MatrixFooterUpsell',
+                mod: this.model.isComboProduct() ? 'MatrixFooterCombo' : 'MatrixFooterUpsell',
                 action: this.options.action,
                 real: this.options.real,
                 action_callback: this.options.action_callback
