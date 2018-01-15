@@ -30,7 +30,6 @@ define(["backbone", 'products'], function(Backbone) {
             }
 
             var product_order_id,
-                products_unavailable = [],
                 products_remove = [],
                 list = [];
             var collection = App.Data.myorder;
@@ -41,7 +40,6 @@ define(["backbone", 'products'], function(Backbone) {
                     var products = App.Data.products[i];
                     var found = products.get_product(product_order_id);
                     if (found && !found.get('schedule').available()) {
-                        products_unavailable.push(found);
                         products_remove.push(model);
                         list.push(found.get('name'));
                         break;
@@ -53,9 +51,9 @@ define(["backbone", 'products'], function(Backbone) {
                 collection.remove(products_remove[i]);
             }
 
-            if (products_unavailable.length > 0) {
+            if (list.length > 0) {
                 App.Data.errors.alert(
-                    (products_unavailable.length == 1 ?
+                    (list.length == 1 ?
                     _loc.PRODUCT_REMOVED_FROM_ORDER :
                     _loc.PRODUCTS_REMOVED_FROM_ORDER + '<br>') +
                     list.join('<br>'));

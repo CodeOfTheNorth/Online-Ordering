@@ -169,7 +169,7 @@ define(["checkout_view"], function(Backbone) {
             App.Views.FactoryView.prototype.render.apply(this, arguments);
 
             var orderDetails = this.$('.order-details'),
-                order_type, pickup, //address,
+                order_type, pickup,
                 main;
 
             order_type = App.Views.GeneratorView.create('Upfront', {
