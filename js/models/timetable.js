@@ -324,6 +324,8 @@ define(["backbone"], function(Backbone) {
                 asap = false,
                 offset = (this.get_dining_offset(isDelivery) / 60 / 1000),
                 asap_text = _loc['TIME_PREFIXES']['ASAP'];
+            var sel_time = !params.selected_time ? null :
+                (params.selected_time.getHours() * 60 + params.selected_time.getMinutes());
 
             if (offset > 0) {
                 asap_text += ' (' + offset + ' ' + _loc['TIME_PREFIXES']['MINUTES'] + ')';
@@ -359,6 +361,9 @@ define(["backbone"], function(Backbone) {
 
             for (var i = 0; i < times.length; i++) {
                 options.push(t.set_minutes(times[i]).toString());
+                if (sel_time === times[i]) {
+                    params.get_selected_index = options.length - 1;
+                }
             }
 
             this.set('options', options);
@@ -769,7 +774,7 @@ define(["backbone"], function(Backbone) {
          * It is needed beacause getPickupList does not returns invalid days within a App.Settings.online_order_date_range period (which timetable is not set (closed) or holidays).
          * @returns {array} an array of valid days with pickup time grids.
          */
-        getPickupList: function(isDelivery, index_by_day_delta) {
+        getPickupList: function(isDelivery, index_by_day_delta, sel_time) {
             var self = this, check_day, isToday,
                 now = this.base(), key_index = 0,
                 day = now.getDay();
@@ -785,6 +790,7 @@ define(["backbone"], function(Backbone) {
                     days.push({day: weekDays[(day + i) % 7], index: i});
                 }
             }
+            sel_time = sel_time ? new Date(sel_time) : null;
 
             return days.map(function(ob_day) {
                 var date = new Date(now.getTime() + ob_day.index * MILLISECONDS_A_DAY),
@@ -810,16 +816,25 @@ define(["backbone"], function(Backbone) {
                 }
 
                 this.workingDay.update({timetable: self.get_working_hours(date, 1), curTime : self.base()});
-                var working_day = this.workingDay.pickupTimeOptions({
+                var options = {
                     today: (weekDay === _loc['DAYS']['TODAY']),
-                    isDelivery: isDelivery
-                }); // set flag "Today" for creating the list of time intervals
-                return {
+                    isDelivery: isDelivery,
+                    selected_time: (!sel_time ? null :
+                        (sel_time.getDate() === date.getDate() && sel_time.getMonth() === date.getMonth()) ?
+                        sel_time :
+                        null)
+                };
+                var working_day = this.workingDay.pickupTimeOptions(options); // set flag "Today" for creating the list of time intervals
+                var retData = {
                     weekDay: weekDay + (ob_day.index >=2 ? ', ' + month + ' ' + _date : ''),
                     date: self.round_date(date),
                     workingDay: working_day,
                     delta: ob_day.index
                 };
+                if (options.get_selected_index) {
+                    retData.selected_index = options.get_selected_index;
+                }
+                return retData;
             }, self);
         },
         /**

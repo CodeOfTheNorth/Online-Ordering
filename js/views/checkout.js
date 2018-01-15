@@ -299,7 +299,8 @@ define(["delivery_addresses", "generator"], function(delivery_addresses) {
 
             this.isDelivery = this.model.get('dining_option') === 'DINING_OPTION_DELIVERY';
             this.pickupTimeIndexByDelta = {};
-            this.pickupTime = this.options.timetable.getPickupList(this.isDelivery, this.pickupTimeIndexByDelta);
+            this.pickupTime = this.options.timetable.getPickupList(this.isDelivery, this.pickupTimeIndexByDelta,
+                App.skin == App.Skins.WEBORDER ? App.Data.myorder.checkout.attributes.pickupTS : null);
             App.Views.FactoryView.prototype.initialize.apply(this, arguments);
             this.listenOrderType(null, this.model.get('dining_option'));
         },
@@ -368,7 +369,7 @@ define(["delivery_addresses", "generator"], function(delivery_addresses) {
             });
 
             this.model.set('pickupDay',index);
-            this.changeTime({target: { value : 0 }});
+            this.changeTime({target: { value: (this.pickupTime && this.pickupTime[day_index] && this.pickupTime[day_index].selected_index) || 0 }});
         },
         changeTime: function(e) {
             var index = e.target.value*1,

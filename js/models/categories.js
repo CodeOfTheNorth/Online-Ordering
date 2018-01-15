@@ -193,7 +193,7 @@ define(["backbone", "collection_sort"], function(Backbone) {
             };
 
             if (App.skin == App.Skins.WEBORDER) {
-                data.data = 'all';
+                data.ignore_timetable = 1;
             }
 
             $.ajax({

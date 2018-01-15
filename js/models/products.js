@@ -920,7 +920,7 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
             };
 
             if (App.skin == App.Skins.WEBORDER) {
-                data.data = 'all';
+                data.ignore_timetable = 1;
             }
 
             Backbone.$.ajax({
