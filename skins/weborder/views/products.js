@@ -24,10 +24,39 @@ define(['products_view'], function(products_view) {
     'use strict';
 
     var ProductListItemView = App.Views.CoreProductView.CoreProductListItemView.extend({
+        bindings: {
+            '.product_unavailable': "classes: {hide: available}"
+        },
+        computeds: {
+            available: {
+                deps: ['stock_amount', 'model'],
+                get: function(stock_amount, model) {
+                    var non_empty = App.Settings.cannot_order_with_empty_inventory ? stock_amount > 0 : true;
+                    if (!non_empty) {
+                        return true;
+                    }
+                    var product = this.model.get_product();
+                    if (!product) {
+                        return false;
+                    }
+                    return product.get('schedule').available();
+                }
+            }
+        },
         showModifiers: function(event, options) {
-            if (App.Settings.cannot_order_with_empty_inventory && this.model.get('stock_amount') <= 0 ) {
+            var empty = !(App.Settings.cannot_order_with_empty_inventory ?
+                    this.model.get('stock_amount') > 0 :
+                    true);
+            var unavailable = !this.model.get_product().get('schedule').available();
+
+            // modifiers showing is prohibited in one case only:
+            // for availiable items (including inventory control, if applicable), when order was not started yet
+            if (!App.Data.mainModel.get('orderStarted') &&
+                !(unavailable || empty)) {
+                App.Data.mainModel.set('upfront_active', true);
                 return;
             }
+
             var self = this,
                 isStanfordItem = App.Data.is_stanford_mode && this.model.get('is_gift'),
                 is_combo = this.model.isComboProduct(),

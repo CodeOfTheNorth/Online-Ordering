@@ -4,6 +4,12 @@
 
 <script type="text/template" id="product_list_item-template">
     <div class="product_list_item primary-border s<%= price_length %>">
+        <div class="product_unavailable hide">
+            <span><%= _lp.PRODUCT_UNAVAILABLE %></span>
+        </div>
+        <div class="product_sold_out hide">
+            <span><%= _lp.PRODUCT_SOLD_OUT %></span>
+        </div>
         <% if(!hide_images) { %>
         <div class="product_image text-center fl-left <% if(isDefaultImage) print('no-photo'); %>">
             <img src="<%= image %>" alt="logo for <%= name %>[<%= id %>]" class="img <% if(/safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent)) print('safaris'); %>">
@@ -19,9 +25,6 @@
         <% if(show_product_description) { %>
         <p class="description"><%= description %></p>
         <% } %>
-    </div>
-        <div class="product_sold_out hide">
-        <span><%= _lp.PRODUCT_SOLD_OUT %></span>
     </div>
 </script>
 
@@ -42,7 +45,7 @@
         <a href="#" target="_blank" class="link size_chart primary-text"><%= _lp.PRODUCTS_SIZE_CHART %></a>
     </div>
     <% if (timetables) { %>
-    <div class="timetables"><%= _lp.PRODUCTS_AVAILABLE %>: <%= timetables %> </div>
+    <div class="timetables"><%= _lp.PRODUCTS_AVAILABLE %>: <span class="timetablesRanges"></span> </div>
     <% } %>
     <% if (is_gift && _settings.online_orders) { %>
     <input type="text" name="gift_card_number" value='<%= gift_card_number %>' class="gift_card_number input" placeholder="<%= _lp.PRODUCTS_GIFT_CARD %>">

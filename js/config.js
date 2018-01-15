@@ -259,6 +259,11 @@ define({
         checkout_view: "js/views/checkout",
         /**
          * @type {string}
+         * @description The actual path of [upfront_view]{@link module:upfront_view} module.
+         */
+        upfront_view: "js/views/upfront",
+        /**
+         * @type {string}
          * @description The actual path of [categories_view]{@link module:categories_view} module.
          */
         categories_view: "js/views/categories",
@@ -485,12 +490,7 @@ define({
          * @type {string}
          * @description The actual path to [raven]{@link module:raven} module. Used for logging
          */
-        raven: 'js/libs/raven.min', //#WOMA-491, version 3.12.1 url: https://cdn.ravenjs.com/3.12.1/raven.min.js
-        /**
-         * @type {string}
-         * @description The actual path to [raven]{@link module:custom_menus} module.
-         */
-        custom_menus: 'js/models/custom_menus'
+        raven: 'js/libs/raven.min' //#WOMA-491, version 3.12.1 url: https://cdn.ravenjs.com/3.12.1/raven.min.js
     },
     /**
      * A waiting time of a module loading.
@@ -566,9 +566,6 @@ define({
         },
         "timetable": {
             deps: ["settings"]
-        },
-        "custom_menus": {
-            deps: ["timetable"]
         },
         "factory": {
             deps: ["backbone", "backbone_epoxy_handlers", "backbone_epoxy_filters"]

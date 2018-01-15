@@ -89,39 +89,10 @@ define(["checkout_view"], function(checkout_view) {
         render: function() {
             App.Views.FactoryView.prototype.render.apply(this, arguments);
 
-            var orderDetails = this.$('.order-details'),
-                paymentInfo = this.$('.payment-info'),
-                order_type, pickup, main, paymentMethods, tips, discount, rewards,
+            var paymentInfo = this.$('.payment-info'),
+                paymentMethods, tips, discount, rewards,
                 chooseCreditCard, creditCard, chooseGiftCard, giftCard,
                 stanfordCard, stanfordPlans, billingAddress;
-
-            order_type = App.Views.GeneratorView.create('Checkout', {
-                mod: 'OrderType',
-                model: this.collection.checkout,
-                DINING_OPTION_NAME: this.options.DINING_OPTION_NAME,
-                className: 'fl-left'
-            });
-
-            pickup = App.Views.GeneratorView.create('Checkout', {
-                model: this.collection.checkout,
-                timetable: this.options.timetable,
-                mod: 'Pickup',
-                className: 'fl-left'
-            });
-
-            main = App.Views.GeneratorView.create('Checkout', {
-                model: this.collection.checkout,
-                customer: this.options.customer,
-                rewardsCard: this.collection.rewardsCard,
-                mod: 'Main',
-                className: 'clear overflow-hidden' // add overflow:hidden to fix Bug 45243
-            });
-
-            this.subViews.push(order_type, pickup, main);
-
-            orderDetails.prepend(main.el);
-            orderDetails.prepend(pickup.el);
-            orderDetails.prepend(order_type.el);
 
             paymentMethods = App.Views.GeneratorView.create('PaymentMethods', {
                 mod: 'Main',
@@ -243,7 +214,7 @@ define(["checkout_view"], function(checkout_view) {
                 paymentInfo = this.$('.payment-info'),
                 rewards,
                 self = this;
-            
+
            if(this.options.enableRewardCard && customer.get('user_id')) {
                rewards = App.Views.GeneratorView.create('Checkout', {
                     model: this.collection.rewardsCard,
@@ -253,7 +224,7 @@ define(["checkout_view"], function(checkout_view) {
                this.subViews.push(rewards);
                paymentInfo.append(rewards.el);
            }
-            
+
            if (promises.length) {
                Backbone.$.when.apply(Backbone.$, promises).then(function() {
                    if (customer.payments) {
@@ -325,29 +296,9 @@ define(["checkout_view"], function(checkout_view) {
         }
     });
 
-    var CheckoutAddressView = App.Views.CoreCheckoutView.CoreCheckoutAddressView.extend({
-        name: 'checkout',
-        mod: 'address',
-        render: function() {
-            App.Views.CoreCheckoutView.CoreCheckoutAddressView.prototype.render.apply(this, arguments);
-
-            var addressSelection = App.Views.GeneratorView.create('Checkout', {
-                mod: 'AddressSelection',
-                checkout: this.options.checkout,
-                customer: this.options.customer,
-                address_index: this.options.address_index
-            });
-            this.subViews.push(addressSelection);
-            this.$('.address-selection').html(addressSelection.el);
-
-            return this;
-        }
-    });
-
     return new (require('factory'))(checkout_view.initViews.bind(checkout_view), function() {
         App.Views.CheckoutView.CheckoutMainView = CheckoutMainView;
         App.Views.CheckoutView.CheckoutPageView = CheckoutPageView;
         App.Views.CheckoutView.CheckoutRewardsCardView = CheckoutRewardsCardView;
-        App.Views.CheckoutView.CheckoutAddressView = CheckoutAddressView;
     });
 });

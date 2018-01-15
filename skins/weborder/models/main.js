@@ -33,7 +33,38 @@ define(["backbone"], function(Backbone) {
             isShowPromoMessage: false,
             needShowStoreChoice: false,
             isBlurContent: false,
-            backAction: window.history.back.bind(window.history)
+            backAction: window.history.back.bind(window.history),
+            /*
+             * Indicates if initial upfront screen is active
+             */
+            upfront_active: false,
+            /*
+             * Indicates the state of upfront update dialog:
+             * 0 - dialog closed
+             * 1 - dialog opened
+             * 2 - dialog closing by Update button
+             */
+            upfront_update: 0,
+            /*
+             * Indicates if user select 'start ordering' (true) or 'just browsing' (false)
+             */
+            orderStarted: false,
+            /*
+             * Indicates that categories have been reloaded, to refresh some dependent views
+             */
+            categoriesReloading: false,
+            /*
+             * Contains a copy of myorder while editing it, to be able to cancel without data changing
+             */
+            orderClone: null,
+            /*
+             * Contains a copy of customer while editing, to be able to cance without data changing
+             */
+            customerClone: null,
+            /*
+             *
+             */
+            DINING_OPTION_NAME: null
         }
     });
 });

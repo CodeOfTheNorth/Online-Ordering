@@ -188,20 +188,18 @@ define(["backbone", "collection_sort"], function(Backbone) {
         get_categories: function() {
             var self = this;
             var dfd = $.Deferred();
+            var data = {
+                establishment: App.Data.settings.get("establishment")
+            };
 
-            var custom_menus = App.Data.custom_menus.get_menus_for_time(App.Data.timetables.base());
-            if (custom_menus.length == 0) {
-                //no custom menus are found
-                return dfd.resolve();
+            if (App.skin == App.Skins.WEBORDER) {
+                data.ignore_timetable = 1;
             }
 
             $.ajax({
                 type: "GET",
                 url: App.Data.settings.get("host") + "/weborders/product_categories/",
-                data: {
-                    establishment: App.Data.settings.get("establishment"),
-                    cmenu: custom_menus
-                },
+                data: data,
                 traditional: true, // it removes "[]" from "category" get parameter name
                 dataType: "json",
                 successResp: function(data) {
@@ -225,6 +223,19 @@ define(["backbone", "collection_sort"], function(Backbone) {
                 }
             });
             return dfd;
+        },
+        /*
+         * Reload categories and reset all related data
+         * @returns {undefined}
+         */
+        reload_categories: function() {
+            this.reset();
+            App.Data.parentCategories.reset();
+            var self = this;
+            this.get_categories().then(function() {
+                App.Data.parentCategories.add(self.getParents());
+                App.Data.mainModel.set('categoriesReloading', true);
+            });
         },
         /**
          * Changes a category on inactive.

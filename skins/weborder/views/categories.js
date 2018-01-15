@@ -346,10 +346,18 @@ define(["generator", "list", "categories_view"], function() {
             this.listenTo(this, 'loadCompleted', this.hideSpinner, this);
             this.initViews();
             this.listenTo(this.pageModel, "change:cur_page", this.updatePageView, this);
+            this.listenTo(App.Data.mainModel, 'change:categoriesReloading', this.categoriesReloading, this);
         },
         bindings: {
             ".products_pages_control": "classes:{hide: less(pageModel_page_count,2)}",
             ".categories_products_wrapper": "classes:{full_size: less(pageModel_page_count,2)}"
+        },
+        categoriesReloading: function() {
+            if (!App.Data.mainModel.get('categoriesReloading')) {
+                return;
+            }
+            App.Data.mainModel.set('categoriesReloading', false);
+            this.initViews();
         },
         initViews: function() {
             var view = this.createView('Pages', {

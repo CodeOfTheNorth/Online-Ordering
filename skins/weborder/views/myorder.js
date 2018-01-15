@@ -159,7 +159,38 @@ define(["myorder_view"], function(myorder_view) {
       });
     };
 
-    var MyOrderMatrix_UpsellRootFirst_FooterView = App.Views.CoreMyOrderView.CoreMyOrderMatrixFooterView.extend({
+    var footerProcessingBlock = {
+        bindings: {
+            '.action_button': 'text: action_button, classes: {disabled: unavailable}'
+        },
+        computeds: {
+                        action_button: {
+                deps: ['product'],
+                get: function(product) {
+                    return this.unavailable(product) ?
+                        _loc.PRODUCT_UNAVAILABLE +
+                            (this.negative_amount(product) ? ' / ' + _loc.PRODUCT_SOLD_OUT : '') :
+                        _loc.MYORDER_ADD_ITEM;
+                }
+            },
+            unavailable: {
+                deps: ['product'],
+                get: function(product) {
+                    return this.unavailable(product);
+                }
+            }
+        },
+        unavailable: function(product) {
+            return (this.negative_amount(product) || !product.get('schedule').available());
+        },
+        negative_amount: function(product) {
+            return !(App.Settings.cannot_order_with_empty_inventory ? product.get('stock_amount') > 0 : true);
+        }
+    };
+
+    var _MyOrderMatrixFooterView = App.Views.CoreMyOrderView.CoreMyOrderMatrixFooterView.extend(footerProcessingBlock);
+
+    var MyOrderMatrix_UpsellRootFirst_FooterView = _MyOrderMatrixFooterView.extend({
         name: 'myorder',
         mod: 'matrix_upsell_root_first_footer',
         bindings: {
@@ -264,7 +295,7 @@ define(["myorder_view"], function(myorder_view) {
         }
     });
 
-    var MyOrderMatrixFooterView = App.Views.CoreMyOrderView.CoreMyOrderMatrixFooterView.extend({
+    var MyOrderMatrixFooterView = _MyOrderMatrixFooterView.extend({
         bindings: {
             '.product_price_label': 'classes: {hide: select(isGift, false, true)}'
         },
@@ -291,7 +322,7 @@ define(["myorder_view"], function(myorder_view) {
         }
     });
 
-    var MyOrderMatrixComboItemFooterView = App.Views.CoreMyOrderView.CoreMyOrderMatrixFooterView.extend({
+    var MyOrderMatrixComboItemFooterView = _MyOrderMatrixFooterView.extend({
         initialize: function() {
             this.extendBindingSources({_product: this.model.get_product()});
             App.Views.FactoryView.prototype.initialize.apply(this, arguments);
@@ -301,6 +332,8 @@ define(["myorder_view"], function(myorder_view) {
             '.footer-line': 'classes: {hide: not(_product_sold_by_weight)}'
         }
     });
+
+    var MyOrderMatrixFooterComboView = App.Views.CoreMyOrderView.CoreMyOrderMatrixFooterComboView.extend(footerProcessingBlock);
 
     return new (require('factory'))(myorder_view.initViews.bind(myorder_view), function() {
         App.Views.MyOrderView.MyOrderMatrixView = MyOrderMatrixView;
@@ -313,5 +346,6 @@ define(["myorder_view"], function(myorder_view) {
         App.Views.MyOrderView.MyOrderMatrixUpsellRootView = MyOrderMatrixUpsellRootView;
         App.Views.MyOrderView.MyOrderMatrix_UpsellRootFirst_FooterView = MyOrderMatrix_UpsellRootFirst_FooterView;
         App.Views.MyOrderView.MyOrderMatrixComboItemFooterView = MyOrderMatrixComboItemFooterView;
+        App.Views.MyOrderView.MyOrderMatrixFooterComboView = MyOrderMatrixFooterComboView;
     });
 });
