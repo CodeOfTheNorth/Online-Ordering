@@ -54,7 +54,7 @@ define(["backbone", "factory"], function(Backbone) {
             no_qty_arrows: function() {
                 return this.options.no_qty_arrows;
             },
-            max_quantity_reached: function() { /* equal(quantity, product_stock_amount) */
+            max_quantity_reached: function() {
                 var stock_amount = this.model.get_product().get('stock_amount');
                 var quantity = this.model.get('quantity');
                 return App.Settings.cannot_order_with_empty_inventory ?
