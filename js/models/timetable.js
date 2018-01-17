@@ -1002,6 +1002,28 @@ define(["backbone"], function(Backbone) {
 
     App.Models.ProductTimeTable = App.Models.Timetable.extend({
         /*
+         * Set timetables for product's schedule.
+         * If timetable_data is empty, it means 24 hours * 7 days.
+         * That's why it's substituted with 00:00 - 23:59 periods for all week days.
+         * When not empty, it's used 'as is'.
+         * @param {type} timetables for the product
+         *
+         */
+        set_timetables: function(timetables) {
+            for (var i in timetables) {
+                if (!_.isEmpty(timetables[i].timetable_data)) {
+                    continue;
+                }
+                for (var j in weekDays) {
+                    timetables[i].timetable_data[weekDays[j]] = [{
+                        from: '00:00',
+                        to: '23:59'
+                    }];
+                }
+            }
+            this.set('timetables', timetables);
+        },
+        /*
          * Gets time of product's availiability (schedule).
          *
          * products' timetables is an array, containing timetables of all custom menus
@@ -1012,7 +1034,6 @@ define(["backbone"], function(Backbone) {
          * @returns {array} all periods of availiability; could be empty array
          * every period has the same format as function get_working_hours()
          */
-
         get_product_hours: function(date) {
             var timetables = this.get('timetables'),
                 ranges = [],
@@ -1141,7 +1162,7 @@ define(["backbone"], function(Backbone) {
                 new Date(App.Data.myorder.checkout.get('pickupTS')):
                 this.base();
             var time = date.getHours() * 60 + date.getMinutes();
-            var working = this.get_working_hours(date),
+            var working = App.Data.timetables.get_working_hours(date),
                 saling =  this.get_product_hours(date);
             var in_working_time = false;
 

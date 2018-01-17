@@ -943,7 +943,7 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
                         products[i].sort_value = category ? (category.get('sort') * 100000 + products[i].sort) : products[i].sort;
                         products[i].category_sort_value = category ? (category.get('sort_val') * 100000 + products[i].sort) : products[i].sort;
                         products[i].schedule = new App.Models.ProductTimeTable();
-                        products[i].schedule.set('timetables', products[i].timetables);
+                        products[i].schedule.set_timetables(products[i].timetables);
                         products[i].filterResult = true;
                         self.add(products[i]);
                     }
