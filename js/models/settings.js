@@ -469,169 +469,176 @@ define(["backbone", "async"], function(Backbone) {
             var data = response.data;
             var self = this;
 
-                if (!data.recaptcha_site_key) {
-                    data.recaptcha_site_key = settings_system.recaptcha_site_key;
+            if (!data.recaptcha_site_key) {
+                data.recaptcha_site_key = settings_system.recaptcha_site_key;
+            }
+
+            if (!data.fb_app_id) {
+                data.fb_app_id = settings_system.fb_app_id;
+            }
+
+            // exclude incorrect custom menus
+            for (var i = data.custom_menus.length - 1; i > 0; i--) {
+                if (!data.custom_menus[i].timetable) {
+                    data.custom_menus.splice(i, 1);
                 }
+            }
 
-                if (!data.fb_app_id) {
-                    data.fb_app_id = settings_system.fb_app_id;
+            $.extend(true, settings_system, data);
+            self.set('brand', data.brand);
+            settings_system.about_images = settings_system.about_images || [];
+            settings_system.about_title = settings_system.about_title || "";
+            settings_system.about_description = settings_system.about_description || "";
+            settings_system.about_access_to_location = settings_system.about_access_to_location || "";
+            // phone (begin)
+            var prefix = "";
+            if (data.phone && data.phone.indexOf("+") === -1 && data.phone !== "") {
+                prefix = "+1"; // By defaut add +1 in the beginning of the phone number
+            }
+
+            settings_system.phone = prefix + data.phone;
+            // phone (end)
+
+            var state_province = "";
+            var country = ["AF", "AM", "AR", "BE", "BG", "BO", "BY", "CA", "CL", "CN", "CO", "CR", "CU", "DM", "DZ", "EC", "ES", "FI", "FJ", "GA", "GQ", "GR", "ID", "IE", "IR", "IT", "KE", "KG", "KH", "KR", "KZ", "MG", "NL", "NO", "PA", "PE", "PG", "PH", "PK", "PL", "RU", "RW", "SA", "SB", "ST", "TH", "TJ", "TM", "TR", "UA", "UZ", "VN", "VU", "ZA", "ZM"];
+            if ($.inArray(settings_system.address.country, country) !== -1) {
+                state_province = settings_system.address.province;
+            } else {
+                state_province = settings_system.address.state;
+            }
+            state_province = (state_province === null) ? "" : state_province;
+            settings_system.address.state_province = state_province;
+
+            var line_2 = "";
+            if (settings_system.address.line_2 !== "") {
+                line_2 += ", " + settings_system.address.line_2;
+            }
+
+            var full_address = settings_system.address.line_1 +
+                               line_2 + ", " +
+                               settings_system.address.city + ", " +
+                               settings_system.address.state_province + " " +
+                               settings_system.address.postal_code;
+
+            settings_system.address.full_address = $.trim(full_address);
+
+            settings_system.address.getRegion = function() {
+                return $.inArray(settings_system.address.country, country) !== -1
+                    ? settings_system.address.province
+                    : settings_system.address.state;
+            };
+
+            self.getRegion = function(address) {
+                return $.inArray(address.country, country) !== -1
+                    ? address.province
+                    : address.state;
+            };
+
+            var srvDate = new Date(settings_system.server_time);
+            var clientDate = new Date();
+
+            trace({for: 'pay'}, "Server time:", settings_system.server_time);
+
+            settings_system.time_zone_offset = settings_system.time_zone_offset * 1000 || 0;
+
+            // create the delta in ms. between server and client by time_zone offset:
+            settings_system.server_time = settings_system.time_zone_offset + (new Date()).getTimezoneOffset() * 60 * 1000;
+            // add the delta in ms. between server and client times set:
+            settings_system.server_time +=  srvDate.getTime() - clientDate.getTime();
+            settings_system.geolocation_load = $.Deferred();
+
+            trace({for: 'pay'}, "Client time:", clientDate.getTime(), "offset:", (new Date()).getTimezoneOffset());
+
+            // fix for bug 7233
+            if(settings_system.delivery_for_online_orders) {
+                if(!(settings_system.delivery_charge >= 0))
+                    settings_system.delivery_charge = 0;
+                if(!(settings_system.estimated_delivery_time >= 0))
+                    settings_system.estimated_delivery_time = 0;
+                if(!(settings_system.max_delivery_distance >= 0))
+                    settings_system.max_delivery_distance = 0;
+                if(!(settings_system.min_delivery_amount >= 0))
+                    settings_system.min_delivery_amount = 0;
+            }
+
+            if (_.isArray(settings_system.delivery_post_code_lookup) && settings_system.delivery_post_code_lookup[0]) {
+                //format codes for better presentation
+                var  codes = settings_system.delivery_post_code_lookup[1];
+                if (codes) {
+                    codes = $.map(codes.split(","), $.trim);
+                    settings_system.delivery_post_code_lookup[1] = codes.join(", ");
                 }
+            }
+            //for debug:
+            //settings_system.color_scheme =  "stanford"; // "default", "blue_&_white", "vintage", "stanford"
+            setData(color_scheme_key, new Backbone.Model({color_scheme: settings_system.color_scheme}), true);
 
-                $.extend(true, settings_system, data);
-                self.set('brand', data.brand);
-                settings_system.about_images = settings_system.about_images || [];
-                settings_system.about_title = settings_system.about_title || "";
-                settings_system.about_description = settings_system.about_description || "";
-                settings_system.about_access_to_location = settings_system.about_access_to_location || "";
-                // phone (begin)
-                var prefix = "";
-                if (data.phone && data.phone.indexOf("+") === -1 && data.phone !== "") {
-                    prefix = "+1"; // By defaut add +1 in the beginning of the phone number
+            settings_system.scales.number_of_digits_to_right_of_decimal = Math.abs((settings_system.scales.number_of_digits_to_right_of_decimal).toFixed(0) * 1);
+
+            // init dining_options if it doesn't exist
+            if(!Array.isArray(settings_system.dining_options)) {
+                settings_system.dining_options = [];
+            }
+
+            try {
+                if (settings_system.other_dining_option_details) {
+                    settings_system.other_dining_option_details = JSON.parse(settings_system.other_dining_option_details);
                 }
+            } catch(e) {
+                console.error("Can't parse other_dining_option_details");
+            }
 
-                settings_system.phone = prefix + data.phone;
-                // phone (end)
-
-                var state_province = "";
-                var country = ["AF", "AM", "AR", "BE", "BG", "BO", "BY", "CA", "CL", "CN", "CO", "CR", "CU", "DM", "DZ", "EC", "ES", "FI", "FJ", "GA", "GQ", "GR", "ID", "IE", "IR", "IT", "KE", "KG", "KH", "KR", "KZ", "MG", "NL", "NO", "PA", "PE", "PG", "PH", "PK", "PL", "RU", "RW", "SA", "SB", "ST", "TH", "TJ", "TM", "TR", "UA", "UZ", "VN", "VU", "ZA", "ZM"];
-                if ($.inArray(settings_system.address.country, country) !== -1) {
-                    state_province = settings_system.address.province;
-                } else {
-                    state_province = settings_system.address.state;
-                }
-                state_province = (state_province === null) ? "" : state_province;
-                settings_system.address.state_province = state_province;
-
-                var line_2 = "";
-                if (settings_system.address.line_2 !== "") {
-                    line_2 += ", " + settings_system.address.line_2;
-                }
-
-                var full_address = settings_system.address.line_1 +
-                                   line_2 + ", " +
-                                   settings_system.address.city + ", " +
-                                   settings_system.address.state_province + " " +
-                                   settings_system.address.postal_code;
-
-                settings_system.address.full_address = $.trim(full_address);
-
-                settings_system.address.getRegion = function() {
-                    return $.inArray(settings_system.address.country, country) !== -1
-                        ? settings_system.address.province
-                        : settings_system.address.state;
-                };
-
-                self.getRegion = function(address) {
-                    return $.inArray(address.country, country) !== -1
-                        ? address.province
-                        : address.state;
-                };
-
-                var srvDate = new Date(settings_system.server_time);
-                var clientDate = new Date();
-
-                trace({for: 'pay'}, "Server time:", settings_system.server_time);
-
-                settings_system.time_zone_offset = settings_system.time_zone_offset * 1000 || 0;
-
-                // create the delta in ms. between server and client by time_zone offset:
-                settings_system.server_time = settings_system.time_zone_offset + (new Date()).getTimezoneOffset() * 60 * 1000;
-                // add the delta in ms. between server and client times set:
-                settings_system.server_time +=  srvDate.getTime() - clientDate.getTime();
-                settings_system.geolocation_load = $.Deferred();
-
-                trace({for: 'pay'}, "Client time:", clientDate.getTime(), "offset:", (new Date()).getTimezoneOffset());
-
-                // fix for bug 7233
-                if(settings_system.delivery_for_online_orders) {
-                    if(!(settings_system.delivery_charge >= 0))
-                        settings_system.delivery_charge = 0;
-                    if(!(settings_system.estimated_delivery_time >= 0))
-                        settings_system.estimated_delivery_time = 0;
-                    if(!(settings_system.max_delivery_distance >= 0))
-                        settings_system.max_delivery_distance = 0;
-                    if(!(settings_system.min_delivery_amount >= 0))
-                        settings_system.min_delivery_amount = 0;
-                }
-
-                if (_.isArray(settings_system.delivery_post_code_lookup) && settings_system.delivery_post_code_lookup[0]) {
-                    //format codes for better presentation
-                    var  codes = settings_system.delivery_post_code_lookup[1];
-                    if (codes) {
-                        codes = $.map(codes.split(","), $.trim);
-                        settings_system.delivery_post_code_lookup[1] = codes.join(", ");
-                    }
-                }
-                //for debug:
-                //settings_system.color_scheme =  "stanford"; // "default", "blue_&_white", "vintage", "stanford"
-                setData(color_scheme_key, new Backbone.Model({color_scheme: settings_system.color_scheme}), true);
-
-                settings_system.scales.number_of_digits_to_right_of_decimal = Math.abs((settings_system.scales.number_of_digits_to_right_of_decimal).toFixed(0) * 1);
-
-                // init dining_options if it doesn't exist
-                if(!Array.isArray(settings_system.dining_options)) {
-                    settings_system.dining_options = [];
-                }
-
-               try {
-                    if (settings_system.other_dining_option_details) {
-                        settings_system.other_dining_option_details = JSON.parse(settings_system.other_dining_option_details);
-                    }
-                } catch(e) {
-                    console.error("Can't parse other_dining_option_details");
-                }
-
-                // Set default dining option.
-                // It's key of DINING_OPTION object property with value corresponding the first element of settings_system.dining_options array
-                (function() {
-                    var dining_options = settings_system.dining_options;
-                    if(dining_options.length > 0) {
-                        for(var dining_option in DINING_OPTION) {
-                            if(dining_options[0] == DINING_OPTION[dining_option]) {
-                                settings_system.default_dining_option = dining_option;
-                                break;
-                            }
+            // Set default dining option.
+            // It's key of DINING_OPTION object property with value corresponding the first element of settings_system.dining_options array
+            (function() {
+                var dining_options = settings_system.dining_options;
+                if(dining_options.length > 0) {
+                    for(var dining_option in DINING_OPTION) {
+                        if(dining_options[0] == DINING_OPTION[dining_option]) {
+                            settings_system.default_dining_option = dining_option;
+                            break;
                         }
                     }
-                })();
-
-                // although is_stanford_mode was previously set on app init, need to reset its value to false
-                // it's needed if establishment in stanford mode was changed to the non-stanford establishment (bug 33421)
-                App.Data.is_stanford_mode = false;
-                // then need to check if stanford mode is enabled using get parameter...
-                var app = require('app');
-                if (app.get['stanford'] == "true"
-                    // ...or by using Stanford payment processor
-                    || settings_system.payment_processor.stanford == true)
-                {
-                    App.Data.is_stanford_mode = true;
                 }
+            })();
 
-                self.set("settings_system", settings_system);
-                App.Settings = App.Data.settings.get("settings_system");
+            // although is_stanford_mode was previously set on app init, need to reset its value to false
+            // it's needed if establishment in stanford mode was changed to the non-stanford establishment (bug 33421)
+            App.Data.is_stanford_mode = false;
+            // then need to check if stanford mode is enabled using get parameter...
+            var app = require('app');
+            if (app.get['stanford'] == "true"
+                // ...or by using Stanford payment processor
+                || settings_system.payment_processor.stanford == true)
+            {
+                App.Data.is_stanford_mode = true;
+            }
 
-                if (!self.get_payment_process()) { // get payment processors
-                    if (App.Data.dirMode) { // app accessed via Directory app (bug #17548)
-                        settings_system.online_orders = false; // if all payment processors are disabled this case looks like 'online_orders' is checked off because 'online_orders' affects only order creating functionality
-                    } else { // app accessed directly from browser (bug #17548)
-                        self.set({
-                            'isMaintenance': true,
-                            'maintenanceMessage': MAINTENANCE.PAYMENT_OPTION
-                        });
-                    }
+            self.set("settings_system", settings_system);
+            App.Settings = App.Data.settings.get("settings_system");
+
+            if (!self.get_payment_process()) { // get payment processors
+                if (App.Data.dirMode) { // app accessed via Directory app (bug #17548)
+                    settings_system.online_orders = false; // if all payment processors are disabled this case looks like 'online_orders' is checked off because 'online_orders' affects only order creating functionality
+                } else { // app accessed directly from browser (bug #17548)
+                    self.set({
+                        'isMaintenance': true,
+                        'maintenanceMessage': MAINTENANCE.PAYMENT_OPTION
+                    });
                 }
+            }
 
-                if (settings_system.dining_options.length == 0) {
-                    if (App.Data.dirMode) { // app accessed via Directory app (bug #17552)
-                        settings_system.online_orders = false; // if all dining options are disabled this case looks like 'online_orders' is checked off because 'online_orders' affects only order creating functionality
-                    } else { // app accessed directly from browser (bug #17552)
-                        self.set({
-                            'isMaintenance': true,
-                            'maintenanceMessage': MAINTENANCE.DINING_OPTION
-                        });
-                    }
+            if (settings_system.dining_options.length == 0) {
+                if (App.Data.dirMode) { // app accessed via Directory app (bug #17552)
+                    settings_system.online_orders = false; // if all dining options are disabled this case looks like 'online_orders' is checked off because 'online_orders' affects only order creating functionality
+                } else { // app accessed directly from browser (bug #17552)
+                    self.set({
+                        'isMaintenance': true,
+                        'maintenanceMessage': MAINTENANCE.DINING_OPTION
+                    });
                 }
-            },
+            }
+        },
 
         get_first_available_est: function () {
 
