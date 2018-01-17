@@ -351,7 +351,6 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
             }
 
             if (dining_option === 'DINING_OPTION_SHIPPING' &&
-                this.isNewAddressSelected(dining_option) &&
                 this.get('shipping_selected') === -1) {
                 errShipping.push(MSG.ERROR_SHIPPING_SERVICES_NOT_FOUND);
             }
