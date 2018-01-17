@@ -2843,7 +2843,7 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
          * Get address set for shipping/delivery or default address set in backend.
          * @param {string} [dining_option] - dining option.
          * @param {boolean} [fromProfile] - indicates whether to use fields from profile address
-         * @returns {object} with state, province, city, street_1, street_2, zipcode, contry fields
+         * @returns {object} with state, province, city, street_1, street_2, zipcode, country fields
          */
         getCheckoutAddress: function(dining_option, fromProfile) {
             var customer = App.Data.customer,

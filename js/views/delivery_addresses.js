@@ -420,6 +420,7 @@ define(['backbone', 'factory'], function(Backbone) {
                 addr = addresses.get(addressId);
             if (!addr) {
                 addr = new App.Models.CustomerAddress({id: addressId});
+                this.options.addresses.add(addr);
             }
             addr && addr.set('selected', true);
         },
