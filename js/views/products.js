@@ -121,7 +121,7 @@ define(["backbone", "factory", "generator", "list"], function(Backbone) {
             var available = schedule ? schedule.available() : true;
             /*
              * First of all available products are shown,
-             * then unavilable with positive inventory (if applicable),
+             * then unavailable with positive inventory (if applicable),
              * then with negative inventory (if applicable, 'Sold Out')
              */
             if (!App.Settings.cannot_order_with_empty_inventory) {

@@ -210,15 +210,20 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
              */
             created_date: null,
             /**
-             * Available time for ordering the product.
+             * Available time for ordering the product, when shop is opened.
              * @type {?string}
              */
             timetables: null,
             /*
-             * Available time for ordering the product, created on the base of timetables
+             * Available time for ordering the product, set in custom menu, created on the base of timetables
              * @type {object}
              */
             schedule: null,
+            /*
+             * timetables for schedule
+             * @type {object}
+             */
+            schedule_timetables: null,
             /**
              * Unique product id (`id` + '_' + `id_category`). Used for a model identification
              * in {@link App.Collections.Products} collection.
@@ -943,7 +948,7 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
                         products[i].sort_value = category ? (category.get('sort') * 100000 + products[i].sort) : products[i].sort;
                         products[i].category_sort_value = category ? (category.get('sort_val') * 100000 + products[i].sort) : products[i].sort;
                         products[i].schedule = new App.Models.ProductTimeTable();
-                        products[i].schedule.set_timetables(products[i].timetables);
+                        products[i].schedule.set_schedule(products[i].timetables);
                         products[i].filterResult = true;
                         self.add(products[i]);
                     }
