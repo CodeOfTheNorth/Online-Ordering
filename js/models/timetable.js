@@ -1002,6 +1002,28 @@ define(["backbone"], function(Backbone) {
 
     App.Models.ProductTimeTable = App.Models.Timetable.extend({
         /*
+         * Set timetables (schedule_timetables) for product's schedule.
+         * If timetable_data is empty, it means 24 hours * 7 days.
+         * That's why it's substituted with 00:00 - 23:59 periods for all week days.
+         * When not empty, it's used 'as is'.
+         * @param {type} timetables for the product
+         *
+         */
+        set_schedule: function(timetables) {
+            for (var i in timetables) {
+                if (!_.isEmpty(timetables[i].timetable_data)) {
+                    continue;
+                }
+                for (var j in weekDays) {
+                    timetables[i].timetable_data[weekDays[j]] = [{
+                        from: '00:00',
+                        to: '23:59'
+                    }];
+                }
+            }
+            this.set('schedule_timetables', timetables);
+        },
+        /*
          * Gets time of product's availiability (schedule).
          *
          * products' timetables is an array, containing timetables of all custom menus
@@ -1012,9 +1034,8 @@ define(["backbone"], function(Backbone) {
          * @returns {array} all periods of availiability; could be empty array
          * every period has the same format as function get_working_hours()
          */
-
         get_product_hours: function(date) {
-            var timetables = this.get('timetables'),
+            var timetables = this.get('schedule_timetables'),
                 ranges = [],
                 date_from,
                 date_to;
@@ -1087,7 +1108,7 @@ define(["backbone"], function(Backbone) {
         /*
          * Gets product hours for the whole week
          * @param {date} date on the week
-         * @returns {timetable} timetable with ranges, combined from all available timetables
+         * @returns {timetable} timetable with ranges, combined from all available schedule_timetables
          */
         get_product_week: function(date) {
             var timetable_data = {};
