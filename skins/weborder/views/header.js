@@ -99,7 +99,7 @@ define(["backbone", "factory"], function() {
                 App.Data.mainModel.get('orderStarted') ?
                 'upfront_update' :
                 'upfront_active',
-                true);
+                1);
         }
     });
 
