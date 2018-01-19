@@ -36,8 +36,10 @@ define(["backbone"], function(Backbone) {
             backAction: window.history.back.bind(window.history),
             /*
              * Indicates if initial upfront screen is active
+             * 0: closed
+             * 1: opened
              */
-            upfront_active: false,
+            upfront_active: 0,
             /*
              * Indicates the state of upfront update dialog:
              * 0 - dialog closed

@@ -102,6 +102,8 @@ define(["checkout_view"], function(Backbone) {
                 } catch(e) {}
             });
 
+            this.updateData();
+
             return this;
         },
         events: {
@@ -191,7 +193,8 @@ define(["checkout_view"], function(Backbone) {
                 model: this.collection.checkout,
                 customer: this.options.customer,
                 mod: 'Main',
-                className: 'clear overflow-hidden'
+                className: 'clear overflow-hidden',
+                disableCache: true
             });
 
             this.subViews.push(order_type, pickup, main);

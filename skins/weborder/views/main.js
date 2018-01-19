@@ -188,7 +188,8 @@ define(["done_view", "generator"], function(done_view) {
                 collection: this.orderClone,
                 timetable: App.Data.timetables,
                 customer: App.Data.customer.clone(),
-                DINING_OPTION_NAME: App.Data.mainModel.get('DINING_OPTION_NAME')
+                DINING_OPTION_NAME: App.Data.mainModel.get('DINING_OPTION_NAME'),
+                disableCache: true
             };
 
             var view = App.Views.GeneratorView.create('Upfront', data);
@@ -202,7 +203,7 @@ define(["done_view", "generator"], function(done_view) {
                 }
                 return;
             }
-            this.model.set('upfront_update', 1);
+            this.model.set('upfront_update', 0);
 
             this.orderClone = App.Data.myorder.clone();
 
@@ -214,7 +215,8 @@ define(["done_view", "generator"], function(done_view) {
                 timetable: App.Data.timetables,
                 customer: App.Data.customer.clone(),
                 DINING_OPTION_NAME: App.Data.mainModel.get('DINING_OPTION_NAME'),
-                className: 'upfront-modal'
+                className: 'upfront-modal',
+                disableCache: true
             };
 
             this.model.set('popup', data);
