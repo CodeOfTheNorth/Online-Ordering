@@ -54,12 +54,12 @@ define(["upfront_view"], function(upfront_view) {
                 this.collection.check_order({customer: true, customerData: this.options.customer});
             if (check.status == 'OK') {
                 App.Data.customer.set(this.options.customer.toJSON());
-                App.Data.mainModel.set('upfront_active', false);
+                App.Data.mainModel.set('upfront_active', 0);
                 App.Data.mainModel.set('orderStarted', true);
             }
         },
         just_browsing: function() {
-            App.Data.mainModel.set('upfront_active', false);
+            App.Data.mainModel.set('upfront_active', 0);
         }
     });
 
