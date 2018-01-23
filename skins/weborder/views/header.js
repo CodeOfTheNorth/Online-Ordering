@@ -35,7 +35,7 @@ define(["backbone", "factory"], function() {
         initialize: function() {
             App.Views.FactoryView.prototype.initialize.apply(this, arguments);
             this.listenTo(App.Data.myorder.checkout, 'change', this.applyBindings);
-            App.Data.mainModel.set('upfront_active', true);
+            App.Data.mainModel.set('upfront_active', 1);
         },
         bindings: {
             '.menu': 'classes: {active: strictEqual(tab_index, 0)}',
