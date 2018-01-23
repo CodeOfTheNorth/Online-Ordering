@@ -176,7 +176,11 @@ define(["done_view", "generator"], function(done_view) {
             this.subViews[3] = App.Views.GeneratorView.create(data.modelName, data);
         },
         upfront_change: function() {
-            if (!this.model.get('upfront_active') || ['#confirm', '#pay'].indexOf(window.location.hash) != -1) {
+            if (!this.model.get('upfront_active')) {
+                return;
+            }
+            if (['#confirm', '#pay'].indexOf(window.location.hash) != -1) {
+                this.model.set('upfront_active', 0);
                 return;
             }
 
