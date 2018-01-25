@@ -290,7 +290,7 @@ define(["delivery_addresses", "generator"], function(delivery_addresses) {
             this.listenTo(this.model, 'change:dining_option', this.listenOrderType, this);
 
             this.listenTo(this.model, 'hide:datepicker', function() {
-                self.picker.hide();
+                self.picker && self.picker.hide();
             }, this);
 
             this.templateData = {

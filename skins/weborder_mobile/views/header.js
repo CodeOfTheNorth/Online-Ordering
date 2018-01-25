@@ -63,7 +63,8 @@ define(["factory", "smart_banner"], function() {
             var tabs = App.Views.GeneratorView.create('Header', {
                 model: this.model,
                 mod: 'Tabs',
-                className: 'tabs tab-text'
+                className: 'tabs tab-text',
+                id: 'header_tabs'
             }, 'header_tabs');
 
             this.subViews.push(tabs);
