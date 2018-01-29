@@ -555,6 +555,9 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
                     item.product.images = self.get('images').slice();
                 }
 
+                item.product.schedule = new App.Models.ProductTimeTable();
+                item.product.schedule.set_schedule(item.product.timetables);
+
                 child.add_child(item);
 
                 newProduct = new App.Models.Product(item.product);
