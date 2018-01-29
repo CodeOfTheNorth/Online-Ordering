@@ -2516,6 +2516,7 @@ var triPOSPaymentProcessor = {
                     setTimeout(function() {
                         console.log('paymentResponse: %o', myorder.paymentResponse);
                         myorder.trigger('paymentResponse');
+                        myorder.paymentInfo = null;
                     }, 1000);
                 } else {
                     myorder.paymentResponse = {status: 'error', errorMsg: data.errorMsg};
