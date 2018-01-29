@@ -89,10 +89,13 @@
     border-top-right-radius: 5px;
 }
 
+/*
 #header .address-line1,
 #header .address-line2,
 #header .operation-time,
-#header .promotions-link {
+#header .promotions-link 
+*/
+#header > div {
     font-size: 12px;
 }
 

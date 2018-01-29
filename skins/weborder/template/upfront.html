@@ -1,0 +1,161 @@
+<script type="text/template" id="upfront_pickup-template">
+    <div class="pickup label"><%= pickupTimeLabel %></div>
+    <div>
+        <div class="select-wrapper item">
+            <input type="text" id="datepicker" readonly="readonly" data-day="0" class="pikaday input ios-safari-caret">
+        </div>
+        <div class="select-wrapper item">
+            <select class="time size1"></select>
+        </div>
+</script>
+
+<script type="text/template" id="upfront_order_type-template">
+    <div class="label"><%= _lp.CHECKOUT_ORDER_TYPE %></div>
+    <div class="select-wrapper item">
+        <select class="order-type-select size4"></select>
+    </div>
+</script>
+
+<script type="text/template" id="upfront_main-template">
+    <div class="personal">
+        <div class="item">
+            <div class="label required optional-text"><%= _lp.PROFILE_FIRST_NAME %></div>
+            <input type="text" class="firstName input ios-safari-caret size4">
+        </div>
+        <div class="item">
+            <div class="label required optional-text"><%= _lp.PROFILE_LAST_NAME %></div>
+            <input type="text" class="lastName input ios-safari-caret size4">
+        </div>
+    </div>
+    <div class="personal">
+        <div class="item">
+            <div class="label required optional-text"><%= _lp.PROFILE_EMAIL_ADDRESS %></div>
+            <input type="email" class="email input ios-safari-caret size4" autocorrect="off" autocapitalize="none">
+        </div>
+        <div class="item">
+            <div class="label required optional-text"><%= _lp.PROFILE_PHONE %></div>
+            <input type="tel" id="phone" class="phone input ios-safari-caret size4">
+        </div>
+    </div>
+
+    <div class="delivery_address"></div>
+
+    <div class="delivery_other"></div>
+</script>
+
+<script type="text/template" id="upfront_page-template">
+    <div class="upfront-content">
+        <h2 class="upfront-title"><%= _lp.UPFRONT_TITLE %></h2>
+        <div class="order-details"></div>        
+        <div class="clear button-block">
+                <span class="start-order"><%= _lp.UPFRONT_START_ORDER %></span>
+                <span class="just-browsing"><%= _lp.UPFRONT_JUST_BROWSING %></span>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id="upfront_update-template">
+    <div class="upfront-modal-title"><%= _lp.UPFRONT_UPDATE_TITLE %></div>
+    <div class="upfront-content">
+        <div class="order-details"></div>
+    </div>
+    <div class="upfront-update">
+        <button><%= _lp.UPFRONT_UPDATE %></button>    
+    </div>
+</script>
+
+<script type="text/template" id="upfront_address-template">
+    <div class="address-selection item"></div>
+
+    <div class="address-edit">
+        <div class="item">
+            <div class="label required optional-text"><%= _lp.CHECKOUT_ADDRESS %></div>
+            <input type="text" name="street_1" class="input ios-safari-caret size4">
+        </div>
+        <div class="item">
+            <div class="label optional-text"><%= _lp.CHECKOUT_APT %></div>
+            <input type="text" name="street_2" class="input ios-safari-caret size4">
+        </div>
+    </div>
+
+    <div class="address-edit">
+        <div class="item">
+            <div class="label required optional-text"><%= _lp.PROFILE_CITY %></div>
+            <input type="text" name="city" class="input ios-safari-caret size4">
+        </div>
+        
+        <% if(country == 'US' && state && states instanceof Object && Object.keys(states).length > 0) { %>
+        <div class="states-box item">
+            <div class="label required optional-text"><%= _lp.PROFILE_STATE %></div>
+            <div class="select-wrapper">
+                <select class="states size3" id="states">
+                <% for(var i in states) { %>
+                    <option value="<%= i %>" <% if(i.toLowerCase() == state.toLowerCase()) { %>selected="selected"<% } %>><%= states[i] %></option>
+                <% } %>
+                </select>
+            </div>
+        </div>
+        <% } %> 
+        <% if(typeof province == 'string') { %>
+        <div class="province-box item">
+            <div class="label required optional-text"><%= _lp.PROFILE_PROVINCE %></div>
+            <input type="text" name="province" class="input ios-safari-caret size1">
+        </div>
+        <% } %>
+        
+        <div class="item">
+            <div class="label required optional-text"><% if(country == 'US') {print(_lp.PROFILE_ZIP_CODE);} else {print(_lp.PROFILE_POSTAL_CODE);} %></div>
+            <input type="text" name="zipcode" class="input ios-safari-caret size1">
+        </div> 
+    </div>
+
+    <% if(isShippingServices) { %>
+    <div class="address-edit">
+        <div class="item">
+            <div class="label required optional-text"><%= _lp.PROFILE_COUNTRY %>:</div>
+            <div class="select-wrapper">
+                <select class="country size2">
+                <% for (var i in countries) { %>
+                    <option value="<%= i %>" <% if(i.toLowerCase() == country.toLowerCase()) { %>selected="selected"<% } %>><%= countries[i] %></option>
+                <% } %>
+                </select>
+            </div>
+        </div>
+    </div> 
+
+    <div class="item">
+        <div class="label required optional-text"><%= _lp.CHECKOUT_SHIPPING_HANDLING %></div>
+        <div class="inline-block">
+            <div class="select-wrapper">
+                <select class="shipping-select select"></select>
+            </div>
+            <div class="shipping-status fl-right"></div>
+        </div>
+    </div>
+    <% } %>
+</script>
+
+<script type="text/template" id="upfront_address_selection-template">
+    <div class="label required optional-text"><%= _lp.CHECKOUT_CHOOSE_ADDRESS %></div>
+    <div class="select-wrapper">
+        <select id="addresses"></select>
+    </div>
+</script>
+
+<script type="text/template" id="upfront_other-template">
+    <div class="list"></div>
+</script>
+
+<script type="text/template" id="upfront_other_item-template">
+    <div class="item fl-left">
+        <div class="label optional-text" data-isrequired><%= name %></div>
+        <% if (Array.isArray(choices) && choices.length) { %>
+            <div class="select-wrapper">
+                <select class="section-select" name="<%= name %>"></select>
+            </div>
+        <% } else { %>
+            <input type="text" name="<%= name %>" class="input ios-safari-caret size1">
+        <% } %>
+    </div>
+</script>

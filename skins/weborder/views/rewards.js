@@ -20,17 +20,32 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
- define(["rewards_view"], function(rewards_view) {
-    'use strict';
-
-    var RewardsCardView = App.Views.CoreRewardsView.CoreRewardsCardView.extend({
-        bindings: {
-            '.reward_card_number': 'classes: {disabled: length(customer_rewardCards)}',
-            '.rewards-input': 'value: number, events: ["input"], disabled: length(customer_rewardCards)'
-        }
-    });
-
-    return new (require('factory'))(rewards_view.initViews.bind(rewards_view), function() {
-        App.Views.RewardsView.RewardsCardView = RewardsCardView;
-    });
+define(["rewards_view"], function (rewards_view) {
+	'use strict';
+	
+	var RewardsCardView = App.Views.CoreRewardsView.CoreRewardsCardView.extend({
+		initialize: function () {
+			App.Views.CoreRewardsView.CoreRewardsCardView.prototype.initialize.apply(this, arguments);
+			this.listenTo(App.Data.customer.get('rewardCards'), "add remove reset", function () {
+				this.removeBindings();
+				this.applyBindings();
+			});
+		},
+		bindings: {
+			'.reward_card_number': 'classes: {disabled: length(customer_rewardCards)}',
+			'.rewards-input': 'getRewardsCardNumber: number, events: ["input"], disabled: length(customer_rewardCards)'
+		},
+		bindingHandlers: {
+			getRewardsCardNumber: {
+				set: function ($element, value) {
+					var text = App.Data.customer.get('rewardCards').length ? value : '';
+					$element.val(text);
+				}
+			}
+		}
+	});
+	
+	return new (require('factory'))(rewards_view.initViews.bind(rewards_view), function () {
+		App.Views.RewardsView.RewardsCardView = RewardsCardView;
+	});
 });

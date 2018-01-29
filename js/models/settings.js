@@ -725,8 +725,7 @@ define(["backbone", "async"], function(Backbone) {
                     },
                     recaptcha_site_key: '6LcTkCETAAAAAO-aSGuRIl6Habqu3f0s8WeAvV5R', // for *.revelup.com domain
                     google_maps_api_key: '',
-                    fb_app_id: '233118313739765', // for *.revelup.com domain
-                    custom_menus: []
+                    fb_app_id: '233118313739765' // for *.revelup.com domain
                 };
 
             return {

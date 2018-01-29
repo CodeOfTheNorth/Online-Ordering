@@ -12,6 +12,12 @@
         'CART_CHECKOUT': 'Checkout',
         'CART_ORDER_SUMMARY': 'Order Summary',
         'CART_PAY': 'Pay',
+        'UPFRONT_TITLE': 'Your food is a couple of clicks away.',
+        'UPFRONT_UPDATE_TITLE': 'UPDATE ORDER INFO',
+        'UPFRONT_ADDRESS': 'Your address',
+        'UPFRONT_START_ORDER': 'Start Order',
+        'UPFRONT_JUST_BROWSING': 'Just Browsing',
+        'UPFRONT_UPDATE': 'Update',
         'CHECKOUT_REWARD_CARD': 'Loyalty #',
         'CHECKOUT_SEE_REWARDS': 'See Rewards',
         'CHECKOUT_ORDER_TYPE': 'Order Type',
@@ -257,6 +263,9 @@
         'PAST_ORDER': 'Past Order',
         'PROFILE_LOYALTY_NUMBER': 'Loyalty Number',
         'PROFILE_ADDRESS_LINE1': 'Address',
-        'PRODUCT_SOLD_OUT': 'Sold out'
+        'PRODUCT_SOLD_OUT': 'Sold out',
+        'PRODUCT_UNAVAILABLE': 'Unavailable',
+        'PRODUCT_REMOVED_FROM_ORDER': 'One product was removed from the order because of time changing: ',
+        'PRODUCTS_REMOVED_FROM_ORDER': 'Some products were removed from the order because of time changing:'
     } // end of locale
 }); // end of module

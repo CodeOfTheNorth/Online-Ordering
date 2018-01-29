@@ -52,7 +52,7 @@ define(["quantity_view"], function(quantity_view) {
             }
             select.append(options);
 
-            if (stock_amount === 1 || product.isParent() || isComboWithWeightProduct) {
+            if (product.isParent() || isComboWithWeightProduct) {
                 select.addClass('disabled');
                 select.prop('disabled', true);
                 selectWrapper.addClass('disabled');

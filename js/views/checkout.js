@@ -204,7 +204,7 @@ define(["delivery_addresses", "generator"], function(delivery_addresses) {
         bindings: {
             ':el': 'toggle: not(equal(dining_option, "DINING_OPTION_ONLINE"))',
             '.select-wrapper': 'classes: { "no-arrows": hide_arrows }',
-            '.order-type-select': 'value: diningOption, options: dining_options'
+            '.order-type-select': 'value: dining_option, options: dining_options'
         },
         computeds: {
             hide_arrows: function() {
@@ -299,7 +299,8 @@ define(["delivery_addresses", "generator"], function(delivery_addresses) {
 
             this.isDelivery = this.model.get('dining_option') === 'DINING_OPTION_DELIVERY';
             this.pickupTimeIndexByDelta = {};
-            this.pickupTime = this.options.timetable.getPickupList(this.isDelivery, this.pickupTimeIndexByDelta);
+            this.pickupTime = this.options.timetable.getPickupList(this.isDelivery, this.pickupTimeIndexByDelta,
+                App.skin == App.Skins.WEBORDER ? App.Data.myorder.checkout.attributes.pickupTS : null);
             App.Views.FactoryView.prototype.initialize.apply(this, arguments);
             this.listenOrderType(null, this.model.get('dining_option'));
         },
@@ -329,16 +330,7 @@ define(["delivery_addresses", "generator"], function(delivery_addresses) {
             function selectDate(date) {
                 var one_day = 1000 * 60 * 60 * 24;
                 var diffDays = parseInt((date - today) / one_day);
-                switch (diffDays) {
-                   case 0:
-                      field.val(_loc['DAYS']['TODAY']);
-                      break;
-                   case 1:
-                      field.val(_loc['DAYS']['TOMORROW']);
-                      break;
-                   default:
-                      field.val(date.format()); //field.val(date.format("Dd, Mm dd"));
-                }
+                field.val(App.Data.myorder.checkout.selectedDate(date, diffDays));
                 field.data("day", diffDays);
                 self.changeDay({target: { value: diffDays }});
             }
@@ -377,7 +369,7 @@ define(["delivery_addresses", "generator"], function(delivery_addresses) {
             });
 
             this.model.set('pickupDay',index);
-            this.changeTime({target: { value : 0 }});
+            this.changeTime({target: { value: (this.pickupTime && this.pickupTime[day_index] && this.pickupTime[day_index].selected_index) || 0 }});
         },
         changeTime: function(e) {
             var index = e.target.value*1,
