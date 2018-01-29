@@ -2513,10 +2513,14 @@ var triPOSPaymentProcessor = {
                     myorder.paymentInfo = data;
                     myorder.paymentInfo.transaction_id = data.TransactionID;
                     myorder.submit_order_and_pay(PAYMENT_TYPE.CREDIT, false, true);
-                    setTimeout(function() {
+                    setTimeout(function waitForAnotherStatus() {
                         console.log('paymentResponse: %o', myorder.paymentResponse);
-                        myorder.trigger('paymentResponse');
                         myorder.paymentInfo = null;
+                        if (myorder.paymentResponse.status === "REDIRECT") {
+                            setTimeout(waitForAnotherStatus, 1000);
+                        } else {
+                            myorder.trigger('paymentResponse');
+                        }
                     }, 1000);
                 } else {
                     myorder.paymentResponse = {status: 'error', errorMsg: data.errorMsg};
