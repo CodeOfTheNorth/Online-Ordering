@@ -2135,15 +2135,16 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                         return;
                     }
                     switch(data.status) {
-                        case "OK":
-                            if (checkout.discount_code && is_apply_discount) {
-                                myorder.checkout.set('last_discount_code', checkout.discount_code);
-                            }
-                            if (myorder.get_only_product_quantity() > 0) {
-                                myorder.process_cart_totals(data.data);
-                            }
-                            myorder.previousError = "OK";
-                            break;
+	                    case "OK":
+		                    if (checkout.discount_code && is_apply_discount) {
+			                    myorder.checkout.set('last_discount_code', checkout.discount_code);
+		                    }
+		                    //prevent cart recalculation after order confirmed
+		                    if(myorder.get_only_product_quantity() > 0 && !/confirm/.test(window.location.hash)) {
+		                       myorder.process_cart_totals(data.data);
+                        }
+		                    myorder.previousError = "OK";
+		                    break;
                         case "DISCOUNT_CODE_IS_EMPTY":
                         case "DISCOUNT_CODE_NOT_FOUND":
                         case "DISCOUNT_CODE_NOT_APPLICABLE":
