@@ -2509,7 +2509,7 @@ var triPOSPaymentProcessor = {
         if (!this.iframePaymentCompleteEvent) {
             listenEvent('IframePaymentComplete', function (event, data) {
                 PaymentIframe.hide();
-                if (data.ExpressResponseMessage === "Approved" && data.TransactionID) {
+                if (data.ExpressResponseMessage === "Approved" && data.TransactionID !== undefined) {
                     myorder.paymentInfo = data;
                     myorder.paymentInfo.transaction_id = data.TransactionID;
                     myorder.submit_order_and_pay(PAYMENT_TYPE.CREDIT, false, true);
