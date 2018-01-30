@@ -189,6 +189,7 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
             this.set("discount", new App.Models.DiscountItem());
             this.listenTo(this, 'change', this.change);
             this.listenTo(this, 'change:quantity', this.update_mdf_sum);
+            this.listenTo(App.Data.myorder.checkout, 'change:pickupTS', this.time_changed, this);
         },
         /**
          * A product specified for the order item may be `product` attribute value or any child product.
@@ -281,6 +282,12 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                     this.trigger('change', this); // need to notify a collection about modifier change to ensure cart totals update
                 });
             }
+        },
+        /*
+         * Check if products in order are available when delivery/arrive/pickup time is changed
+         * this function should be overwritten by any skin that requires it
+         */
+        time_changed: function() {
         },
         /**
          * Updates `sum` attribute of modifiers.
@@ -1826,7 +1833,7 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
             }
 
             if (options.customer) {
-                var customer = App.Data.customer,
+                var customer = options.customerData || App.Data.customer,
                     check_customer = customer.check(dining_option);
 
                 if (check_customer.status === 'ERROR') {
@@ -1847,14 +1854,14 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
             } else if (errorMsg) {
                 return error(errorMsg); // user notification
             } else {
-                _success.call(this);
+                return _success.call(this);
             }
 
             function _success() {
                 if (options.validationOnly) {
                     var tmp_model = new Backbone.View();
                     tmp_model.listenTo(this, 'paymentResponseValid', function() {
-                        success();
+                        success && success();
                         tmp_model.remove();
                         self.trigger('paymentInProcessValid');
                     });
@@ -1864,8 +1871,9 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                         self.trigger('paymentInProcessValid');
                     });
                     this.create_order_and_pay(PAYMENT_TYPE.NO_PAYMENT, true);
+                    return {status: 'VALIDATION'};
                 } else {
-                    success();
+                    return {status: 'OK', message: (success ? success() : '')};
                 }
             }
         },
@@ -2135,15 +2143,16 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
                         return;
                     }
                     switch(data.status) {
-                        case "OK":
-                            if (checkout.discount_code && is_apply_discount) {
-                                myorder.checkout.set('last_discount_code', checkout.discount_code);
-                            }
-                            if (myorder.get_only_product_quantity() > 0) {
-                                myorder.process_cart_totals(data.data);
-                            }
-                            myorder.previousError = "OK";
-                            break;
+	                    case "OK":
+		                    if (checkout.discount_code && is_apply_discount) {
+			                    myorder.checkout.set('last_discount_code', checkout.discount_code);
+		                    }
+		                    //prevent cart recalculation after order confirmed
+		                    if(myorder.get_only_product_quantity() > 0 && !/confirm/.test(window.location.hash)) {
+		                       myorder.process_cart_totals(data.data);
+                        }
+		                    myorder.previousError = "OK";
+		                    break;
                         case "DISCOUNT_CODE_IS_EMPTY":
                         case "DISCOUNT_CODE_NOT_FOUND":
                         case "DISCOUNT_CODE_NOT_APPLICABLE":

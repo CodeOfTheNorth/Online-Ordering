@@ -63,51 +63,71 @@ define([], function() {
                     "wednesday": [
                         {
                             "from": "00:00",
-                            "to": "23:59"
+                            "to": "23:59",
+                            "from_int": 0,
+                            "to_int": 1439
                         },
                         {
                             "from": "10:00",
-                            "to": "12:00"
+                            "to": "12:00",
+                            "from_int": 600,
+                            "to_int": 720
                         }
                     ],
                     "wednesday12": [
                         {
                             "from": "12:00am",
-                            "to": "11:59pm"
+                            "to": "11:59pm",
+                            "from_int": 0,
+                            "to_int": 1439
                         },
                         {
                             "from": "10:00am",
-                            "to": "12:00pm"
+                            "to": "12:00pm",
+                            "from_int": 600,
+                            "to_int": 720
                         }
                     ],
                     "wednesday13": [
                         {
                             "from": "0:00",
-                            "to": "23:59"
+                            "to": "23:59",
+                            "from_int": 0,
+                            "to_int": 1439
                         },
                         {
                             "from": "10:00",
-                            "to": "12:00"
+                            "to": "12:00",
+                            "from_int": 600,
+                            "to_int": 720
                         }
                     ],
                     "thursday": [
                         {
                             "from": "00:00",
-                            "to": "10:00"
+                            "to": "10:00",
+                            "from_int": 0,
+                            "to_int": 600
                         },
                         {
                             "from": "15:00",
-                            "to": "20:00"
+                            "to": "20:00",
+                            "from_int": 900,
+                            "to_int": 1200
                         }
                     ],
                     "friday": [
                         {
                             "from": "10:00",
-                            "to": "16:00"
+                            "to": "16:00",
+                            "from_int": 600,
+                            "to_int": 960
                         },
                         {
                             "from": "00:00",
-                            "to": "13:00"
+                            "to": "13:00",
+                            "from_int": 0,
+                            "to_int": 780
                         }
                     ],
                     "saturday": [
@@ -123,7 +143,9 @@ define([], function() {
                     "monday": [
                         {
                             "from": "12:26",
-                            "to": "23:59"
+                            "to": "23:59",
+                            "from_int": 746,
+                            "to_int": 1439
                         }
                     ],
                     "tuesday": [
@@ -131,41 +153,57 @@ define([], function() {
                     "wednesday": [
                         {
                             "from": "00:00",
-                            "to": "23:59"
+                            "to": "23:59",
+                            "from_int": 0,
+                            "to_int": 1439
                         },
                         {
                             "from": "10:00",
-                            "to": "12:00"
+                            "to": "12:00",
+                            "from_int": 600,
+                            "to_int": 720
                         }
                     ],
                     "wednesday12": [
                         {
                             "from": "12:00am",
-                            "to": "11:59pm"
+                            "to": "11:59pm",
+                            "from_int": 720,
+                            "to_int": 1439
                         },
                         {
                             "from": "10:00am",
-                            "to": "12:00pm"
+                            "to": "12:00pm",
+                            "from_int": 600,
+                            "to_int": 720
                         }
                     ],
                     "thursday": [
                         {
                             "from": "00:00",
-                            "to": "10:00"
+                            "to": "10:00",
+                            "from_int": 0,
+                            "to_int": 600
                         },
                         {
                             "from": "15:00",
-                            "to": "20:00"
+                            "to": "20:00",
+                            "from_int": 900,
+                            "to_int": 1200
                         }
                     ],
                     "friday": [
                         {
                             "from": "10:00",
-                            "to": "16:00"
+                            "to": "16:00",
+                            "from_int": 600,
+                            "to_int": 960
                         },
                         {
                             "from": "00:00",
-                            "to": "13:00"
+                            "to": "13:00",
+                            "from_int": 0,
+                            "to_int": 780
                         }
                     ],
                     "saturday": [
@@ -191,7 +229,7 @@ define([], function() {
                     }],
                     "thursday": [{
                         "from": "00:00",
-                        "to": "23:59"
+                        "to": "23:59",
                     }],
                     "friday": [{
                         "from": "00:00",

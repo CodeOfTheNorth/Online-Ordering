@@ -51,7 +51,7 @@ define(['backbone'], function(Backbone) {
                 }
             }
 
-            if(App.Views.Generator.enableCache && id in cache) {
+            if(App.Views.Generator.enableCache && id in cache && !options.disableCache) {
                 var view = cache[id];
             } else {
                 options.dbgClassName = ViewClass + options.mod + 'View';

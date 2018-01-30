@@ -180,6 +180,8 @@ define(['backbone'], function(Backbone) {
                     errorSend("Alert & reload", message);
                 }, 0);
             }
+
+            return {status: 'ERROR', message: message};
         }
     });
 });

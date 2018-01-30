@@ -20,101 +20,112 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(["total_view"], function(total_view) {
-    'use strict';
-
-    var TotalCheckout = App.Views.CoreTotalView.CoreTotalCheckoutView.extend({
-        bindings: extendProto('bindings', {
-            '.discount-links': 'toggle: any(showDiscountCode, showRewards), classes: {hide: all(not(showDiscountCode), not(haveRewards) )}',
-            '.have-discounts': 'html: haveDiscountCodeOrRewards, toggle: all(showDiscountCode, showRewards)',
-            '.have-discount-code': 'html: haveDiscountCode, toggle: all(showDiscountCode, not(showRewards))',
-            '.have-rewards': 'html: haveRewards, toggle: all(not(showDiscountCode), showRewards)',
-            '.remove-discount-code': 'toggle: checkout_last_discount_code',
-            '.remove-reward-redemption': 'toggle: length(rewardsCard_discounts)',
-            '.total_discounts': 'toggle: any(checkout_last_discount_code, length(rewardsCard_discounts), discounts)'
-        }),
-        computeds: extendProto('computeds', {
-            haveDiscountCodeOrRewards: {
-                deps: ['_lp_MYORDER_HAVE_DISCOUNT_CODE_OR_REWARDS', '_lp_MYORDER_DISCOUNT_CODE', '_lp_REWARDS_NUMBER', '_lp_REWARDS_REDEEM', 'rewardsCard_number', '_lp_OR',],
-                get: function(MYORDER_HAVE_DISCOUNT_CODE_OR_REWARDS, MYORDER_DISCOUNT_CODE, REWARDS_NUMBER, REWARDS_REDEEM, number, OR) {
-	                function rewardLink() {
-		                var appendix = '<span>'+OR+'&nbsp;'+'</span>';
-		                if (!App.Data.customer.get('user_id')) return '';
-                    return appendix + wrap(number ? REWARDS_REDEEM : REWARDS_NUMBER, 'rewards-link');
-	                }
-	                return MYORDER_HAVE_DISCOUNT_CODE_OR_REWARDS.replace('%s', wrap(MYORDER_DISCOUNT_CODE, 'discount-link')).replace('%s', rewardLink());
-                }
-            },
-            haveDiscountCode: {
-                deps: ['_lp_MYORDER_HAVE_DISCOUNT_CODE', '_lp_MYORDER_DISCOUNT_CODE'],
-                get: function(MYORDER_HAVE_DISCOUNT_CODE, MYORDER_DISCOUNT_CODE) {
-                    return MYORDER_HAVE_DISCOUNT_CODE.replace('%s', wrap(MYORDER_DISCOUNT_CODE, 'discount-link'));
-                }
-            },
-            haveRewards: {
-                deps: ['_lp_MYORDER_HAVE_DISCOUNT_CODE', '_lp_REWARDS_NUMBER', '_lp_REWARDS_REDEEM', 'rewardsCard_number'],
-                get: function(MYORDER_HAVE_DISCOUNT_CODE, REWARDS_NUMBER, REWARDS_REDEEM, number) {
-                    if (!App.Data.customer.get('user_id')) return '';
-                    return number ? wrap(REWARDS_REDEEM, 'rewards-link') : MYORDER_HAVE_DISCOUNT_CODE.replace('%s', wrap(REWARDS_NUMBER, 'rewards-link'));
-                }
-            },
-            showDiscountCode: {
-                deps: ['_system_settings_accept_discount_code', 'checkout_last_discount_code'],
-                get: function(accept_discount_code, last_discount_code) {
-                    return accept_discount_code && !last_discount_code;
-                }
-            },
-            showRewards: {
-                deps: ['_system_settings_enable_reward_cards_collecting', 'rewardsCard_discounts'],
-                get: function(enable_reward_cards_collecting, discount) {
-                    return enable_reward_cards_collecting && !discount.length;
-                }
-            }
-        }),
-        events: extendProto('events', {
-            'click .discount-link': 'showDiscountCode',
-            'click .rewards-link': 'showRewards',
-            'click .remove-discount-code': 'removeDiscountCode',
-            'click .remove-reward-redemption': 'removeRewardRedemption'
-        }),
-        render: function() {
-            this.$el.html(this.template({acceptableCCTypes: ACCEPTABLE_CREDIT_CARD_TYPES}));
-            return this;
-        },
-        showDiscountCode: function() {
-            var showDiscountCode = this.options.showDiscountCode;
-            typeof showDiscountCode == 'function' && showDiscountCode();
-        },
-        showRewards: function() {
-            var showRewards = this.options.showRewards;
-            typeof showRewards == 'function' && showRewards();
-        },
-        removeDiscountCode: function() {
-            this.options.checkout.set({
-                last_discount_code: '',
-                discount_code: ''
-            });
-            this.collection.get_cart_totals();
-        },
-        removeRewardRedemption: function() {
-            var rewardsCard = this.options.rewardsCard,
-                rewardCards = this.options.rewardCards,
-                savedRewardCard = rewardCards.at(0);
-            rewardsCard.resetData();
-            savedRewardCard && rewardsCard.selectRewardCard(savedRewardCard);
-            rewardCards.resetSelection();
-        }
-    });
-
-    function wrap(text, className) {
-        return '<span class="link ' + className + '">' + text+ "</span>";
-    }
-
-    function extendProto(prop, data) {
-        return _.extend({}, App.Views.CoreTotalView.CoreTotalCheckoutView.prototype[prop], data);
-    }
-
-    return new (require('factory'))(total_view.initViews.bind(total_view), function() {
-        App.Views.TotalView.TotalCheckoutView = TotalCheckout;
-    });
+define(["total_view"], function (total_view) {
+	'use strict';
+	var TotalCheckout = App.Views.CoreTotalView.CoreTotalCheckoutView.extend({
+		initialize: function () {
+			App.Views.CoreTotalView.CoreTotalCheckoutView.prototype.initialize.apply(this, arguments);
+			this.listenTo(this.options.customer.get('rewardCards'), "add remove reset", function () {
+				this.removeBindings();
+				this.applyBindings();
+			});
+		},
+		bindings: extendProto('bindings', {
+			'.discount-links': 'toggle: any(showDiscountCode, showRewards), classes: {hide: all(not(showDiscountCode), not(haveRewards) )}',
+			'.have-discounts': 'haveDiscountCodeOrRewards: rewardsCard_number, toggle: all(showDiscountCode, showRewards)',
+			'.have-discount-code': 'html: haveDiscountCode, toggle: all(showDiscountCode, not(showRewards))',
+			'.have-rewards': 'html: haveRewards, toggle: all(not(showDiscountCode), showRewards)',
+			'.remove-discount-code': 'toggle: checkout_last_discount_code',
+			'.remove-reward-redemption': 'toggle: length(rewardsCard_discounts)',
+			'.total_discounts': 'toggle: any(checkout_last_discount_code, length(rewardsCard_discounts), discounts)'
+		}),
+		bindingHandlers: {
+			haveDiscountCodeOrRewards: {
+				set: function ($element) {
+					var _lp = this.view.getBinding('$_lp').toJSON();
+					var rewardCards = App.Data.customer.get('rewardCards').length;
+					var text = _lp.MYORDER_HAVE_DISCOUNT_CODE_OR_REWARDS.replace('%s', wrap(_lp.MYORDER_DISCOUNT_CODE, 'discount-link')).replace('%s', rewardLink());
+					$element.html(text);
+					
+					function rewardLink() {
+						var appendix = '<span>' + _lp.OR + '&nbsp;' + '</span>';
+						if (!App.Data.customer.get('user_id')) return '';
+						return appendix + wrap(rewardCards ? _lp.REWARDS_REDEEM : _lp.REWARDS_NUMBER, 'rewards-link');
+					}
+				}
+			}
+		},
+		computeds: extendProto('computeds', {
+			haveDiscountCode: {
+				deps: ['_lp_MYORDER_HAVE_DISCOUNT_CODE', '_lp_MYORDER_DISCOUNT_CODE'],
+				get: function (MYORDER_HAVE_DISCOUNT_CODE, MYORDER_DISCOUNT_CODE) {
+					return MYORDER_HAVE_DISCOUNT_CODE.replace('%s', wrap(MYORDER_DISCOUNT_CODE, 'discount-link'));
+				}
+			},
+			haveRewards: {
+				deps: ['_lp_MYORDER_HAVE_DISCOUNT_CODE', '_lp_REWARDS_NUMBER', '_lp_REWARDS_REDEEM', 'rewardsCard_number'],
+				get: function (MYORDER_HAVE_DISCOUNT_CODE, REWARDS_NUMBER, REWARDS_REDEEM, number) {
+					if (!App.Data.customer.get('user_id')) return '';
+					return number ? wrap(REWARDS_REDEEM, 'rewards-link') : MYORDER_HAVE_DISCOUNT_CODE.replace('%s', wrap(REWARDS_NUMBER, 'rewards-link'));
+				}
+			},
+			showDiscountCode: {
+				deps: ['_system_settings_accept_discount_code', 'checkout_last_discount_code'],
+				get: function (accept_discount_code, last_discount_code) {
+					return accept_discount_code && !last_discount_code;
+				}
+			},
+			showRewards: {
+				deps: ['_system_settings_enable_reward_cards_collecting', 'rewardsCard_discounts'],
+				get: function (enable_reward_cards_collecting, discount) {
+					return enable_reward_cards_collecting && !discount.length;
+				}
+			}
+		}),
+		events: extendProto('events', {
+			'click .discount-link': 'showDiscountCode',
+			'click .rewards-link': 'showRewards',
+			'click .remove-discount-code': 'removeDiscountCode',
+			'click .remove-reward-redemption': 'removeRewardRedemption'
+		}),
+		render: function () {
+			this.$el.html(this.template({acceptableCCTypes: ACCEPTABLE_CREDIT_CARD_TYPES}));
+			return this;
+		},
+		showDiscountCode: function () {
+			var showDiscountCode = this.options.showDiscountCode;
+			typeof showDiscountCode == 'function' && showDiscountCode();
+		},
+		showRewards: function () {
+			var showRewards = this.options.showRewards;
+			typeof showRewards == 'function' && showRewards();
+		},
+		removeDiscountCode: function () {
+			this.options.checkout.set({
+				last_discount_code: '',
+				discount_code: ''
+			});
+			this.collection.get_cart_totals();
+		},
+		removeRewardRedemption: function () {
+			var rewardsCard = this.options.rewardsCard,
+				rewardCards = this.options.rewardCards,
+				savedRewardCard = rewardCards.at(0);
+			rewardsCard.resetData();
+			savedRewardCard && rewardsCard.selectRewardCard(savedRewardCard);
+			rewardCards.resetSelection();
+		}
+	});
+	
+	function wrap(text, className) {
+		return '<span class="link ' + className + '">' + text + "</span>";
+	}
+	
+	function extendProto(prop, data) {
+		return _.extend({}, App.Views.CoreTotalView.CoreTotalCheckoutView.prototype[prop], data);
+	}
+	
+	return new (require('factory'))(total_view.initViews.bind(total_view), function () {
+		App.Views.TotalView.TotalCheckoutView = TotalCheckout;
+	});
 });

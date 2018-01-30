@@ -537,6 +537,7 @@ define(["main_router"], function(main_router) {
                 App.Data.mainModel.set({
                     header: headers.main,
                     cart: carts.main,
+                    DINING_OPTION_NAME: this.LOC_DINING_OPTION_NAME,
                     content: [
                         {
                             modelName: 'Categories',
@@ -582,6 +583,7 @@ define(["main_router"], function(main_router) {
                 App.Data.mainModel.set('mod', 'Main');
                 App.Data.mainModel.set({
                     header: headers.main,
+                    DINING_OPTION_NAME: this.LOC_DINING_OPTION_NAME,
                     content: {
                         modelName: 'StoreInfo',
                         model: App.Data.timetables,
@@ -602,6 +604,7 @@ define(["main_router"], function(main_router) {
                 App.Data.mainModel.set('mod', 'Main');
                 App.Data.mainModel.set({
                     header: headers.main,
+                    DINING_OPTION_NAME: this.LOC_DINING_OPTION_NAME,
                     content: {
                         modelName: 'StoreInfo',
                         mod: 'MapWithStores',
@@ -754,6 +757,7 @@ define(["main_router"], function(main_router) {
                     mod: 'Main',
                     header: headers.main,
                     cart: cartData,
+                    DINING_OPTION_NAME: this.LOC_DINING_OPTION_NAME,
                     content: {
                         modelName: 'Main',
                         mod: 'Done',

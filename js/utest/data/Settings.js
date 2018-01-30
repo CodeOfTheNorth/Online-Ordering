@@ -213,7 +213,6 @@ define([], function() {
                 "delivery_for_online_orders": true,
                 "delivery_post_code_lookup": [false, "603163"],
                 "about_title": "Kinematics",
-                "use_custom_menus": true,
                 "eat_in_for_online_orders": true,
                 "suppress_student_identifier_popup": false,
                 "api_version": 1,
