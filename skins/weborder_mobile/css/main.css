@@ -157,7 +157,7 @@ h1, h2, h3 {
     -webkit-overflow-scrolling: touch; /* set native iOS scrolling */
 }
 
-#section.custom-mode,  #section_content.custom-mode{
+#section.custom-mode, #section_content.custom-mode {
     border: 5px solid #9edad4;
     box-sizing: border-box;
 }
