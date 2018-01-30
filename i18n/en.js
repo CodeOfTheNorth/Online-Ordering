@@ -461,6 +461,7 @@
             'ERROR_GET_DISCOUNTS': 'Failed request to get discounts',
             'ERROR_GET_CART_TOTALS': 'Failed request to get cart totals. Probably the network connection has been lost or server is unreachable now.',
             'ERROR_INCORRECT_DISCOUNT_CODE': 'Type correct discount code from 1 to 200 characters',
+            'ERROR_NONPOSITIVE_TIP_VALUE': 'Tip must be positive or zero amount.',
             'DISCOUNT_CODE_IS_EMPTY': 'The typed discount code hasn\'t been found. Automatic discounts can be applied only.',
             'DISCOUNT_CODE_NOT_FOUND': 'The typed discount code hasn\'t been found. Automatic discounts can be applied only.',
             'DISCOUNT_CODE_NOT_APPLICABLE': 'The typed discount code is not applicable now. Automatic discounts can be applied only.',

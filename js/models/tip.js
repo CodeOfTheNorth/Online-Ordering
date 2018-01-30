@@ -110,6 +110,11 @@ define(["backbone"], function(Backbone) {
                 serviceFee = this.get_service_fee_str();
 
             this.set('subtotal', subtotal);
+            
+            if(Number(sum) < 0) {
+                App.Data.errors.alert(MSG.ERROR_NONPOSITIVE_TIP_VALUE);
+                this.set('sum', 0)
+            }
 
             if (!type) {
                 return 0;
