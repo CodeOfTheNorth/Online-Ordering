@@ -453,14 +453,18 @@ define(['products', 'filters'], function() {
             });
 
             if (products.length) {
-                // get products ids and convert it to query string
-                var queryString = products.map(function(model) {
-                    return 'product=' + model.id;
-                }).join('&');
+                // get products ids
+                var product_ids = products.map(function(model) {
+                    return model.id;
+                });
 
                 Backbone.$.ajax({
+                    method: 'post',
                     url: '/weborders/attributes/',
-                    data: queryString,
+                    data: JSON.stringify({
+                        establishment: App.Data.settings.attributes.establishment,
+                        product_ids: product_ids
+                    }),
                     success: function(data) {
                         switch (data.status) {
                             case 'OK':
