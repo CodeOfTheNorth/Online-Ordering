@@ -52,6 +52,10 @@ define(["backbone"], function(Backbone) {
              */
             orderStarted: false,
             /*
+             * Indicates the id of the clicked product, if it should be clicked again after order starting
+             */
+            clickedProduct: -1,
+            /*
              * Indicates that categories have been reloaded, to refresh some dependent views
              */
             categoriesReloading: false,
