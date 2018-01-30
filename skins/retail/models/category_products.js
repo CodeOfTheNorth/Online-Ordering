@@ -461,7 +461,10 @@ define(['products', 'filters'], function() {
                 Backbone.$.ajax({
                     method: 'post',
                     url: '/weborders/attributes/',
-                    data: JSON.stringify({product_ids: product_ids}),
+                    data: JSON.stringify({
+                        establishment: App.Data.settings.attributes.establishment,
+                        product_ids: product_ids
+                    }),
                     success: function(data) {
                         switch (data.status) {
                             case 'OK':
