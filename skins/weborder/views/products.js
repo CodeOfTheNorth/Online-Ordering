@@ -24,6 +24,13 @@ define(['products_view'], function(products_view) {
     'use strict';
 
     var ProductListItemView = App.Views.CoreProductView.CoreProductListItemView.extend({
+        initialize: function() {
+            App.Views.CoreProductView.CoreProductListItemView.prototype.initialize.apply(this, arguments);
+            if (App.Data.mainModel.get('orderStarted') &&
+                App.Data.mainModel.get('clickedProduct') == this.model.get('id')) {
+                this.showModifiers();
+            }
+        },
         bindings: {
             '.product_unavailable': "classes: {hide: available}"
         },
@@ -53,9 +60,11 @@ define(['products_view'], function(products_view) {
             // for availiable items (including inventory control, if applicable), when order was not started yet
             if (!App.Data.mainModel.get('orderStarted') &&
                 !(unavailable || empty)) {
+                App.Data.mainModel.set('clickedProduct', this.model.get('id'));
                 App.Data.mainModel.set('upfront_active', 1);
                 return;
             }
+            App.Data.mainModel.set('clickedProduct', -1);
 
             var self = this,
                 isStanfordItem = App.Data.is_stanford_mode && this.model.get('is_gift'),
