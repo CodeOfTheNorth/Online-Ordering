@@ -1383,6 +1383,12 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
          * @default null
          */
         paymentResponse: null,
+        /**
+         * Contains payment info from payment processor
+         * @type {?Object}
+         * @default null
+         */
+        paymentInfo: null,
         /*
          * indicates if the price of any product was changed during the session
          * @type {boolean}
@@ -2523,7 +2529,9 @@ define(["backbone", 'total', 'checkout', 'products', 'rewards', 'stanfordcard'],
             ASSERT(payment_type, 'Unexpected payment_type');
             var pt = PaymentProcessor.processPaymentType(payment_type, myorder);
             $.extend(payment_info, pt);
-
+            if (myorder.paymentInfo instanceof Object) {
+                $.extend(payment_info, myorder.paymentInfo);
+            }
             // if payment has failed need emit 'paymentResponse' event and abort execution
             if (payment_info.errorMsg) {
                 return reportPaymentError(payment_info.errorMsg);

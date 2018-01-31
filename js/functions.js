@@ -2503,18 +2503,29 @@ var triPOSPaymentProcessor = {
     handleRedirect: function(myorder, data) {
         PaymentIframe.redirect(data.data);
         setTimeout(function() {
-            App.Data.mainModel.trigger('loadCompleted')
+            App.Data.mainModel.trigger('loadCompleted');
         }, 1000);
 
         if (!this.iframePaymentCompleteEvent) {
             listenEvent('IframePaymentComplete', function (event, data) {
                 PaymentIframe.hide();
-                if (data.status == "OK")
-                    myorder.paymentResponse = data;
-                else
+                if (data.ExpressResponseMessage === "Approved" && data.TransactionID !== undefined) {
+                    myorder.paymentInfo = data;
+                    myorder.paymentInfo.transaction_id = data.TransactionID;
+                    myorder.submit_order_and_pay(PAYMENT_TYPE.CREDIT, false, true);
+                    setTimeout(function waitForAnotherStatus() {
+                        console.log('paymentResponse: %o', myorder.paymentResponse);
+                        myorder.paymentInfo = null;
+                        if (myorder.paymentResponse.status === "REDIRECT") {
+                            setTimeout(waitForAnotherStatus, 1000);
+                        } else {
+                            myorder.trigger('paymentResponse');
+                        }
+                    }, 1000);
+                } else {
                     myorder.paymentResponse = {status: 'error', errorMsg: data.errorMsg};
-
-                myorder.trigger('paymentResponse');
+                    myorder.trigger('paymentResponse');
+                }
             });
             this.iframePaymentCompleteEvent = true;
         }
@@ -2523,7 +2534,7 @@ var triPOSPaymentProcessor = {
     processPayment: function(myorder, payment_info, pay_get_parameter) {
         return payment_info;
     }
-}
+};
 
 /**
  * Removes all classes by regular expression.
