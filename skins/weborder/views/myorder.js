@@ -161,10 +161,10 @@ define(["myorder_view"], function(myorder_view) {
 
     var footerProcessingBlock = {
         bindings: {
-            '.action_button': 'text: action_button, classes: {disabled: unavailable}'
+            '.action_button': 'text: action_button, classes: {disabled: any(unavailable, nonchecked)}'
         },
         computeds: {
-                        action_button: {
+            action_button: {
                 deps: ['product'],
                 get: function(product) {
                     return this.unavailable(product) ?
@@ -178,10 +178,14 @@ define(["myorder_view"], function(myorder_view) {
                 get: function(product) {
                     return this.unavailable(product);
                 }
+            },
+            nonchecked: function() {
+                return !this.check_model();
             }
         },
         unavailable: function(product) {
-            return (this.negative_amount(product) || !product.get('schedule').available());
+            var schedule = product.get('schedule');
+            return (this.negative_amount(product) || (schedule && !schedule.available()));
         },
         negative_amount: function(product) {
             return !(App.Settings.cannot_order_with_empty_inventory ? product.get('stock_amount') > 0 : true);
