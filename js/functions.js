@@ -1040,17 +1040,11 @@ function isIOS() {
  */
 function pickupToString(date) {
     var skin = App.Data.settings.get('skin'),
-        result,
         d = new Date(date),
         time = new TimeFrm(d.getHours(), d.getMinutes());
     //"Mon Dec 30 2013 10:30:00 GMT+0400 (Russian Standard Time)"
-    switch (skin) {
-        case 'weborder':
-        case 'weborder_mobile':
-            result = d.toString().replace(/([a-z]+) ([a-z]+) (\d{1,2}) .+/i,'$2 $3, ').concat(time.toString());
-    }
 
-    return result;
+    return d.toString().replace(/([a-z]+) ([a-z]+) (\d{1,2}) .+/i,'$2 $3, ').concat(time.toString());
 }
 
 /**
