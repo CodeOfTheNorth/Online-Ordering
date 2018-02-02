@@ -337,7 +337,8 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
          */
         check: function(dining_option) {
             var err = [];
-            var errShipping = [];
+            var errShipping = [],
+            shipping_status = this.get("load_shipping_status");
 
             !this.get('first_name') && err.push(_loc.PROFILE_FIRST_NAME);
             !this.get('last_name') && err.push(_loc.PROFILE_LAST_NAME);
@@ -351,8 +352,8 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
             }
 
             if (dining_option === 'DINING_OPTION_SHIPPING' &&
-                this.isNewAddressSelected(dining_option) &&
-                this.get('shipping_selected') === -1) {
+                this.get('shipping_selected') === -1 &&
+                (!shipping_status || shipping_status === "pending")) {
                 errShipping.push(MSG.ERROR_SHIPPING_SERVICES_NOT_FOUND);
             }
 
@@ -2843,7 +2844,7 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
          * Get address set for shipping/delivery or default address set in backend.
          * @param {string} [dining_option] - dining option.
          * @param {boolean} [fromProfile] - indicates whether to use fields from profile address
-         * @returns {object} with state, province, city, street_1, street_2, zipcode, contry fields
+         * @returns {object} with state, province, city, street_1, street_2, zipcode, country fields
          */
         getCheckoutAddress: function(dining_option, fromProfile) {
             var customer = App.Data.customer,

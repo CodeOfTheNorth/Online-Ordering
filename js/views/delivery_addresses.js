@@ -271,7 +271,7 @@ define(['backbone', 'factory'], function(Backbone) {
             return this;
         },
         updateShippingServices: function() {
-            var customer = this.options.customer,
+            var customer = App.Data.customer,
                 shipping_services = customer.get("shipping_services"),
                 shipping_status = customer.get("load_shipping_status");
 
@@ -325,15 +325,16 @@ define(['backbone', 'factory'], function(Backbone) {
             var shipping = {}, name,
                 value = parseInt(e.currentTarget.value),
                 myorder = App.Data.myorder,
+                customer = App.Data.customer,
                 checkout = myorder.checkout;
 
-            this.options.customer.set('shipping_selected', value);
-            if (value >= 0) {
-                shipping = this.options.customer.get("shipping_services")[value];
+            customer.set('shipping_selected', value);
+            if (value >= 0 && customer.get("shipping_services").length) {
+                shipping = customer.get("shipping_services")[value];
                 myorder.total.set('shipping', shipping.shipping_and_handling_charge);
             }
 
-            if (e.shipping_status != "pending" && !isNaN(value) && value != this.options.customer.defaults.shipping_selected) {
+            if (e.shipping_status != "pending" && !isNaN(value) && value != customer.defaults.shipping_selected) {
                 myorder.update_cart_totals();
             }
         },
@@ -343,10 +344,11 @@ define(['backbone', 'factory'], function(Backbone) {
                 dining_option = checkout.get('dining_option'),
                 isDelivery = dining_option === 'DINING_OPTION_DELIVERY',
                 isCatering = dining_option === 'DINING_OPTION_CATERING',
-                model = this.options.customer.getCheckoutAddress(dining_option);
+                customer = App.Data.customer,
+                model = customer.getCheckoutAddress(dining_option);
             // need to reset shipping services before updating them
             // due to server needs a no shipping service specified to return a new set of shipping services.
-            this.options.customer.resetShippingServices();
+            customer.resetShippingServices();
             this.isShippingServices = dining_option === 'DINING_OPTION_SHIPPING';
 
             if (model.street_1 && model.city && model.country && model.zipcode
@@ -420,8 +422,10 @@ define(['backbone', 'factory'], function(Backbone) {
                 addr = addresses.get(addressId);
             if (!addr) {
                 addr = new App.Models.CustomerAddress({id: addressId});
+                this.options.addresses.add(addr);
             }
             addr && addr.set('selected', true);
+            App.Data.customer.get('addresses').where({id: addr.id})[0].set('selected', true);
         },
         /**
          * Rendering of 'Address' drop-down list.
