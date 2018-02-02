@@ -274,6 +274,53 @@ define(['backbone', 'factory'], function(Backbone) {
             var customer = App.Data.customer,
                 shipping_services = customer.get("shipping_services"),
                 shipping_status = customer.get("load_shipping_status");
+            check_shipment_options();
+	
+	        function check_shipment_options() {
+		        var def = Backbone.$.Deferred();
+		        var data_json = {
+			        establishmentId: 486,
+			        items: [{
+				        price: 1,
+				        product: 1,
+				        quantity: 1
+			        }],
+			        orderInfo: {
+				        dining_option: 7,
+				        shipping: {},
+				        customer: {
+					        address: {
+						        address: "170 Columbus Ave, San Francisco, CA, 94133",
+						        city: "San Francisco",
+						        country: "US",
+						        province: "",
+						        state: "CA",
+						        street_1: "170 Columbus Ave",
+						        street_2: "",
+						        zipcode: "94133"
+					        }
+				        }
+			        }
+		        };
+		        Backbone.$.ajax({
+			        url: "/weborders/shipping_options/",
+			        headers: App.Data.customer.getAuthorizationHeader(),
+			        data: JSON.stringify(data_json),
+			        type: "POST",
+			        success: function (data) {
+				        switch (data.status) {
+					        case 'OK':
+						        console.log(response.data.shipping.options);
+						        def.resolve();
+						        break;
+					        default:
+						        console.log('Nothing received');
+						        def.resolve();
+				        }
+			        }
+		        });
+		        return def;
+	        }
 
             var shipping = this.$('.shipping-select').empty(),
                 selectWrapper = shipping.parents('.select-wrapper');
