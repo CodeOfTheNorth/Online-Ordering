@@ -111,8 +111,7 @@ define(["backbone"], function(Backbone) {
 
             this.set('subtotal', subtotal);
             
-            if(Number(sum) < 0) {
-                App.Data.errors.alert(MSG.ERROR_NONPOSITIVE_TIP_VALUE);
+            if (Number(sum) < 0) {
                 this.set('sum', 0)
             }
 
