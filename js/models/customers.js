@@ -351,11 +351,11 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
                 err = err.concat(this._check_delivery_fields());
             }
 
-            if (dining_option === 'DINING_OPTION_SHIPPING' &&
-                this.get('shipping_selected') === -1 &&
-                (!shipping_status || shipping_status === "pending")) {
-                errShipping.push(MSG.ERROR_SHIPPING_SERVICES_NOT_FOUND);
-            }
+            // if (dining_option === 'DINING_OPTION_SHIPPING' &&
+            //     this.get('shipping_selected') === -1 &&
+            //     (!shipping_status || shipping_status === "pending")) {
+            //     errShipping.push(MSG.ERROR_SHIPPING_SERVICES_NOT_FOUND);
+            // }
 
             if (err.length) {
                 return {
