@@ -820,20 +820,6 @@ define(["backbone", 'childproducts', 'collection_sort', 'product_sets'], functio
          * @default App.Models.Product
          */
         model: App.Models.Product,
-        /*
-         * Used to compare two products
-         * if cannot_order_with_empty_inventory == true,
-         * then products with stock_amount > 0 are set in the beginning of the list
-         * @param {model} product
-         * @returns {integer} sort value
-         */
-        comparator: function(product) {
-            var sort = product.get('sort');
-            if (!App.Settings.cannot_order_with_empty_inventory) {
-                return sort;
-            }
-            return product.get('stock_amount') > 0 ? sort - 10000000 : sort;
-        },
         /**
          * Sets `compositeId` attribute as unique id of model. `id` attribute cannot be used
          * due to products with the same `id` may be in the collection (has multiple categories).
