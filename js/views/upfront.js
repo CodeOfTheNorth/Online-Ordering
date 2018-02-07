@@ -153,7 +153,6 @@ define(["checkout_view"], function(Backbone) {
         controlDeliveryOther: function(model, value) {
             if(value === 'DINING_OPTION_OTHER') {
                 if (!this.otherView) {
-
                     this.otherView = new App.Views.CoreUpfrontView.CoreUpfrontOtherView({model: this.model, collection: this.model.get('other_dining_options')});
                     this.$('.delivery_other').append(this.otherView.el);
                 }

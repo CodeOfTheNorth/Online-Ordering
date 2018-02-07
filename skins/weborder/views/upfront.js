@@ -39,8 +39,7 @@ define(["upfront_view"], function(upfront_view) {
             }
         }
     });
-
-
+  
     var UpfrontPageView = App.Views.UpfrontView.UpfrontPageView.extend({
         name: 'upfront',
         mod: 'page',

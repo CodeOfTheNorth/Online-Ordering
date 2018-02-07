@@ -472,31 +472,31 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
             }
             
             function setPilotShipment() {
-		            var products = App.Data.products;
-		            var product = getFirstProduct();
-				        var defaultProductOptions = {
-				            price: 0,
-		                product: 0,
-		                name: '',
-		                quantity: 1
-		            };
+                var products = App.Data.products;
+                var product = getFirstProduct();
+                var defaultProductOptions = {
+                    price: 0,
+                    product: 0,
+                    name: '',
+                    quantity: 1
+                };
             
-				        defaultProductOptions.product = product;
-			          _.map(products[product].models, function (item) {
-		                  defaultProductOptions.price = item.get('price');
-		                  defaultProductOptions.name = item.get('name');
-			          });
-		        
-		            function getFirstProduct() {
-		              var productsArr = [];
-		              for (var key in products) {
-		                 productsArr.push(key);
-		              }
-		              return productsArr[0];
-		            }
+                defaultProductOptions.product = product;
+                _.map(products[product].models, function (item) {
+                    defaultProductOptions.price = item.get('price');
+                    defaultProductOptions.name = item.get('name');
+                });
+                
+                function getFirstProduct() {
+                    var productsArr = [];
+                    for (var key in products) {
+                        productsArr.push(key);
+                    }
+                    return productsArr[0];
+                }
             
             return defaultProductOptions;
-	        }
+            }
         },
         /**
          * Clears `shipping_services` attribute, changes `load_shipping_status`.
@@ -2441,7 +2441,7 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
 
             req.done(function() {
                 var req = self.getOrders();
-	            req.then( self.trigger('past_orders_pages_reset') );
+                req.then( self.trigger('past_orders_pages_reset') );
             });
 
             req.fail(function(jqXHR) {
