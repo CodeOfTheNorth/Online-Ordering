@@ -39,8 +39,7 @@ define(["upfront_view"], function(upfront_view) {
             }
         }
     });
-
-
+  
     var UpfrontPageView = App.Views.UpfrontView.UpfrontPageView.extend({
         name: 'upfront',
         mod: 'page',
@@ -94,6 +93,36 @@ define(["upfront_view"], function(upfront_view) {
             this.$('.address-selection').html(addressSelection.el);
 
             return this;
+        },
+        events: {
+            'change input[name="street_1"]': 'changeStreetName',
+            'change input[name="city"]': 'changeCityName',
+            'change input[name="zipcode"]': 'changeZipCode',
+            'select #states': 'changeState'
+        },
+        changeStreetName: function(e) {
+            var currentAddr = this.options.addresses.getSelectedAddress();
+            currentAddr.set('street_1', e.target.value);
+            this.updateAddress();
+        },
+        changeCityName: function(e) {
+            var currentAddr = this.options.addresses.getSelectedAddress();
+             currentAddr.set('city', e.target.value);
+             this.updateAddress();
+        },
+        changeZipCode: function(e) {
+             var currentAddr = this.options.addresses.getSelectedAddress();
+             currentAddr.set('zipcode', e.target.value);
+             this.updateAddress();
+        },
+        changeState: function(e) {
+            var currentAddr = this.options.addresses.getSelectedAddress();
+             currentAddr.set('state', e.target.value);
+             this.updateAddress();
+        },
+        updateAddress: function() {
+            if(this.options.customer._check_delivery_fields().length) return;
+            if(!/checkout/.test(window.location.hash)) this.options.customer.get_shipping_services();
         }
     });
 

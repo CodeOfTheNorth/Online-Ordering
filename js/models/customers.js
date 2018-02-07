@@ -415,9 +415,9 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
             data.address = address;
             data.items = [];
             data.establishment = App.Data.settings.get("establishment");
-            App.Data.myorder.each(function(model) {
+            App.Data.myorder.length ? App.Data.myorder.each(function(model) {
                 data.items.push(model.item_submit());
-            });
+            }) : data.items.push(setPilotShipment());
 
             // reset shipping services
             this.resetShippingServices('pending');
@@ -469,6 +469,33 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
                 return _.isObject(shipping) && Array.isArray(shipping.options)
                     ? _.pluck(shipping.options, 'service_code').indexOf(shipping.service_code)
                     : -1;
+            }
+            
+            function setPilotShipment() {
+                var products = App.Data.products;
+                var product = getFirstProduct();
+                var defaultProductOptions = {
+                    price: 0,
+                    product: 0,
+                    name: '',
+                    quantity: 1
+                };
+            
+                defaultProductOptions.product = product;
+                _.map(products[product].models, function (item) {
+                    defaultProductOptions.price = item.get('price');
+                    defaultProductOptions.name = item.get('name');
+                });
+                
+                function getFirstProduct() {
+                    var productsArr = [];
+                    for (var key in products) {
+                        productsArr.push(key);
+                    }
+                    return productsArr[0];
+                }
+            
+            return defaultProductOptions;
             }
         },
         /**
@@ -2414,7 +2441,7 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
 
             req.done(function() {
                 var req = self.getOrders();
-	            req.then( self.trigger('past_orders_pages_reset') );
+                req.then( self.trigger('past_orders_pages_reset') );
             });
 
             req.fail(function(jqXHR) {
