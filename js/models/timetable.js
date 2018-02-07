@@ -1162,15 +1162,17 @@ define(["backbone"], function(Backbone) {
                 new Date(App.Data.myorder.checkout.get('pickupTS')):
                 this.base();
             var time = date.getHours() * 60 + date.getMinutes();
-            var working = this.get_working_hours(date),
-                saling =  this.get_product_hours(date);
-            var in_working_time = false;
+            var working = this.get_working_hours(date), // in could be true, false or an array
+                saling =  this.get_product_hours(date); // it is an array always, could be empty array
+            var in_working_time = (working === true);
 
             // check if time is inside working time range(s)
-            for (var i in working) {
-                if (this.time_in_range(working[i], time)) {
-                    in_working_time = true;
-                    break;
+            if (!in_working_time) {
+                for (var i in working) {
+                    if (this.time_in_range(working[i], time)) {
+                        in_working_time = true;
+                        break;
+                    }
                 }
             }
             if (!in_working_time) {
