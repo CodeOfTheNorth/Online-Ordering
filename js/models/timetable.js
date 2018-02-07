@@ -727,7 +727,17 @@ define(["backbone"], function(Backbone) {
          * @returns {?object}
          */
         getCurDayHours: function() {
-            return Array.isArray(this.get('hours')) ? this.get('hours')[0] : null; //{hours: true};
+            var hours = this.get('hours');
+            if (!hours) {
+                return null;
+            }
+            var weekDay = this.get_day_of_week(this.base().getDay() % 7);
+            for (var i in hours) {
+                if (hours[i].weekDay == weekDay) {
+                    return hours[i];
+                }
+            }
+            return null;
         },
         /**
          * Checks if shop works at a specified time.
