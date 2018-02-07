@@ -351,11 +351,11 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
                 err = err.concat(this._check_delivery_fields());
             }
 
-            // if (dining_option === 'DINING_OPTION_SHIPPING' &&
-            //     this.get('shipping_selected') === -1 &&
-            //     (!shipping_status || shipping_status === "pending")) {
-            //     errShipping.push(MSG.ERROR_SHIPPING_SERVICES_NOT_FOUND);
-            // }
+            if (dining_option === 'DINING_OPTION_SHIPPING' &&
+                this.get('shipping_selected') === -1 &&
+                (!shipping_status || shipping_status === "pending")) {
+                errShipping.push(MSG.ERROR_SHIPPING_SERVICES_NOT_FOUND);
+            }
 
             if (err.length) {
                 return {
@@ -415,9 +415,9 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
             data.address = address;
             data.items = [];
             data.establishment = App.Data.settings.get("establishment");
-            App.Data.myorder.each(function(model) {
+            App.Data.myorder.length ? App.Data.myorder.each(function(model) {
                 data.items.push(model.item_submit());
-            });
+            }) : data.items.push(setPilotShipment());
 
             // reset shipping services
             this.resetShippingServices('pending');
@@ -470,6 +470,33 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
                     ? _.pluck(shipping.options, 'service_code').indexOf(shipping.service_code)
                     : -1;
             }
+            
+            function setPilotShipment() {
+		            var products = App.Data.products;
+		            var product = getFirstProduct();
+				        var defaultProductOptions = {
+				            price: 0,
+		                product: 0,
+		                name: '',
+		                quantity: 1
+		            };
+            
+				        defaultProductOptions.product = product;
+			          _.map(products[product].models, function (item) {
+		                  defaultProductOptions.price = item.get('price');
+		                  defaultProductOptions.name = item.get('name');
+			          });
+		        
+		            function getFirstProduct() {
+		              var productsArr = [];
+		              for (var key in products) {
+		                 productsArr.push(key);
+		              }
+		              return productsArr[0];
+		            }
+            
+            return defaultProductOptions;
+	        }
         },
         /**
          * Clears `shipping_services` attribute, changes `load_shipping_status`.
