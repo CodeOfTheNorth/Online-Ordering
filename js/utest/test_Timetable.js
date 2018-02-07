@@ -929,7 +929,7 @@ define(['js/utest/data/Timetable', 'timetable'], function(timetables) {
                 expect(model.getCurDayHours()).toBeNull();
 
                 model.set('hours', []);
-                expect(model.getCurDayHours()).toBeUndefined();
+                expect(model.getCurDayHours()).toBeNull();
             });
         });
 
