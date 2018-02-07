@@ -271,7 +271,7 @@ define(['backbone', 'factory'], function(Backbone) {
             return this;
         },
         updateShippingServices: function() {
-            var customer = App.Data.customer,
+            var customer = this.options.customer,
                 shipping_services = customer.get("shipping_services"),
                 shipping_status = customer.get("load_shipping_status");
 

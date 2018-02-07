@@ -44,7 +44,9 @@ define(["checkout_view"], function(Backbone) {
             var self = this;
             this.listenTo(this.model, 'change:dining_option', this.controlAddress, this);
             this.listenTo(this.model, 'change:dining_option', this.controlDeliveryOther, this);
+            this.listenTo(this.model, 'change:dining_option', this.checkNonEmptyFields, this);
             this.listenTo(this.options.customer, 'change:first_name change:last_name change:email change:phone', this.updateData, this);
+            this.listenTo(this.options.customer, 'change', this.checkNonEmptyFields, this);
             this.customer = this.options.customer;
             this.card = App.Data.card;
             this.address_index = -1;
@@ -143,12 +145,14 @@ define(["checkout_view"], function(Backbone) {
                 this.subViews.push(address);
                 this.$('.delivery_address').append(address.el);
                 delete this.address_index;
+                if(this.options.customer._check_delivery_fields().length) {
+                    $('.start-order').addClass('disabled');
+                }
             }
         },
         controlDeliveryOther: function(model, value) {
             if(value === 'DINING_OPTION_OTHER') {
                 if (!this.otherView) {
-
                     this.otherView = new App.Views.CoreUpfrontView.CoreUpfrontOtherView({model: this.model, collection: this.model.get('other_dining_options')});
                     this.$('.delivery_other').append(this.otherView.el);
                 }
@@ -163,6 +167,16 @@ define(["checkout_view"], function(Backbone) {
             this.$('.lastName').val(customer.get('last_name'));
             this.$('.email').val(customer.get('email'));
             this.$('.phone').val(customer.get('phone'));
+        },
+        checkNonEmptyFields: function() {
+          var dining_option = this.model.get('dining_option');
+          
+            if (dining_option === 'DINING_OPTION_DELIVERY' || dining_option === 'DINING_OPTION_SHIPPING' || dining_option === 'DINING_OPTION_CATERING') {
+                if(this.options.customer._check_delivery_fields().length) return;
+            }
+            if(this.options.customer.check().status === 'OK') {
+                $('.start-order').removeClass('disabled');
+            }
         }
     });
 
