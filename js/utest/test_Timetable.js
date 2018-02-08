@@ -921,7 +921,16 @@ define(['js/utest/data/Timetable', 'timetable'], function(timetables) {
         describe('getCurDayHours()', function() {
             it('`hours` is set', function() {
                 model.set('timetables', timetable);
-                expect(model.getCurDayHours()).toEqual(model.get('hours')[0]);
+                var weekDay = model.get_day_of_week(model.base().getDay() % 7);
+                var hours = model.get('hours');
+                for (var i in hours) {
+                    if (hours[i].weekDay == weekDay) {
+                        expect(model.getCurDayHours()).toEqual(model.get('hours')[i]);
+                        return;
+                    }
+                }
+                // will be executed if something went wrong
+                expect(false).toBe(true);
             });
 
             it('`hours` is not array or empty array', function() {
