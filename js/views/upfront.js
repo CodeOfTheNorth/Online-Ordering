@@ -46,7 +46,6 @@ define(["checkout_view"], function(Backbone) {
             this.listenTo(this.model, 'change:dining_option', this.controlDeliveryOther, this);
             this.listenTo(this.model, 'change:dining_option', this.checkNonEmptyFields, this);
             this.listenTo(this.options.customer, 'change:first_name change:last_name change:email change:phone', this.updateData, this);
-            this.listenTo(this.options.customer, 'change', this.checkNonEmptyFields, this);
             this.customer = this.options.customer;
             this.card = App.Data.card;
             this.address_index = -1;
@@ -167,6 +166,7 @@ define(["checkout_view"], function(Backbone) {
             this.$('.lastName').val(customer.get('last_name'));
             this.$('.email').val(customer.get('email'));
             this.$('.phone').val(customer.get('phone'));
+            this.checkNonEmptyFields();
         },
         checkNonEmptyFields: function() {
           var dining_option = this.model.get('dining_option');
