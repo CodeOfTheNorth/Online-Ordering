@@ -1,8 +1,19 @@
-#profile-panel {
+#profile-panel,
+.upfront-login {
     position: absolute;
     right: 0;
     top: 0;
+}
+
+#profile-panel {
     z-index: 200;
+}
+
+.upfront-login {
+    padding-top: 20px;
+    padding-right: 20px;
+    font-size: 16px;
+    font-weight: bold;
 }
 
 #profile-panel.active {
@@ -28,18 +39,22 @@
 }
 
 #profile-panel .signup-link,
-#profile-panel .login-link {
+#profile-panel .login-link,
+.upfront-login .signup-link,
+.upfront-login .login-link {
     display: inline-block;
     text-transform: uppercase;
     position: relative;
     color: inherit;
 }
 
-#profile-panel .signup-link {
+#profile-panel .signup-link,
+.upfront-login .signup-link {
     margin-right: 17px;
 }
 
-#profile-panel .signup-link::after {
+#profile-panel .signup-link::after,
+.upfront-login .signup-link::after {
     content: '';
     display: block;
     position: absolute;
@@ -52,7 +67,9 @@
 
 #profile-panel .active::before,
 #profile-panel .signup-link:hover::before,
-#profile-panel .login-link:hover::before {
+#profile-panel .login-link:hover::before,
+.upfront-login .signup-link:hover::before,
+.upfront-login .login-link:hover::before {
     content: '';
     display: block;
     width: 100%;

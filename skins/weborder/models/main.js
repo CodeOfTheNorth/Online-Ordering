@@ -68,6 +68,13 @@ define(["backbone"], function(Backbone) {
              */
             customerClone: null,
             /*
+             * Indicates the login action to be performed while upfront screen is shown
+             * 0 - do nothing
+             * 1 - new registration
+             * 2 - login
+             */
+            loginAction: 0,
+            /*
              *
              */
             DINING_OPTION_NAME: null
