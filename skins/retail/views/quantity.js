@@ -38,10 +38,8 @@ define(["quantity_view"], function(quantity_view) {
             var select = this.$('select'),
                 product = this.model.get_product(),
                 quantity = this.model.get('quantity'),
-                stock_amount = product.get('stock_amount'),
                 selectWrapper = this.$('.combobox-wrapper'),
-                max_amount = product.get('max_stock_amount'),
-                selectable_amount = App.Settings.cannot_order_with_empty_inventory ? stock_amount : max_amount;
+                selectable_amount = App.Settings.cannot_order_with_empty_inventory ? product.get('stock_amount') : product.get('max_stock_amount');
 
             // need hide quantity widget if parent product is selected
             if(product.isParent())
