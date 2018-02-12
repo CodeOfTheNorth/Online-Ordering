@@ -39,13 +39,29 @@ define(["upfront_view"], function(upfront_view) {
             }
         }
     });
-  
+
     var UpfrontPageView = App.Views.UpfrontView.UpfrontPageView.extend({
         name: 'upfront',
         mod: 'page',
+        bindings: {
+            '.upfront-login': 'classes: {hide: logged}'
+        },
+        computeds: {
+            logged: function() {
+                return !!App.Data.customer.get('access_token');
+            }
+        },
         events: {
+            'click .signup-link': 'signup',
+            'click .login-link': 'login',
             'click .start-order': 'start_order',
             'click .just-browsing': 'just_browsing'
+        },
+        signup: function() {
+            App.Data.mainModel.set('loginAction', 1);
+        },
+        login: function() {
+            App.Data.mainModel.set('loginAction', 2);
         },
         start_order: function() {
             var check = App.Data.customer.get('access_token') ?

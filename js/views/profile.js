@@ -669,15 +669,21 @@ define(["factory"], function() {
             '.reset-password-box': 'toggle: ui_showPWDReset'
         },
         events: {
-            'click .signup-link': controlLinks(true, false, false, false),
-            'click .login-link': controlLinks(false, true, false, false),
+            'click .signup-link': 'clickSignUp',
+            'click .login-link': 'clickLogin',
             'click .logged-as': controlLinks(false, false, true, false),
             'click .close': controlLinks(false, false, false, false)
         },
         onEnterListeners: {
-            '.signup-link': controlLinks(true, false, false, false),
-            '.login-link': controlLinks(false, true, false, false),
+            '.signup-link': 'clickSignUp',
+            '.login-link': 'clickLogin',
             '.logged-as': controlLinks(false, false, true, false)
+        },
+        clickSignUp: function () {
+            setControlLinks(true, false, false, false, this);
+        },
+        clickLogin: function() {
+            setControlLinks(false, true, false, false, this);
         },
         bindingSources: {
             ui: function() {
@@ -1456,16 +1462,20 @@ define(["factory"], function() {
             scroll_el && scroll_el.scrollTo(0,0);
         }
     });
-    
+
     function controlLinks(showSignUp, showLogIn, showMenu, showPWDReset) {
         return function() {
-            this.getBinding('$ui').set({
-                showSignUp: showSignUp,
-                showLogIn: showLogIn,
-                showMenu: showMenu,
-                showPWDReset: showPWDReset
-            });
+            setControlLinks(showSignUp, showLogIn, showMenu, showPWDReset, this);
         };
+    }
+
+    function setControlLinks(showSignUp, showLogIn, showMenu, showPWDReset, self) {
+        self.getBinding('$ui').set({
+            showSignUp: showSignUp,
+            showLogIn: showLogIn,
+            showMenu: showMenu,
+            showPWDReset: showPWDReset
+        });
     }
 
     function creditCardType(types, card_type) {

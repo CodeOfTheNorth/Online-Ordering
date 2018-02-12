@@ -182,6 +182,26 @@ define(["profile_view"], function(profile_view) {
         }
     });
 
+    var ProfilePanelView = App.Views.CoreProfileView.CoreProfilePanelView.extend({
+        initialize: function() {
+            App.Views.CoreProfileView.CoreProfilePanelView.prototype.initialize.apply(this, arguments);
+            this.listenTo(App.Data.mainModel, 'change:loginAction', this.loginAction);
+        },
+        loginAction: function() {
+            var action = App.Data.mainModel.get('loginAction');
+            if (action == 0) {
+                return;
+            }
+            App.Data.mainModel.set('loginAction', 0);
+            App.Data.mainModel.set('upfront_active', 0);
+            if (action == 1) {
+                this.clickSignUp();
+            } else if (action == 2) {
+                this.clickLogin();
+            }
+        }
+    });
+
     var ProfileEditView = App.Views.CoreProfileView.CoreProfileEditView.extend({
         bindings: {
             '.update-btn': 'classes: {disabled: updateBtn_disabled}, text: select(ui_show_response, _lp_PROFILE_UPDATE_SUCCESSFUL, _lp_UPDATE)'
@@ -283,5 +303,6 @@ define(["profile_view"], function(profile_view) {
         App.Views.ProfileView.ProfileOrderItemView = ProfileOrderItemView;
         App.Views.ProfileView.ProfilePastOrderView = ProfilePastOrderView;
         App.Views.ProfileView.ProfileRewardCardsEditionView = ProfileRewardCardsEditionView;
+        App.Views.ProfileView.ProfilePanelView = ProfilePanelView;
     });
 });
