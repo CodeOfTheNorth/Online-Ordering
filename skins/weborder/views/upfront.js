@@ -149,7 +149,6 @@ define(["upfront_view"], function(upfront_view) {
             if(!/checkout/.test(window.location.hash) && App.Data.mainModel.get('upfront_active') !== 0) this.options.customer.get_shipping_services();
         },
         checkNonEmptyFields: function() {
-             console.log(this.options.customer);
             var dining_option = this.options.checkout.get('dining_option');
             if (dining_option === 'DINING_OPTION_DELIVERY' || dining_option === 'DINING_OPTION_SHIPPING' || dining_option === 'DINING_OPTION_CATERING') {
                 if(this.options.customer._check_delivery_fields().length) return;
