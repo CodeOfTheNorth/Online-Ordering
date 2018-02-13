@@ -771,10 +771,27 @@ define(["backbone"], function(Backbone) {
                 },
                 success: function(data) {
                     if (Array.isArray(data.data)) {
+                        if(/confirm/.test(window.location.hash)) {
+                            self.update_stock_amount(data.data);
+                        }
                         self.add(self.processOrders(data.data));
                     }
                 },
                 error: new Function()           // to override global ajax error handler
+            });
+        },
+        update_stock_amount: function(data) {
+            var ordered_items = [];
+            data[0].items.map(item => ordered_items.push({id: item.actual_data.id, stock_amount: item.actual_data.stock_amount}));
+            _.mapObject(App.Data.products, function(product_group) {
+                _.map(product_group.models, function(product){
+                    var check_item = function () {
+                        return _.find(ordered_items, function(item){return item.id === product.attributes.id})
+                    };
+                    if(check_item()) {
+                        product.set('stock_amount', check_item().stock_amount);
+                    }
+                })
             });
         },
         /**
