@@ -43,6 +43,10 @@ define(["upfront_view"], function(upfront_view) {
     var UpfrontPageView = App.Views.UpfrontView.UpfrontPageView.extend({
         name: 'upfront',
         mod: 'page',
+        initialize: function() {
+            App.Views.CoreUpfrontView.CoreUpfrontPageView.prototype.initialize.apply(this, arguments);
+            this.listenTo(App.Data.customer, 'change: addresses', this.addressChanged);
+        },
         bindings: {
             '.upfront-login': 'classes: {hide: logged}'
         },
@@ -75,6 +79,9 @@ define(["upfront_view"], function(upfront_view) {
         },
         just_browsing: function() {
             App.Data.mainModel.set('upfront_active', 0);
+        },
+        addressChanged: function() {
+            this.options.customer.set('addresses', App.Data.customer.get('addresses'));
         }
     });
 
