@@ -1023,7 +1023,6 @@ define(["backbone"], function(Backbone) {
                 if (working === true) {
                     return date;
                 }
-                days--;
                 if (Array.isArray(working)) {
                     if (time <= working[0].from_int) {
                         return align_time(date, working[0].from_int);
@@ -1033,10 +1032,10 @@ define(["backbone"], function(Backbone) {
                 }
                 // else go to the next day, until we have it
                 date.setDate(date.getDate() + 1);
-                if (!days) {
+                if (!(--days)) {
                     return this.base();
                 }
-            } while(days); // !!! must be changed
+            } while(days);
 
             function align_time(date, time) {
                 time -= time % 15;
