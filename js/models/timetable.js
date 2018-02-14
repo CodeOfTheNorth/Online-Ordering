@@ -1042,7 +1042,6 @@ define(["backbone"], function(Backbone) {
                 var h = Math.floor(time / 60);
                 var m = time - h * 60;
                 return new Date(date.setHours(h, m, 0, 0));
-
             }
         }
     });
