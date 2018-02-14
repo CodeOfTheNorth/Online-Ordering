@@ -1003,6 +1003,48 @@ define(["backbone"], function(Backbone) {
                    ('0' + date.getDate()).slice(-2) + '/' +
                    ('0' + (date.getMonth() + 1)).slice(-2) + '/' +
                    date.getFullYear();
+        },
+        /*
+         * Get the nearest time available for ordering.
+         * Function checks working hours for today first of all and then
+         * some more days, but no more than defined in the setting 'online_order_date_range'
+         * If nothing is available, the current server time is a default.
+         *
+         * @returns {date}
+         */
+        get_nearest_time: function() {
+            var date = this.base();
+            var days = App.Settings.online_order_date_range;
+            var working;
+            var time = date.getHours() * 60 + date.getMinutes();
+
+            do {
+                working = this.get_working_hours(date);
+                if (working === true) {
+                    return date;
+                }
+                days--;
+                if (Array.isArray(working)) {
+                    if (time <= working[0].from_int) {
+                        return align_time(date, working[0].from_int);
+                    } else if (working[0].from_int < time && time < working[0].to_int) {
+                        return align_time(date, time);
+                    }
+                }
+                // else go to the next day, until we have it
+                date.setDate(date.getDate() + 1);
+                if (!days) {
+                    return this.base();
+                }
+            } while(days); // !!! must be changed
+
+            function align_time(date, time) {
+                time -= time % 15;
+                var h = Math.floor(time / 60);
+                var m = time - h * 60;
+                return new Date(date.setHours(h, m, 0, 0));
+
+            }
         }
     });
 
@@ -1168,9 +1210,7 @@ define(["backbone"], function(Backbone) {
          * Check if product is available for ordering at requested date-time
          */
         available: function() {
-            var date = App.Data.mainModel && App.Data.mainModel.get('orderStarted') ?
-                new Date(App.Data.myorder.checkout.get('pickupTS')):
-                this.base();
+            var date = new Date(App.Data.myorder.checkout.get('pickupTS'));
             var time = date.getHours() * 60 + date.getMinutes();
             var working = this.get_working_hours(date), // in could be true, false or an array
                 saling =  this.get_product_hours(date); // it is an array always, could be empty array
