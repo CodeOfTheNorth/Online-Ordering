@@ -55,19 +55,16 @@ define(["backbone", "factory"], function(Backbone) {
                 return this.options.no_qty_arrows;
             },
             max_quantity_reached: function() {
-                var stock_amount = this.model.get_product().get('stock_amount');
-                var quantity = this.model.get('quantity');
-                return App.Settings.cannot_order_with_empty_inventory ?
-                    (quantity == stock_amount || stock_amount < 0) :
-                    false;
+                var selectable_amount = App.Settings.cannot_order_with_empty_inventory ? this.model.get_product().get('stock_amount') :
+                this.model.get_product().get('max_stock_amount');
+                return (this.model.get('quantity') == selectable_amount || selectable_amount < 0);
             }
         },
         hide_show: function(isComboWithWeightProduct) {
             var product = this.model.get_product(),
-                stock_amount = product.get('stock_amount'),
-                max_stock_amount = product.get('max_stock_amount'),
+                disallowEmptyInventory = App.Settings.cannot_order_with_empty_inventory,
+                selectable_amount = disallowEmptyInventory ? product.get('stock_amount') : product.get('max_stock_amount'),
                 is_gift = product.get('is_gift'),
-                disallowEmptyInventory = App.Data.settings.get('settings_system').cannot_order_with_empty_inventory,
                 quantity = this.model.get('quantity');
 
             is_gift && this.model.set('quantity', 1);
@@ -78,7 +75,7 @@ define(["backbone", "factory"], function(Backbone) {
                 this.$el.removeClass('hide');
             }
 
-            this.$('.select-wrapper').addClass('l' + (stock_amount ? stock_amount.toString().length : '1'));
+            this.$('.select-wrapper').addClass('l' + (selectable_amount ? selectable_amount.toString().length : '1'));
 
             // if "cannot order with empty inventory" is checked on
             // need reset the quantity each time when user changes an attribute selection
@@ -93,7 +90,7 @@ define(["backbone", "factory"], function(Backbone) {
                 if (quantity > 1) {
                     this.$('.decrease').removeClass('disabled');
                 }
-                if (quantity < max_stock_amount && !disallowEmptyInventory) {
+                if (quantity < selectable_amount && !disallowEmptyInventory) {
                     this.$('.increase').removeClass('disabled');
                 }
             }
@@ -103,8 +100,8 @@ define(["backbone", "factory"], function(Backbone) {
                 return;
             var q = this.model.get('quantity'),
                 enabledEmptyInventory = !App.Data.settings.get('settings_system').cannot_order_with_empty_inventory,
-                max_stock_amount = this.model.get_product().get('max_stock_amount'),
-                new_amount = (enabledEmptyInventory || q+1 <= max_stock_amount) ? q+1 : max_stock_amount;
+                selectable_amount = !enabledEmptyInventory ? this.model.get_product().get('stock_amount') : this.model.get_product().get('max_stock_amount'),
+                new_amount = (enabledEmptyInventory || q+1 <= selectable_amount) ? q+1 : selectable_amount;
             this.model.set('quantity', new_amount);
         },
         decrease: function(event) {
