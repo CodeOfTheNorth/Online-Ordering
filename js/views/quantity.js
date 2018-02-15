@@ -56,7 +56,7 @@ define(["backbone", "factory"], function(Backbone) {
             },
             max_quantity_reached: function() {
                 var selectable_amount = App.Settings.cannot_order_with_empty_inventory ? this.model.get_product().get('stock_amount') :
-                this.model.product.get('max_stock_amount');
+                this.model.get_product().get('max_stock_amount');
                 return (this.model.get('quantity') == selectable_amount || selectable_amount < 0);
             }
         },
