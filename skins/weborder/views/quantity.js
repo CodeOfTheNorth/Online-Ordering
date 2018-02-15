@@ -37,20 +37,19 @@ define(["quantity_view"], function(quantity_view) {
             var select = this.$('select'),
                 product = this.model.get_product(),
                 quantity = this.model.get('quantity'),
-                stock_amount = product.get('stock_amount'),
                 selectWrapper = this.$('.combobox-wrapper'),
-                max_amount = product.get('max_stock_amount');
-
+                selectable_amount = App.Settings.cannot_order_with_empty_inventory ? product.get('stock_amount') : product.get('max_stock_amount');
+          
             select.empty();
             var options = [];
-            for (var i = 1; i <= max_amount; i++) {
+            for (var i = 1; i <= selectable_amount; i++) {
                 if (i === quantity) {
                     options.push('<option selected="selected" value="' + i + '">' + i + '</option>');
                 } else {
                     options.push('<option value="' + i + '">' + i + '</option>');
                 }
             }
-            select.append(options);
+            selectable_amount > 0 && select.append(options);
 
             if (product.isParent() || isComboWithWeightProduct) {
                 select.addClass('disabled');
@@ -71,7 +70,7 @@ define(["quantity_view"], function(quantity_view) {
             if (this.combobox) {
                 this.combobox.destroy();
             }
-            this.combobox = select.combobox(1, max_amount);
+            this.combobox = select.combobox(1, selectable_amount);
         },
         change: function(e) {
             this.model.set('quantity', e.target.value * 1);
