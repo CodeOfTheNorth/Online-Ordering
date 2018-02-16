@@ -258,9 +258,6 @@ define(["checkout_view"], function(checkout_view) {
     });
 
     var CheckoutRewardsCardView = App.Views.FactoryView.extend({
-      initialize: function () {
-          App.Views.FactoryView.prototype.initialize.apply(this, arguments);
-      },
         name: 'checkout',
         mod: 'rewards_card',
         bindings: {
