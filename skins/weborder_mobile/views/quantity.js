@@ -38,18 +38,18 @@ define(["quantity_view"], function(quantity_view) {
         hide_show: function(isComboWithWeightProduct) {
             App.Views.CoreQuantityView.CoreQuantityMainView.prototype.hide_show.apply(this, arguments);
             var product = this.model.get_product(),
-                stock_amount = product.get('stock_amount'),
-                max_stock_amount = product.get('max_stock_amount'),
-                disallowNegativeInventory = App.Data.settings.get('settings_system').cannot_order_with_empty_inventory;
+                quantity = this.model.get('quantity'),
+                disallowNegativeInventory = App.Settings.cannot_order_with_empty_inventory,
+                selectable_amount = disallowNegativeInventory ? product.get('stock_amount') : product.get('max_stock_amount');
 
-            if (stock_amount === 1 || product.isParent() || isComboWithWeightProduct || this.model.isMatrixChildProductUpsell()) {
+            if (selectable_amount === 1 || product.isParent() || isComboWithWeightProduct || this.model.isMatrixChildProductUpsell()) {
                 this.$('.quantity_edit_input').addClass('disabled').prop('disabled', true);
                 disallowNegativeInventory && this.model.set('quantity', 1); // bug 13494
             } else {
-                if (this.model.get('quantity') > 1) {
+                if (quantity > 1) {
                     this.$('.decrease').removeClass('disabled');
                 }
-                if (this.model.get('quanity') < max_stock_amount) {
+                if (quantity < selectable_amount) {
                     this.$('.increase').removeClass('disabled');
                 }
                 this.$('.quantity_edit_input').removeClass('disabled').prop('disabled', false);
@@ -60,7 +60,8 @@ define(["quantity_view"], function(quantity_view) {
         },
         change_quantity: function(e) {
             var min = 1,
-                max = this.model.get_product().get('max_stock_amount');
+                max = App.Settings.cannot_order_with_empty_inventory ? this.model.get_product().get('stock_amount')
+                  : this.model.get_product().get('max_stock_amount');
 
             if (!e.target.validity.valid) {
                 e.target.value = min;
