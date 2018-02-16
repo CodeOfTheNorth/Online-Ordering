@@ -612,7 +612,7 @@ define(['backbone', 'captcha'], function(Backbone) {
                     if (data.status == 'OK' && self.collection) {
                         self.collection.remove(self);
                         //clear rewardsCard current model to prevent showing unlinked card on checkout
-                        App.Data.myorder.rewardsCard.resetData();
+                        App.Data.myorder.rewardsCard && App.Data.myorder.rewardsCard.resetData();
                     }
                 },
                 error: new Function()           // to override global ajax error handler
