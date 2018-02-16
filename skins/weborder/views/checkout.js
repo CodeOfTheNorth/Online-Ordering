@@ -258,32 +258,22 @@ define(["checkout_view"], function(checkout_view) {
     });
 
     var CheckoutRewardsCardView = App.Views.FactoryView.extend({
-      initialize: function () {
-			App.Views.FactoryView.prototype.initialize.apply(this, arguments);
-          this.listenTo(App.Data.customer.get('rewardCards'), "add remove reset", function () {
-            this.removeBindings();
-            this.applyBindings();
-          });
-		    },
         name: 'checkout',
         mod: 'rewards_card',
         bindings: {
             '.rewards-card-apply': 'classes: {hide: length(discounts)}',
             '.see-rewards': 'classes: {hide: not(length(discounts))}',
-            '.rewardCard': 'getRewardsCardNumber: number, events: ["input"], attr: {readonly: select(length(discounts), true, false)}, restrictInput: "0123456789", kbdSwitcher: "numeric", pattern: /^\\d*$/'
+            '.rewardCard': 'value: number, events: ["input"], attr: {readonly: select(length(discounts), true, false)}, restrictInput: "0123456789", kbdSwitcher: "numeric", pattern: /^\\d*$/'
         },
-      	bindingHandlers: {
-            getRewardsCardNumber: {
-                set: function ($element, value) {
-                  var text = App.Data.customer.get('rewardCards').length ? value : '';
-                  $element.val(text);
-                }
-			}
-		},
         events: {
             'click .rewards-card-apply': 'applyRewardsCard',
             'click .see-rewards': 'showRewards',
-            'click .cancel-input': 'resetRewards'
+            'click .cancel-input': 'resetRewards',
+            'change .rewardCard': 'changRewardCardNumber',
+        },
+        changRewardCardNumber: function(e) {
+          var rewardCard = App.Data.myorder.rewardsCard;
+          rewardCard.set('number', e.target.value);
         },
         applyRewardsCard: function() {
             this.model.trigger('onApplyRewardsCard');
