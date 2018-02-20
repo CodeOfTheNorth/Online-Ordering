@@ -1,7 +1,9 @@
 <script type="text/template" id="quantity_main-template">
     <span class="title header-text"><%= _lp.QUANTITY_TITLE %>:</span>
     <div class="quantity_select combobox-wrapper inline-block primary-bg">
-        <select tabindex="0"></select>
+        <div class="decrease btn fl-left input-border alternate-text">-</div>
+        <input class="quantity_edit_input" type="number" inputmode="numeric" value="<%= quantity %>" min="1">
+        <div class="increase btn input-border alternate-text">+</div>
     </div>
 </script>
 
