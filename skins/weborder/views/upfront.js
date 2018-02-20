@@ -40,6 +40,11 @@ define(["upfront_view"], function(upfront_view) {
         }
     });
 
+    function setSelectedAddress() {
+        var addr = App.Data.customer.get('addresses').findWhere({selected:true});
+        addr && App.Data.mainModel.set('address_index', addr.get('id'));
+    }
+
     var UpfrontPageView = App.Views.UpfrontView.UpfrontPageView.extend({
         name: 'upfront',
         mod: 'page',
@@ -75,6 +80,7 @@ define(["upfront_view"], function(upfront_view) {
                 App.Data.customer.set(this.options.customer.toJSON());
                 App.Data.mainModel.set('upfront_active', 0);
                 App.Data.mainModel.set('orderStarted', true);
+                setSelectedAddress();
             }
         },
         just_browsing: function() {
@@ -96,6 +102,7 @@ define(["upfront_view"], function(upfront_view) {
             if (check.status == 'OK') {
                 App.Data.customer.set(this.options.customer.toJSON());
                 App.Data.mainModel.set('upfront_update', 2);
+                setSelectedAddress();
             }
         }
     });

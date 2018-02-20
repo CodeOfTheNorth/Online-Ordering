@@ -474,7 +474,8 @@ define(['backbone', 'factory'], function(Backbone) {
                     delete this.options.address_index;
                 }
                 else {
-                    this.$('#addresses').val(-1);
+                    var addr = addresses.get(this.options.address_index);
+                    addr && addr.set('selected', true);
                 }
             }
         },

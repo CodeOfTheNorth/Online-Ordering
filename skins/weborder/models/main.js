@@ -75,6 +75,11 @@ define(["backbone"], function(Backbone) {
              */
             loginAction: 0,
             /*
+             * Indicates the address index of selected address in upfront start/update screens
+             * -1 means default address
+             */
+            address_index: -1,
+            /*
              *
              */
             DINING_OPTION_NAME: null

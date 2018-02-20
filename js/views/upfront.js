@@ -49,7 +49,7 @@ define(["checkout_view"], function(Backbone) {
             this.listenTo(this.options.customer, 'change', this.checkNonEmptyFields, this);
             this.customer = this.options.customer;
             this.card = App.Data.card;
-            this.address_index = -1;
+            this.address_index = this.options.address_index || -1;
             App.Views.FactoryView.prototype.initialize.apply(this, arguments);
 
             this.model.get('dining_option') === 'DINING_OPTION_DELIVERY' &&
@@ -170,7 +170,7 @@ define(["checkout_view"], function(Backbone) {
         },
         checkNonEmptyFields: function() {
           var dining_option = this.model.get('dining_option');
-          
+
             if (dining_option === 'DINING_OPTION_DELIVERY' || dining_option === 'DINING_OPTION_SHIPPING' || dining_option === 'DINING_OPTION_CATERING') {
                 if(this.options.customer._check_delivery_fields().length) return;
             }
@@ -208,6 +208,7 @@ define(["checkout_view"], function(Backbone) {
                 customer: this.options.customer,
                 mod: 'Main',
                 className: 'clear overflow-hidden',
+                address_index: this.options.address_index,
                 disableCache: true
             });
 

@@ -193,6 +193,7 @@ define(["done_view", "generator"], function(done_view) {
                 timetable: App.Data.timetables,
                 customer: App.Data.customer.clone(),
                 DINING_OPTION_NAME: App.Data.mainModel.get('DINING_OPTION_NAME'),
+                address_index: this.model.get('address_index'),
                 disableCache: true
             };
 
@@ -220,6 +221,7 @@ define(["done_view", "generator"], function(done_view) {
                 customer: App.Data.customer.clone(),
                 DINING_OPTION_NAME: App.Data.mainModel.get('DINING_OPTION_NAME'),
                 className: 'upfront-modal',
+                address_index: this.model.get('address_index'),
                 disableCache: true
             };
 
