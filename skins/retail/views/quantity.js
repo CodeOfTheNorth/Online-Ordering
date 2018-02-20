@@ -28,51 +28,47 @@ define(["quantity_view"], function(quantity_view) {
             '.title': 'attr: {"data-qty": quantity}'
         },
         events: {
-            'change input': 'change'
+            'input .quantity_edit_input': 'change'
         },
-
-        combobox: null,
-
         hide_show: function() {
             App.Views.CoreQuantityView.CoreQuantityMainView.prototype.hide_show.apply(this, arguments);
-            var select = this.$('select'),
-                product = this.model.get_product(),
+            var product = this.model.get_product(),
                 quantity = this.model.get('quantity'),
-                selectWrapper = this.$('.combobox-wrapper'),
-                selectable_amount = App.Settings.cannot_order_with_empty_inventory ? product.get('stock_amount') : product.get('max_stock_amount');
+                forbidNegativeInventory = App.Settings.cannot_order_with_empty_inventory,
+                selectable_amount = forbidNegativeInventory ? product.get('stock_amount') : product.get('max_stock_amount');
 
             // need hide quantity widget if parent product is selected
             if(product.isParent())
                 return this.$el.hide();
 
-            selectable_amount > 0 && select.empty();
-            var options = [];
-            for (var i = 1; i <= selectable_amount; i++) {
-                if (i === quantity) {
-                    options.push('<option selected="selected" value="' + i + '">' + i + '</option>');
-                } else {
-                    options.push('<option value="' + i + '">' + i + '</option>');
-                }
-            }
-            select.append(options);
-
-            if (selectable_amount === 1) {
-                select.addClass('disabled');
-                select.prop('disabled', true);
-                selectWrapper.addClass('disabled');
+            if (selectable_amount === 1 || this.model.isMatrixChildProductUpsell()) {
+                this.$('.quantity_edit_input').addClass('disabled').prop('disabled', true);
+                forbidNegativeInventory && this.model.set('quantity', 1); // bug 13494
             } else {
-                select.removeClass('disabled');
-                select.prop('disabled', false);
-                selectWrapper.removeClass('disabled');
+                if (quantity > 1) {
+                    this.$('.decrease').removeClass('disabled');
+                }
+                if (quantity < selectable_amount) {
+                    this.$('.increase').removeClass('disabled');
+                }
+                this.$('.quantity_edit_input').removeClass('disabled').prop('disabled', false);
             }
-
-            if (this.combobox) {
-                this.combobox.destroy();
-            }
-            this.combobox = select.combobox(1, selectable_amount);
         },
         change: function(e) {
-            this.model.set('quantity', e.target.value * 1);
+            var max = App.Settings.cannot_order_with_empty_inventory ? this.model.get_product().get('stock_amount')
+                : this.model.get_product().get('max_stock_amount');
+            if (e.target.value > max) {
+                e.target.value = max;
+            } else {
+                this.model.set('quantity', e.target.value * 1);
+            }
+
+            if (e.target.value)  {
+                this.model.set('quantity', e.target.value * 1);
+            }
+        },
+        update: function() {
+            this.$('.quantity_edit_input').val(this.model.get('quantity'));
         }
     });
 
