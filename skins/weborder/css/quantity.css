@@ -12,6 +12,17 @@
     background: inherit;
 }
 
+.quantity_edit_input {
+    text-align: center;
+    width: inherit;
+}
+
+.quantity_edit_input::-webkit-inner-spin-button,
+.quantity_edit_input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 .btn-qty {
     display: inline-block;
     width: 44px;
