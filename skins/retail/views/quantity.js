@@ -34,8 +34,7 @@ define(["quantity_view"], function(quantity_view) {
             App.Views.CoreQuantityView.CoreQuantityMainView.prototype.hide_show.apply(this, arguments);
             var product = this.model.get_product(),
                 quantity = this.model.get('quantity'),
-                forbidNegativeInventory = App.Settings.cannot_order_with_empty_inventory,
-                selectable_amount = forbidNegativeInventory ? product.get('stock_amount') : product.get('max_stock_amount');
+                selectable_amount = App.Settings.cannot_order_with_empty_inventory ? product.get('stock_amount') : product.get('max_stock_amount');
 
             // need hide quantity widget if parent product is selected
             if(product.isParent())
@@ -43,7 +42,7 @@ define(["quantity_view"], function(quantity_view) {
 
             if (selectable_amount === 1 || this.model.isMatrixChildProductUpsell()) {
                 this.$('.quantity_edit_input').addClass('disabled').prop('disabled', true);
-                forbidNegativeInventory && this.model.set('quantity', 1); // bug 13494
+                App.Settings.cannot_order_with_empty_inventory && this.model.set('quantity', 1); // bug 13494
             } else {
                 if (quantity > 1) {
                     this.$('.decrease').removeClass('disabled');
