@@ -45,12 +45,12 @@ define(["upfront_view"], function(upfront_view) {
         addr && App.Data.mainModel.set('address_index', addr.get('id'));
     }
 
-    var UpfrontPageView = App.Views.UpfrontView.UpfrontPageView.extend({
+    var UpfrontPageView = App.Views.CoreUpfrontView.CoreUpfrontPageView.extend({
         name: 'upfront',
         mod: 'page',
         initialize: function() {
             App.Views.CoreUpfrontView.CoreUpfrontPageView.prototype.initialize.apply(this, arguments);
-            this.listenTo(App.Data.customer, 'change: addresses', this.addressChanged);
+            window.addEventListener('message', this.messageReceived.bind(this), false);
         },
         bindings: {
             '.upfront-login': 'classes: {hide: logged}'
@@ -86,12 +86,15 @@ define(["upfront_view"], function(upfront_view) {
         just_browsing: function() {
             App.Data.mainModel.set('upfront_active', 0);
         },
-        addressChanged: function() {
-            this.options.customer.set('addresses', App.Data.customer.get('addresses'));
+        messageReceived: function(event) {
+            if(event && event.data && event.data == 'addressesLoaded') {
+                this.options.customer.set('addresses', App.Data.customer.get('addresses'));
+                this.render();
+            }
         }
     });
 
-    var UpfrontUpdateView = App.Views.UpfrontView.UpfrontPageView.extend({
+    var UpfrontUpdateView = App.Views.CoreUpfrontView.CoreUpfrontPageView.extend({
         name: 'upfront',
         mod: 'update',
         events: {

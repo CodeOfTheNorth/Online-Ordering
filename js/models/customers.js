@@ -470,7 +470,7 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
                     ? _.pluck(shipping.options, 'service_code').indexOf(shipping.service_code)
                     : -1;
             }
-            
+
             function setPilotShipment() {
                 var products = App.Data.products;
                 var product = getFirstProduct();
@@ -480,13 +480,13 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
                     name: '',
                     quantity: 1
                 };
-            
+
                 defaultProductOptions.product = product;
                 _.map(products[product].models, function (item) {
                     defaultProductOptions.price = item.get('price');
                     defaultProductOptions.name = item.get('name');
                 });
-                
+
                 function getFirstProduct() {
                     var productsArr = [];
                     for (var key in products) {
@@ -494,7 +494,7 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
                     }
                     return productsArr[0];
                 }
-            
+
             return defaultProductOptions;
             }
         },
@@ -2813,6 +2813,7 @@ define(["backbone", "facebook", "js_cookie", "page_visibility", "giftcard", "ord
                 self.add(App.Models.CustomerAddress.prototype.convertFromAPIFormat(address));
             });
             this.trigger('updated_from_backend');
+            window.postMessage('addressesLoaded', '*');
         },
         /**
          * Saves addresses to a storage.
